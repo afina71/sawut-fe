@@ -1,79 +1,60 @@
 <template>
-  <v-card :loading="loading" class="mx-auto my-12" max-width="374">
-    <template slot="progress">
-      <v-progress-linear
-        color="deep-purple"
-        height="10"
-        indeterminate
-      ></v-progress-linear>
-    </template>
-
-    <v-img
-      height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
-
-    <v-card-title>Cafe Badilico</v-card-title>
-
-    <v-card-text>
-      <v-row align="center" class="mx-0">
-        <v-rating
-          :value="4.5"
-          color="amber"
-          dense
-          half-increments
-          readonly
-          size="14"
-        ></v-rating>
-
-        <div class="grey--text ml-4">4.5 (413)</div>
-      </v-row>
-
-      <div class="my-4 subtitle-1">$ • Italian, Cafe</div>
-
-      <div>
-        Small plates, salads & sandwiches - an intimate setting with 12 indoor
-        seats plus patio seating.
-      </div>
-    </v-card-text>
-
-    <v-divider class="mx-4"></v-divider>
-
-    <v-card-title>Tonight's availability</v-card-title>
-
-    <v-card-text>
-      <v-chip-group
-        v-model="selection"
-        active-class="deep-purple accent-4 white--text"
-        column
-      >
-        <v-chip>5:30PM</v-chip>
-
-        <v-chip>7:30PM</v-chip>
-
-        <v-chip>8:00PM</v-chip>
-
-        <v-chip>9:00PM</v-chip>
-      </v-chip-group>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-btn color="deep-purple lighten-2" text @click="reserve">
-        Reserve
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+  <v-row justify="center">
+    <v-card class="rounded-xl" width="500">
+      <v-card-title class="green darken-1">
+        <v-row class="justify-center py-5">
+          <div>
+            <p
+              class="ma-0 text-md-h4 font-weight-medium white--text text-center"
+            >
+              SAWUT
+            </p>
+            <p
+              class="ma-0 text-md-h6 font-weight-medium white--text text-center"
+            >
+              (Sistem Akuntansi Wakaf Uang/Tunai)
+            </p>
+          </div>
+        </v-row>
+      </v-card-title>
+      <v-card-action class="white">
+        <v-form ref="loginForm" class="px-10 py-5">
+          <v-text-field
+            label="Email"
+            type="text"
+            append-icon="mdi-account"
+            required
+          ></v-text-field>
+          <v-text-field
+            label="Kata Sandi"
+            :append-icon="isPasswordShown ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="isPasswordShown ? 'text' : 'password'"
+            required
+            @click:append="isPasswordShown = !isPasswordShown"
+          ></v-text-field>
+          <div class="text-center my-8">
+            <v-btn
+              x-large
+              depressed
+              width="100%"
+              type="submit"
+              class="white--text rounded-lg"
+              :color="colorTheme"
+              >Masuk</v-btn
+            >
+          </div>
+        </v-form>
+      </v-card-action>
+    </v-card>
+  </v-row>
 </template>
 
 <script>
-// import Logo from '~/components/Logo.vue'
-// import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  layout: 'landing',
-  // components: {
-  //   Logo,
-  //   VuetifyLogo,
-  // },
+  layout: 'auth',
+  data: () => ({
+    isPasswordShown: false,
+    colorTheme: '#1B7A13',
+  }),
 }
 </script>
