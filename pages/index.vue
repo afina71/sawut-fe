@@ -21,7 +21,7 @@
         <v-form ref="loginForm" class="px-10 py-5">
           <v-text-field
             label="Email"
-            type="text"
+            type="email"
             append-icon="mdi-account"
             required
           ></v-text-field>
@@ -40,6 +40,7 @@
               type="submit"
               class="white--text rounded-lg"
               :color="colorTheme"
+              to="/dashboard/beranda"
               >Masuk</v-btn
             >
           </div>

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="app">
     <v-main>
       <v-container fill-height>
         <nuxt />
@@ -13,7 +13,7 @@ export default {}
 </script>
 
 <style>
-#app {
+.app {
   background: url('../assets/bg_login.png') no-repeat !important;
   background-size: cover;
 }
