@@ -142,7 +142,7 @@ export default {
     submenu2: [
       {
         title: 'Data Aset Tetap',
-        page: '/dashboard/pengelolaan lainnya/data aset tetap',
+        page: '/dashboard/data lainnya/data aset tetap',
       },
       {
         title: 'Data Utang',
