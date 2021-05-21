@@ -176,7 +176,6 @@ export default {
           nominal_pelunasan: 50000.0,
           kekurangan: 3000.0,
           tanggal_jatuh_tempo: 4,
-          status: 'Belum Lunas',
         },
         {
           id: 1,
@@ -186,7 +185,6 @@ export default {
           nominal_pelunasan: 3000.0,
           kekurangan: 0.0,
           tanggal_jatuh_tempo: 4,
-          status: 'Lunas',
         },
       ]
     },
@@ -234,8 +232,16 @@ export default {
     },
 
     getColor(item) {
-      if (this.editedItem.kekurangan <= 0.0) return 'green'
-      else return 'red'
+      const index = this.pelunasanPiutang.indexOf(item)
+      const isPaidOff = this.pelunasanPiutang[index].kekurangan
+
+      if (isPaidOff === 0.0) {
+        this.pelunasanPiutang[index].status = 'Lunas'
+        return 'green'
+      } else {
+        this.pelunasanPiutang[index].status = 'Belum Lunas'
+        return 'red'
+      }
     },
   },
 }
