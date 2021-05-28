@@ -2,6 +2,11 @@ import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+
+  // env: {
+  //   baseUrl: process.env.BASE_URL,
+  // },
+
   head: {
     titleTemplate: '%s - sawut',
     title: 'sawut',
@@ -37,10 +42,31 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: 'http://127.0.0.1:8000',
+    credentials: true,
+  },
+
+  // auth: {
+  //   cookies: false,
+  //   strategies: {
+  //     local: {
+  //       endpoint: {
+  //         login: {
+  //           url: '/api/login',
+  //           method: 'post',
+  //           propertyName: 'key',
+  //         },
+  //       },
+  //       tokenType: 'Token',
+  //       tokenName: 'Authorization',
+  //     },
+  //   },
+  // },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
