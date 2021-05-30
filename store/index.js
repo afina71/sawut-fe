@@ -82,4 +82,46 @@ export const actions = {
   getDataWakaf({ dispatch }) {
     return dispatch('getItems', [`wakaf/penerimaan`])
   },
+
+  // createUser({ dispatch }, [body, query]) {
+  //   const qs = new URLSearchParams(query).toString()
+  //   return dispatch('createItem', [`signup?${qs}`, body])
+  // },
+
+  // teacher-dashboard
+  // getClassTeacherById({ dispatch }, userId) {
+  //   return dispatch('getItems', [`teacher/${userId}`])
+  // },
+  // createClass({ dispatch }, payload) {
+  //   return dispatch('createItem', ['teacher', payload])
+  // },
+  // getClassTeacherDetail({ dispatch }, classId) {
+  //   return dispatch('getItems', [`teacher/class/${classId}`])
+  // },
+  // deleteClassTeacher({ dispatch }, payload) {
+  //   return dispatch('deleteItem', `teacherclass/${payload}`)
+  // },
+  // updateClassTeacher({ dispatch }, [classId, data]) {
+  //   return dispatch('updateItem', [`teacher/${classId}`, data])
+  // },
+
+  // // student-dashboard
+  // getAllClass({ dispatch }) {
+  //   return dispatch('getItems', 'student')
+  // },
+  // joinClass({ dispatch }, [userId, data]) {
+  //   return dispatch('updateItem', [`student/${userId}`, data])
+  // },
+  // checkClass({ dispatch }, payload) {
+  //   return dispatch('createItem', ['student', payload])
+  // },
+  // getClassStudentDetail({ dispatch }, classId) {
+  //   return dispatch('getItems', [`student/class/${classId}`])
+  // },
+  // getClassStudentById({ dispatch }, userId) {
+  //   return dispatch('getItems', [`student/${userId}`])
+  // },
+  // deleteStudentFromClass({ dispatch }, { classId, userId }) {
+  //   return dispatch('deleteItem', `teacher/${classId}/${userId}`)
+  // },
 }

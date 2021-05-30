@@ -49,6 +49,9 @@ export default {
   axios: {
     baseURL: 'http://127.0.0.1:8000',
     credentials: true,
+    init(axios) {
+      axios.defaults.withCredentials = true
+    },
   },
 
   // auth: {

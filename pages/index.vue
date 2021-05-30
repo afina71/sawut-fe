@@ -18,10 +18,11 @@
         </v-row>
       </v-card-title>
       <v-card-action class="white">
-        <v-form class="px-10 py-5" @submit.prevent="submitForm">
+        <v-form v-model="valid" class="px-10 py-5" @submit.prevent="submitForm">
           <v-text-field
             id="email"
             v-model="form.email"
+            :rules="emailRules"
             label="Email"
             type="email"
             append-icon="mdi-account"
@@ -30,6 +31,7 @@
           <v-text-field
             id="password"
             v-model="form.password"
+            :rules="passwordRules"
             label="Kata Sandi"
             :type="type"
             :append-icon="icon"
@@ -44,7 +46,7 @@
               type="submit"
               class="white--text rounded-lg"
               :color="colorTheme"
-              :disabled="isLoading || areAllInputsEmpty"
+              :disabled="isLoading || !valid"
               >Masuk</v-btn
             >
           </div>
@@ -66,6 +68,12 @@ export default {
       isPasswordShown: false,
       colorTheme: '#1B7A13',
       isLoading: false,
+      valid: true,
+      emailRules: [
+        (v) => !!v || 'Mohon masukkan email',
+        (v) => /.+@.+\..+/.test(v) || 'Alamat email tidak valid',
+      ],
+      passwordRules: [(v) => !!v || 'Mohon masukkan password'],
     }
   },
 
@@ -93,12 +101,13 @@ export default {
           password: this.form.password,
         })
         .then((response) => {
+          this.isLoading = false
           console.log(response)
         })
         .catch((error) => {
+          this.isLoading = false
           console.log(error)
         })
-      console.log('hello afin')
     },
     // async submitForm() {
     //   const { email, password } = this.form
