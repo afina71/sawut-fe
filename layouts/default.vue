@@ -2,9 +2,11 @@
   <v-app id="inspire">
     <v-navigation-drawer
       v-model="drawer"
+      color="green darken-2"
       app
-      :mini-variant.sync="mini"
+      expand-on-hover
       permanent
+      dark
     >
       <v-list>
         <v-list-item @click.stop="mini = !mini">
@@ -83,7 +85,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app>
+    <v-app-bar app color="green lighten-5" flat>
       <v-toolbar-title>SAWUT</v-toolbar-title>
     </v-app-bar>
 

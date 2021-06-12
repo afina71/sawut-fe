@@ -5,6 +5,7 @@ export const state = () => {
     variables: null,
     isInit: false,
     user: null,
+    token: null,
   }
 }
 
@@ -28,6 +29,9 @@ export const mutations = {
   isInitFalse(state) {
     state.isInit = false
   },
+  LOGIN_SUCCESS(state, response) {
+    state.token = response.token
+  },
 }
 export const actions = {
   useAPI(context, { method, url, data, token }) {
@@ -50,7 +54,7 @@ export const actions = {
   getItems({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'get',
-      url: `${process.env.baseUrl}/api/${payload}`,
+      url: `http://127.0.0.1:8000/api/${payload}`,
     })
   },
   createItem({ dispatch }, [url, data]) {
@@ -80,7 +84,7 @@ export const actions = {
   },
 
   getDataWakaf({ dispatch }) {
-    return dispatch('getItems', [`wakaf/penerimaan`])
+    return dispatch('getItems', 'wakaf/penerimaan')
   },
 
   // createUser({ dispatch }, [body, query]) {

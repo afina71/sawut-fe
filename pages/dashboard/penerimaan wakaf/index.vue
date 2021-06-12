@@ -47,7 +47,7 @@
                   required
                 ></v-text-field>
                 <v-text-field
-                  v-model="editedItem.nomor"
+                  v-model="editedItem.nomor_aiw"
                   class="pt-1"
                   label="Nomor AIW"
                   dense
@@ -62,14 +62,14 @@
                   required
                 ></v-autocomplete>
                 <v-text-field
-                  v-model="editedItem.jangka_waktu"
+                  v-model="editedItem.jangka_temporer"
                   class="pt-1"
                   label="Jangka Waktu"
                   dense
                   required
                 ></v-text-field>
                 <v-text-field
-                  v-model="editedItem.nominal_wakaf"
+                  v-model="editedItem.nominal"
                   class="pt-1"
                   label="Nominal Wakaf"
                   dense
@@ -116,10 +116,43 @@
     <!-- data tabel -->
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="dataWakaf"
       :search="search"
       sort-by="tanggal"
     >
+      <template #cell(tanggal)="{ item: { tanggal } }">
+        <span>{{ tanggal }}</span>
+      </template>
+      <template #cell(nama)="{ item: { nama } }">
+        <span>{{ nama }}</span>
+      </template>
+      <template #cell(nik)="{ item: { nik } }">
+        <span>{{ nik }}</span>
+      </template>
+      <template #cell(nomor_aiw)="{ item: { nomor_aiw } }">
+        <span>{{ nomor_aiw }}</span>
+      </template>
+      <template #cell(alamat)="{ item: { alamat } }">
+        <span>{{ alamat }}</span>
+      </template>
+      <template #cell(phone)="{ item: { phone } }">
+        <span>{{ phone }}</span>
+      </template>
+      <template #cell(jenis_wakaf)="{ item: { jenis_wakaf } }">
+        <span>{{ jenis_wakaf }}</span>
+      </template>
+      <template #cell(jangka_temporer)="{ item: { jangka_temporer } }">
+        <span>{{ jangka_temporer }}</span>
+      </template>
+      <template #cell(metode_pembayaran)="{ item: { metode_pembayaran } }">
+        <span>{{ metode_pembayaran }}</span>
+      </template>
+      <template #cell(nominal_wakaf)="{ item: { nominal_wakaf } }">
+        <span>{{ nominal_wakaf }}</span>
+      </template>
+      <template #cell(keterangan)="{ item: { keterangan } }">
+        <span>{{ keterangan }}</span>
+      </template>
       <template #[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -134,6 +167,11 @@
 <script>
 export default {
   layout: 'default',
+  async asyncData({ store }) {
+    return {
+      dataWakaf: await store.dispatch('getDataWakaf'),
+    }
+  },
   data: () => ({
     jenisWakaf: ['Wakaf Temporer', 'Wakaf Permanent'],
     metode: ['Tunai Permanen', 'Temporer'],
@@ -151,33 +189,40 @@ export default {
       { text: 'Nama', value: 'nama' },
       { text: 'NIK', value: 'nik' },
       { text: 'Nomor AIW', value: 'nomor_aiw' },
+      { text: 'Alamat', value: 'alamat' },
+      { text: 'Phone', value: 'phone' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
-      { text: 'Jangka Waktu', value: 'jangka_waktu' },
+      { text: 'Jangka Temporer', value: 'jangka_temporer' },
       { text: 'Metode Pembayaran', value: 'metode_pembayaran' },
       { text: 'Nominal Wakaf', value: 'nominal' },
+      { text: 'Keterangan', value: 'keterangan' },
       { text: 'Aksi', value: 'actions', sortable: false },
     ],
-    desserts: [],
+    // dataWakaf: [],
     editedIndex: -1,
     editedItem: {
       nama: '',
-      tanggal: '',
       nik: '',
-      nomor: '',
+      nomor_aiw: '',
+      alamat: '',
+      phone: '',
       jenis_wakaf: '',
-      jangka_waktu: '',
+      jangka_temporer: '',
       metode_pembayaran: '',
       nominal_wakaf: '',
+      keterangan: '',
     },
     defaultItem: {
       nama: '',
-      tanggal: '',
       nik: '',
-      nomor: '',
+      nomor_aiw: '',
+      alamat: '',
+      phone: '',
       jenis_wakaf: '',
-      jangka_waktu: '',
+      jangka_temporer: '',
       metode_pembayaran: '',
       nominal_wakaf: '',
+      keterangan: '',
     },
   }),
 
@@ -202,108 +247,32 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92301,
-          nik: 6.0,
-          nomor: 28,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92301,
-          nik: 6.0,
-          nomor: 29,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 923931,
-          nik: 6.0,
-          nomor: 14,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 939301,
-          nik: 6.0,
-          nomor: 54,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92391,
-          nik: 6.0,
-          nomor: 94,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 99301,
-          nik: 6.0,
-          nomor: 34,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92301,
-          nik: 6.0,
-          nomor: 29,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92391,
-          nik: 6.0,
-          nomor: 25,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92301,
-          nik: 6.0,
-          nomor: 22,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-        {
-          nama: 'Pak eko dianto',
-          tanggal: 92328,
-          nik: 6.0,
-          nomor: 34,
-          jenis_wakaf: 4.0,
-          jangka_waktu: 6.0,
-          metode_pembayaran: 24,
-          nominal_wakaf: 4.0,
-        },
-      ]
+      // this.dataWakaf = [
+      //   {
+      //     nama: 'Pak eko dianto',
+      //     nik: 6.0,
+      //     nomor_aiw: 28,
+      //     alamat: '....',
+      //     phone: '890',
+      //     jenis_wakaf: 4.0,
+      //     jangka_temporer: 6.0,
+      //     metode_pembayaran: 24,
+      //     nominal_wakaf: 4.0,
+      //     keterangan: '',
+      //   },
+      //   {
+      //     nama: 'Pak eko dianto',
+      //     nik: 6.0,
+      //     nomor_aiw: 28,
+      //     alamat: '....',
+      //     phone: '890',
+      //     jenis_wakaf: 4.0,
+      //     jangka_temporer: 6.0,
+      //     metode_pembayaran: 24,
+      //     nominal_wakaf: 4.0,
+      //     keterangan: '',
+      //   },
+      // ]
     },
 
     editItem(item) {

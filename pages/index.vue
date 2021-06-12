@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-card class="rounded-xl" width="500">
-      <v-card-title class="green darken-1">
+      <v-card-title class="green darken-2">
         <v-row class="justify-center py-5">
           <div>
             <p
@@ -17,7 +17,7 @@
           </div>
         </v-row>
       </v-card-title>
-      <v-card-action class="white">
+      <v-card class="white">
         <v-form v-model="valid" class="px-10 py-5" @submit.prevent="submitForm">
           <v-text-field
             id="email"
@@ -44,14 +44,13 @@
               depressed
               width="100%"
               type="submit"
-              class="white--text rounded-lg"
-              :color="colorTheme"
+              class="white--text rounded-lg green darken-2"
               :disabled="isLoading || !valid"
               >Masuk</v-btn
             >
           </div>
         </v-form>
-      </v-card-action>
+      </v-card>
     </v-card>
   </v-row>
 </template>
@@ -96,13 +95,15 @@ export default {
     submitForm() {
       this.isLoading = true
       this.$axios
-        .post('http://127.0.0.1:8000/api/login', {
+        .post('http://127.0.0.1:8000/api/auth/login', {
           email: this.form.email,
           password: this.form.password,
         })
         .then((response) => {
           this.isLoading = false
           console.log(response)
+          this.$store.commit('LOGIN_SUCCESS', response)
+          this.$router.push(`/dashboard/beranda`)
         })
         .catch((error) => {
           this.isLoading = false
@@ -110,7 +111,6 @@ export default {
         })
     },
     // async submitForm() {
-    //   const { email, password } = this.form
     //   this.isLoading = true
     //   try {
     //     await this.$auth.loginWith('local', {

@@ -46,13 +46,13 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    baseURL: 'http://127.0.0.1:8000',
-    credentials: true,
-    init(axios) {
-      axios.defaults.withCredentials = true
-    },
-  },
+  // axios: {
+  //   baseURL: 'http://127.0.0.1:8000',
+  //   credentials: true,
+  //   init(axios) {
+  //     axios.defaults.withCredentials = true
+  //   },
+  // },
 
   // auth: {
   //   cookies: false,
@@ -60,9 +60,13 @@ export default {
   //     local: {
   //       endpoint: {
   //         login: {
-  //           url: '/api/login',
+  //           url: '/api/auth/login',
   //           method: 'post',
-  //           propertyName: 'key',
+  //         },
+  //         user: {
+  //           url: '/api/auth/user',
+  //           method: 'get',
+  //           propertyName: false,
   //         },
   //       },
   //       tokenType: 'Token',
