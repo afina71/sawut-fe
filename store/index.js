@@ -6,6 +6,7 @@ export const state = () => {
     isInit: false,
     user: null,
     token: null,
+    authenticated: false,
   }
 }
 
@@ -29,8 +30,10 @@ export const mutations = {
   isInitFalse(state) {
     state.isInit = false
   },
-  LOGIN_SUCCESS(state, response) {
-    state.token = response.token
+  SAVE_TOKEN(state, response) {
+    localStorage.setItem('token', response.data.token)
+    state.token = response.data.token
+    state.authenticated = true
   },
 }
 export const actions = {
@@ -46,45 +49,112 @@ export const actions = {
             },
           }) => {
             // eslint-disable-next-line unicorn/error-message
-            reject(new Error({ statusCode, message }))
+            // reject(new Error({ statusCode, message }))
           }
         )
     })
   },
+  // getItems({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'get',
+  //     url: `https://laravel-sawut.herokuapp.com/api/${payload}`,
+  //   })
+  // },
+  // createItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'post',
+  //     url: `https://laravel-sawut.herokuapp.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // updateItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'patch',
+  //     url: `https://laravel-sawut.herokuapp.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // deleteItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'delete',
+  //     url: `https://laravel-sawut.herokuapp.com/api/${payload}`,
+  //   })
+  // },
   getItems({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'get',
-      url: `http://127.0.0.1:8000/api/${payload}`,
+      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
     })
   },
   createItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
       method: 'post',
-      url: `${process.env.baseUrl}/api/${url}`,
+      url: `https://sawut-laravel.herokuapp.com/api/${url}`,
       data,
     })
   },
   updateItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
-      method: 'patch',
-      url: `${process.env.baseUrl}/api/${url}`,
+      method: 'put',
+      url: `https://sawut-laravel.herokuapp.com/api/${url}`,
       data,
     })
   },
   deleteItem({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'delete',
-      url: `${process.env.baseUrl}/api/${payload}`,
+      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
     })
   },
 
   // auth-related actions
   login(context, payload) {
-    return this.dispatch('createItem', ['login', payload])
+    return this.dispatch('createItem', ['auth/login', payload])
   },
 
+  // penerimaan wakaf
   getDataWakaf({ dispatch }) {
     return dispatch('getItems', 'wakaf/penerimaan')
+  },
+  createDataWakaf({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/penerimaan/create', payload])
+  },
+  getDataWakafIndividu({ dispatch }, [id, payload]) {
+    return dispatch('getItems', [`wakaf/penerimaan/${id}/edit`, payload])
+  },
+  updateDataWakafIndividu({ dispatch }, [id, payload]) {
+    return dispatch('updateItems', [`wakaf/penerimaan/${id}`, payload])
+  },
+  deleteDataWakafIndividu({ dispatch }, [id, payload]) {
+    return dispatch('deleteItem', `wakaf/penerimaan/${id}`, payload)
+  },
+
+  // pengelolaan wakaf
+  getDataKas({ dispatch }) {
+    return dispatch('getItems', 'wakaf/pengelolaan')
+  },
+  createDataKas({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/pengelolaan/pindah', payload])
+  },
+
+  // penyaluran manfaat
+  getDataPenyaluran({ dispatch }) {
+    return dispatch('getItems', 'wakaf/penyaluran/')
+  },
+
+  // pengajuan biaya
+  getDataPengajuan({ dispatch }) {
+    return dispatch('getItems', 'wakaf/pengajuan/')
+  },
+
+  // pelunasan piutang
+  getDataPelunasan({ dispatch }) {
+    return dispatch('getItems', 'wakaf/pelunasan/')
+  },
+
+  // data aset tetap
+  getDataAsetTetap({ dispatch }) {
+    return dispatch('getItems', 'wakaf/data-aset-tetap/')
   },
 
   // createUser({ dispatch }, [body, query]) {

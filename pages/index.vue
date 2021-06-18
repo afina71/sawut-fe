@@ -92,23 +92,42 @@ export default {
     togglePassword(e) {
       this.isPasswordShown = !this.isPasswordShown
     },
-    submitForm() {
+    // submitForm() {
+    //   this.isLoading = true
+    //   this.$axios
+    //     .post('http://127.0.0.1:8000/api/auth/login', {
+    //       email: this.form.email,
+    //       password: this.form.password,
+    //     })
+    //     .then((response) => {
+    //       this.isLoading = false
+    //       console.log(response)
+    //       this.$store.commit('SAVE_TOKEN', response)
+    //       // this.$axios.interceptors.request.use((config) => {
+    //       //   const token = this.$store.load('SAVE_TOKEN')
+    //       //   if (token) config.headers.Authorization = `Bearer ${token}`
+    //       //   return config
+    //       // })
+    //       this.$router.push(`/dashboard/beranda`)
+    //     })
+    //     .catch((error) => {
+    //       this.isLoading = false
+    //       console.log(error)
+    //     })
+    // },
+    async submitForm() {
+      const { email, password } = this.form
       this.isLoading = true
-      this.$axios
-        .post('http://127.0.0.1:8000/api/auth/login', {
-          email: this.form.email,
-          password: this.form.password,
-        })
-        .then((response) => {
-          this.isLoading = false
-          console.log(response)
-          this.$store.commit('LOGIN_SUCCESS', response)
-          this.$router.push(`/dashboard/beranda`)
-        })
-        .catch((error) => {
-          this.isLoading = false
-          console.log(error)
-        })
+      try {
+        const user = await this.$store.dispatch('login', { email, password })
+        this.$store.commit('setUser', user)
+        this.$axios.setToken(`Bearer ${user.token}`)
+        // await this.$store.dispatch('login', { email, password })
+        this.isLoading = false
+        this.$router.push(`/dashboard/beranda`)
+      } catch (error) {
+        this.isLoading = false
+      }
     },
     // async submitForm() {
     //   this.isLoading = true

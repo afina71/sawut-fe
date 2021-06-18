@@ -109,51 +109,51 @@ export default {
       {
         title: 'Penerimaan Wakaf',
         icon: 'mdi-inbox-arrow-down-outline',
-        page: '/dashboard/penerimaan wakaf',
+        page: '/dashboard/penerimaanWakaf',
       },
       {
         title: 'Pengelolaan Wakaf',
         icon: 'mdi-chart-box-outline',
-        page: '/dashboard/pengelolaan wakaf',
+        page: '/dashboard/pengelolaanWakaf',
       },
       {
         title: 'Penyaluran Manfaat',
         icon: 'mdi-handshake-outline',
-        page: '/dashboard/penyaluran manfaat',
+        page: '/dashboard/penyaluranManfaat',
       },
       {
         title: 'Pengajuan Biaya',
         icon: 'mdi-swap-horizontal-circle-outline',
-        page: '/dashboard/pengajuan biaya',
+        page: '/dashboard/pengajuanBiaya',
       },
       {
         title: 'Pelunasan Piutang',
         icon: 'mdi-cash-check',
-        page: '/dashboard/pelunasan piutang',
+        page: '/dashboard/pelunasanPiutang',
       },
     ],
     submenu1: [
-      { title: 'Posisi Keuangan', page: '/dashboard/laporan/posisi keuangan' },
+      { title: 'Posisi Keuangan', page: '/dashboard/laporan/posisiKeuangan' },
       {
         title: 'Rincian Aset Wakaf',
-        page: '/dashboard/laporan/rincian aset wakaf',
+        page: '/dashboard/laporan/rincianAsetWakaf',
       },
       { title: 'Aktivitas', page: '/dashboard/laporan/aktivitas' },
-      { title: 'Arus Kas', page: '/dashboard/laporan/arus kas' },
+      { title: 'Arus Kas', page: '/dashboard/laporan/arusKas' },
     ],
     submenu2: [
       {
         title: 'Data Aset Tetap',
-        page: '/dashboard/data lainnya/data aset tetap',
+        page: '/dashboard/dataLainnya/dataAsetTetap',
       },
       {
         title: 'Data Utang',
-        page: '/dashboard/data lainnya/data utang',
+        page: '/dashboard/dataLainnya/dataUtang',
       },
     ],
     submenu3: [
-      { title: 'Data Akun', page: '/dashboard/pengaturan/data akun' },
-      { title: 'Data Pengguna', page: '/dashboard/pengaturan/data pengguna' },
+      { title: 'Data Akun', page: '/dashboard/pengaturan/dataAkun' },
+      { title: 'Data Pengguna', page: '/dashboard/pengaturan/dataPengguna' },
     ],
     mini: true,
   }),

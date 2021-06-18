@@ -6,7 +6,7 @@
     <v-row class="pb-10">
       <v-spacer></v-spacer>
 
-      <!-- popup add data -->
+      <!-- popup pindah data -->
       <v-col class="d-flex justify-end col-md-4">
         <v-dialog v-model="dialog" max-width="450px">
           <template #activator="{ on, attrs }">
@@ -17,15 +17,15 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Pemindahan Saldo {{ formTitle }} Pengelolaan </b></span
+                ><b> Pemindahan Saldo Kas </b></span
               >
             </v-card-title>
             <v-card-action class="white">
-              <v-form ref="loginForm" class="px-10 py-5">
+              <v-form class="px-10 py-5">
                 <v-autocomplete
                   v-model="editedItem.akun_asal"
                   class="pt-1"
-                  :items="namaakun"
+                  :items="namaKas"
                   item-text="text"
                   item-value="value"
                   label="Akun Asal"
@@ -35,7 +35,7 @@
                 <v-autocomplete
                   v-model="editedItem.akun_tujuan"
                   class="pt-1"
-                  :items="namaakun"
+                  :items="namaKas"
                   item-text="text"
                   item-value="value"
                   label="Akun Tujuan"
@@ -43,7 +43,7 @@
                   required
                 ></v-autocomplete>
                 <v-text-field
-                  v-model="editedItem.jumlah_pemindahan"
+                  v-model="editedItem.saldo"
                   class="pt-1"
                   label="Jumlah"
                   dense
@@ -67,9 +67,16 @@
     <!-- data tabel -->
     <v-data-table
       :headers="headers"
-      :items="pengelolaanwakaf"
-      :hide-default-footer="true"
+      :items="dataKas"
+      :search="search"
+      sort-by="kas"
     >
+      <template #cell(kas)="{ item: { kas } }">
+        <span>{{ kas }}</span>
+      </template>
+      <template #cell(saldo)="{ item: { saldo } }">
+        <span>{{ saldo }}</span>
+      </template>
     </v-data-table>
   </v-main>
 </template>
@@ -77,47 +84,48 @@
 <script>
 export default {
   layout: 'default',
+  async asyncData({ store }) {
+    return {
+      dataKas: await store.dispatch('getDataKas'),
+    }
+  },
   data: () => ({
-    namaakun: [
-      {
-        value: 0,
-        text: 'Kas Tunai',
-      },
-      {
-        value: 1,
-        text: 'Kas Tabungan Wakaf',
-      },
-      {
-        value: 2,
-        text: 'Kas Deposito',
-      },
-      {
-        value: 3,
-        text: 'Kas Tabungan Bagi Hasil',
-      },
-      {
-        value: 4,
-        text: 'Kas Tabungan Non Bagi Hasil',
-      },
-    ],
-    colorTheme: '#1B7A13',
+    colorTheme: '#388E3C',
     dialog: false,
     dialogDelete: false,
-    headers: [
-      { text: 'Nama Akun', value: 'nama_akun' },
-      { text: 'Saldo', value: 'jumlah_pemindahan' },
+    namaKas: [
+      {
+        text: 'Kas Tunai',
+        value: 'tunai',
+      },
+      {
+        text: 'Kas Tabungan Wakaf',
+        value: 'tabwakaf',
+      },
+      {
+        text: 'Kas Deposito',
+        value: 'deposito',
+      },
+      {
+        text: 'Kas Tabungan Bagi Hasil',
+        value: 'tabbagihasil',
+      },
+      {
+        text: 'Kas Tabungan Non Bagi Hasil',
+        value: 'tabnonbagihasil',
+      },
     ],
-    pengelolaanwakaf: [],
-    editedIndex: -1,
-    editedItem: { nama_akun: '', jumlah_pemindahan: '' },
-    defaultItem: { nama_akun: '', jumlah_pemindahan: '' },
+    headers: [
+      { text: 'Nama Akun', value: 'kas' },
+      { text: 'Saldo', value: 'saldo' },
+    ],
+    // pengelolaanwakaf: [],
+    // editedIndex: -1,
+    editedItem: { akun_asal: '', akun_tujuan: '', saldo: '' },
+    // defaultItem: { nama_akun: '', jumlah_pemindahan: '' },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Input Data' : 'Edit Data'
-    },
-  },
+  computed: {},
 
   watch: {
     dialog(val) {
@@ -128,34 +136,31 @@ export default {
     },
   },
 
-  created() {
-    this.initialize()
-  },
-
   methods: {
-    initialize() {
-      this.pengelolaanwakaf = [
-        {
-          nama_akun: 'Kas Tunai',
-          jumlah_pemindahan: 50.0,
-        },
-        {
-          nama_akun: 'Kas Tabungan Wakaf',
-          jumlah_pemindahan: 50.0,
-        },
-        {
-          nama_akun: 'Kas Tabungan Deposito',
-          jumlah_pemindahan: 50.0,
-        },
-        {
-          nama_akun: 'Kas Tabungan Bagi Hasil',
-          jumlah_pemindahan: 50.0,
-        },
-        {
-          nama_akun: 'Kas Tabungan Non Bagi Hasil',
-          jumlah_pemindahan: 50.0,
-        },
-      ]
+    async pindahSaldo() {
+      const {
+        // eslint-disable-next-line camelcase
+        akun_asal,
+        // eslint-disable-next-line camelcase
+        akun_tujuan,
+        saldo,
+      } = this.editedItem
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('createDataKas', {
+          akun_asal,
+          akun_tujuan,
+          saldo,
+        })
+        this.isLoading = false
+        this.handleRefreshList()
+      } catch (error) {
+        this.isLoading = false
+      }
+      this.close()
+    },
+    async handleRefreshList() {
+      this.dataKas = await this.$store.dispatch('getDataKas')
     },
 
     close() {
@@ -164,31 +169,6 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
-    },
-
-    pindahSaldo() {
-      // mengecek akun asal tidak sama dengan akun tujuan
-      if (this.editedItem.akun_asal === this.editedItem.akun_tujuan) {
-        this.close()
-      }
-
-      // mengecek sisa saldo lebih besar saldo pemindahan
-      if (
-        this.pengelolaanwakaf[this.editedItem.akun_asal].jumlah_pemindahan >
-        parseInt(this.editedItem.jumlah_pemindahan)
-      ) {
-        this.close()
-      }
-
-      this.pengelolaanwakaf[
-        this.editedItem.akun_asal
-      ].jumlah_pemindahan -= parseInt(this.editedItem.jumlah_pemindahan)
-
-      this.pengelolaanwakaf[
-        this.editedItem.akun_tujuan
-      ].jumlah_pemindahan += parseInt(this.editedItem.jumlah_pemindahan)
-
-      this.close()
     },
   },
 }

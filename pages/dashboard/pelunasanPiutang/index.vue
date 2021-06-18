@@ -84,7 +84,27 @@
     </v-row>
 
     <!-- data tabel -->
-    <v-data-table :headers="headers" :items="pelunasanPiutang" :search="search">
+    <v-data-table
+      :headers="headers"
+      :items="dataPelunasan"
+      :search="search"
+      sort-by="tanggal_cicilan"
+    >
+      <template #cell(nama_peminjam)="{ item: { nama_peminjam } }">
+        <span>{{ nama_peminjam }}</span>
+      </template>
+      <template #cell(kas)="{ item: { kas } }">
+        <span>{{ kas }}</span>
+      </template>
+      <template #cell(jumlah_cicilan)="{ item: { jumlah_cicilan } }">
+        <span>{{ jumlah_cicilan }}</span>
+      </template>
+      <template #cell(kekurangan)="{ item: { kekurangan } }">
+        <span>{{ kekurangan }}</span>
+      </template>
+      <template #cell(tanggal_jatuh_tempo)="{ item: { tanggal_jatuh_tempo } }">
+        <span>{{ tanggal_jatuh_tempo }}</span>
+      </template>
       <template #[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
@@ -104,8 +124,13 @@
 <script>
 export default {
   layout: 'default',
+  async asyncData({ store }) {
+    return {
+      dataPelunasan: await store.dispatch('getDataPelunasan'),
+    }
+  },
   data: () => ({
-    colorTheme: '#1B7A13',
+    colorTheme: '#388E3C',
     dialog: false,
     dialogDelete: false,
     search: '',
@@ -114,11 +139,11 @@ export default {
         text: 'Tanggal',
         align: 'start',
         sortable: false,
-        value: 'tanggal',
+        value: 'tanggal_cicilan',
       },
       { text: 'Nama Peminjam', value: 'nama_peminjam' },
       { text: 'NIK', value: 'nik' },
-      { text: 'Jumlah Cicilan', value: 'nominal_pelunasan' },
+      { text: 'Jumlah Cicilan', value: 'jumlah_cicilan' },
       { text: 'Kekurangan', value: 'kekurangan' },
       { text: 'Tanggal Jatuh Tempo', value: 'tanggal_jatuh_tempo' },
       { text: 'Aksi', value: 'actions', sortable: false },
@@ -128,18 +153,18 @@ export default {
     editedIndex: -1,
     editedItem: {
       id: '',
-      nama_peminjam: '',
+      tanggal_cicilan: '',
       nik: '',
-      nominal_pelunasan: '',
+      jumlah_cicilan: '',
       kekurangan: '',
       tanggal_jatuh_tempo: '',
       status: '',
     },
     defaultItem: {
       id: '',
-      nama_peminjam: '',
+      tanggal_cicilan: '',
       nik: '',
-      nominal_pelunasan: '',
+      jumlah_cicilan: '',
       kekurangan: '',
       tanggal_jatuh_tempo: '',
       status: '',

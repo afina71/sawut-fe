@@ -30,7 +30,7 @@
                 ><b> Form Input {{ formTitle }} Pengajuan Biaya</b></span
               >
             </v-card-title>
-            <v-card-action class="white">
+            <v-card-actions class="white">
               <v-form ref="loginForm" class="px-10 py-5">
                 <v-text-field
                   v-model="editedItem.nama_pengaju"
@@ -72,7 +72,7 @@
                   required
                 ></v-autocomplete>
               </v-form>
-            </v-card-action>
+            </v-card-actions>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
@@ -115,7 +115,7 @@
       <template #no-data>
         <v-btn color="primary" @click="initialize"> Reset </v-btn>
       </template>
-      <template #[`item.status`]="{ item }">
+      <template #[`item.status`]="{ item }" @click="editItem(item)">
         <v-chip :color="getColor(item)" dark>
           {{ item.status }}
         </v-chip>
@@ -135,7 +135,16 @@
 <script>
 export default {
   layout: 'default',
+  async asyncData({ store }) {
+    return {
+      dataPengajuan: await store.dispatch('getDataPengajuan'),
+    }
+  },
   data: () => ({
+    colorTheme: '#388E3C',
+    dialog: false,
+    dialogDelete: false,
+    search: '',
     kategoriBiaya: [
       { header: 'Beban Pengelolaan dan Pengembangan Wakaf' },
       { name: 'Beban ATK', group: 'Group 1' },
@@ -162,10 +171,6 @@ export default {
       'Kas Tabungan Bagi Hasil',
       'Kas Tabungan Non Bagi Hasil',
     ],
-    colorTheme: '#1B7A13',
-    dialog: false,
-    dialogDelete: false,
-    search: '',
     headers: [
       { text: 'Nama Pengaju', value: 'nama_pengaju' },
       { text: 'Kategori Biaya', value: 'kategori_biaya' },
