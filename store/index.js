@@ -123,10 +123,10 @@ export const actions = {
     return dispatch('getItems', [`wakaf/penerimaan/${id}/edit`, payload])
   },
   updateDataWakafIndividu({ dispatch }, [id, payload]) {
-    return dispatch('updateItems', [`wakaf/penerimaan/${id}`, payload])
+    return dispatch('updateItem', [`wakaf/penerimaan/${id}`, payload])
   },
-  deleteDataWakafIndividu({ dispatch }, [id, payload]) {
-    return dispatch('deleteItem', `wakaf/penerimaan/${id}`, payload)
+  deleteDataWakafIndividu({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/penerimaan/${id}`)
   },
 
   // pengelolaan wakaf
@@ -139,22 +139,63 @@ export const actions = {
 
   // penyaluran manfaat
   getDataPenyaluran({ dispatch }) {
-    return dispatch('getItems', 'wakaf/penyaluran/')
+    return dispatch('getItems', 'wakaf/penyaluran')
   },
 
   // pengajuan biaya
   getDataPengajuan({ dispatch }) {
-    return dispatch('getItems', 'wakaf/pengajuan/')
+    return dispatch('getItems', 'wakaf/pengajuan')
+  },
+  createDataPengajuan({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/pengajuan/create', payload])
+  },
+  updateDataPengajuan({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/pengajuan/${id}`, payload])
+  },
+  deleteDataPengajuan({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/pengajuan/${id}`)
   },
 
   // pelunasan piutang
   getDataPelunasan({ dispatch }) {
-    return dispatch('getItems', 'wakaf/pelunasan/')
+    return dispatch('getItems', 'wakaf/pelunasan')
+  },
+  createDataPelunasan({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/pelunasan/create', payload])
+  },
+  updateDataPelunasanIndividu({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/pelunasan/${id}`, payload])
+  },
+  deleteDataPelunasanIndividu({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/pelunasan/${id}`)
   },
 
   // data aset tetap
   getDataAsetTetap({ dispatch }) {
-    return dispatch('getItems', 'wakaf/data-aset-tetap/')
+    return dispatch('getItems', 'wakaf/data-aset-tetap')
+  },
+  createDataAsetTetap({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/data-aset-tetap/create', payload])
+  },
+  updateDataAsetTetap({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/data-aset-tetap/${id}`, payload])
+  },
+  deleteDataAsetTetap({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/data-aset-tetap/${id}`)
+  },
+
+  // data utang
+  getDataUtang({ dispatch }) {
+    return dispatch('getItems', 'wakaf/data-utang')
+  },
+  createDataUtang({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/data-utang/create', payload])
+  },
+  updateDataUtang({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/data-utang/${id}`, payload])
+  },
+  deleteDataUtang({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/data-utang/${id}`)
   },
 
   // createUser({ dispatch }, [body, query]) {

@@ -20,37 +20,35 @@
                 ><b> Pemindahan Saldo Kas </b></span
               >
             </v-card-title>
-            <v-card-action class="white">
-              <v-form class="px-10 py-5">
-                <v-autocomplete
-                  v-model="editedItem.akun_asal"
-                  class="pt-1"
-                  :items="namaKas"
-                  item-text="text"
-                  item-value="value"
-                  label="Akun Asal"
-                  dense
-                  required
-                ></v-autocomplete>
-                <v-autocomplete
-                  v-model="editedItem.akun_tujuan"
-                  class="pt-1"
-                  :items="namaKas"
-                  item-text="text"
-                  item-value="value"
-                  label="Akun Tujuan"
-                  dense
-                  required
-                ></v-autocomplete>
-                <v-text-field
-                  v-model="editedItem.saldo"
-                  class="pt-1"
-                  label="Jumlah"
-                  dense
-                  required
-                ></v-text-field>
-              </v-form>
-            </v-card-action>
+            <v-form class="px-10 pt-10">
+              <v-autocomplete
+                v-model="editedItem.akun_asal"
+                class="pt-1"
+                :items="namaKas"
+                item-text="text"
+                item-value="value"
+                label="Akun Asal"
+                dense
+                required
+              ></v-autocomplete>
+              <v-autocomplete
+                v-model="editedItem.akun_tujuan"
+                class="pt-1"
+                :items="namaKas"
+                item-text="text"
+                item-value="value"
+                label="Akun Tujuan"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="editedItem.saldo"
+                class="pt-1"
+                label="Jumlah"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
@@ -93,6 +91,7 @@ export default {
     colorTheme: '#388E3C',
     dialog: false,
     dialogDelete: false,
+    search: '',
     namaKas: [
       {
         text: 'Kas Tunai',

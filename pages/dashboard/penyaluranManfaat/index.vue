@@ -20,7 +20,7 @@
                 ><b> Pemindahan Saldo Kas </b></span
               >
             </v-card-title>
-            <v-card-action class="white">
+            <!-- <v-card-action class="white">
               <v-form class="px-10 py-5">
                 <v-autocomplete
                   v-model="editedItem.akun_asal"
@@ -50,7 +50,7 @@
                   required
                 ></v-text-field>
               </v-form>
-            </v-card-action>
+            </v-card-action> -->
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>

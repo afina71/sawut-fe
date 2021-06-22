@@ -16,9 +16,10 @@
       </v-col>
       <v-spacer></v-spacer>
 
-      <!-- popup add/edit data -->
+      <!-- popup form -->
       <v-col class="d-flex justify-end col-md-4">
-        <v-dialog v-model="dialog" max-width="450px">
+        <!-- popup add data -->
+        <v-dialog v-model="dialogInput" max-width="450px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
               Input Pelunasan Piutang
@@ -27,45 +28,91 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Input {{ formTitle }} Pelunasan Piutang</b></span
+                ><b> Form Input Pelunasan Piutang</b></span
               >
             </v-card-title>
-            <v-card-action class="white">
-              <v-form ref="loginForm" class="px-10 py-5">
-                <v-text-field
-                  v-model="editedItem.nama_peminjam"
-                  class="pt-1"
-                  label="Nama Peminjam"
-                  dense
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="editedItem.nik"
-                  class="pt-1"
-                  label="NIK"
-                  dense
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="editedItem.nominal_pelunasan"
-                  class="pt-1"
-                  label="Nominal"
-                  dense
-                  required
-                ></v-text-field>
-              </v-form>
-            </v-card-action>
+            <v-form class="px-10 pt-10">
+              <v-text-field
+                v-model="inputItem.tanggal_cicilan"
+                class="pt-1"
+                label="Tanggal Cicilan"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.nik"
+                class="pt-1"
+                label="Nomor Induk Kependudukan"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.jumlah_cicilan"
+                class="pt-1"
+                label="Jumlah Cicilan"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Batal </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Simpan </v-btn>
+              <v-btn color="blue darken-1" text @click="closeInput">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="handleInput">
+                Simpan
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- popup edit data -->
+        <v-dialog v-model="dialogEdit" max-width="450px">
+          <v-card class="rounded-xl">
+            <v-card-title class="green darken-1 justify-center">
+              <span class="headline text-body-1 white--text"
+                ><b> Form Edit Data Wakaf</b></span
+              >
+            </v-card-title>
+            <v-form class="px-10 pt-10">
+              <v-text-field
+                v-model="editedItem.tanggal_cicilan"
+                class="pt-1"
+                label="Tanggal Cicilan"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.nik"
+                class="pt-1"
+                label="Nomor Induk Kependudukan"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.jumlah_cicilan"
+                class="pt-1"
+                label="Jumlah Cicilan"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
+
+            <v-card-actions class="pb-5">
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeEdit">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
+                Simpan
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- popup delete data -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline"
+            <v-card-title class="headline pt-10 text-body-1"
               >Apa Anda yakin ingin menghapus data ini?</v-card-title
             >
             <v-card-actions>
@@ -73,7 +120,7 @@
               <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
               <v-spacer></v-spacer>
@@ -86,15 +133,18 @@
     <!-- data tabel -->
     <v-data-table
       :headers="headers"
-      :items="dataPelunasan"
+      :items="dataPelunasan.data"
       :search="search"
       sort-by="tanggal_cicilan"
     >
+      <template #cell(tanggal_cicilan)="{ item: { tanggal_cicilan } }">
+        <span>{{ tanggal_cicilan }}</span>
+      </template>
       <template #cell(nama_peminjam)="{ item: { nama_peminjam } }">
         <span>{{ nama_peminjam }}</span>
       </template>
-      <template #cell(kas)="{ item: { kas } }">
-        <span>{{ kas }}</span>
+      <template #cell(nik)="{ item: { nik } }">
+        <span>{{ nik }}</span>
       </template>
       <template #cell(jumlah_cicilan)="{ item: { jumlah_cicilan } }">
         <span>{{ jumlah_cicilan }}</span>
@@ -105,17 +155,19 @@
       <template #cell(tanggal_jatuh_tempo)="{ item: { tanggal_jatuh_tempo } }">
         <span>{{ tanggal_jatuh_tempo }}</span>
       </template>
-      <template #[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-      </template>
-      <template #no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
-      <template #[`item.status`]="{ item }">
-        <v-chip :color="getColor(item)" dark>
-          {{ item.status }}
+      <template #[`item.pelunasan`]="{ item }">
+        <v-chip v-if="item.pelunasan === `Belum Lunas`" color="red" dark>
+          {{ item.pelunasan }}
         </v-chip>
+        <v-chip v-else color="green" dark>
+          {{ item.pelunasan }}
+        </v-chip>
+      </template>
+      <template #[`item.aksi`]="row">
+        <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
+      </template>
+      <template #[`item.aksi2`]="row">
+        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -131,112 +183,140 @@ export default {
   },
   data: () => ({
     colorTheme: '#388E3C',
-    dialog: false,
+    dialogInput: false,
+    dialogEdit: false,
     dialogDelete: false,
     search: '',
     headers: [
-      {
-        text: 'Tanggal',
-        align: 'start',
-        sortable: false,
-        value: 'tanggal_cicilan',
-      },
+      { text: 'Tgl. Cicilan', value: 'tanggal_cicilan' },
       { text: 'Nama Peminjam', value: 'nama_peminjam' },
       { text: 'NIK', value: 'nik' },
       { text: 'Jumlah Cicilan', value: 'jumlah_cicilan' },
       { text: 'Kekurangan', value: 'kekurangan' },
-      { text: 'Tanggal Jatuh Tempo', value: 'tanggal_jatuh_tempo' },
-      { text: 'Aksi', value: 'actions', sortable: false },
-      { text: 'Status', value: 'status', sortable: false },
+      { text: 'Tgl. Jatuh Tempo', value: 'tanggal_jatuh_tempo' },
+      { text: 'Status', value: 'pelunasan' },
+      { text: 'Aksi', value: 'aksi', sortable: false },
+      { text: '', value: 'aksi2', sortable: false },
     ],
-    pelunasanPiutang: [],
+    // pelunasanPiutang: [],
     editedIndex: -1,
     editedItem: {
       id: '',
       tanggal_cicilan: '',
       nik: '',
       jumlah_cicilan: '',
-      kekurangan: '',
-      tanggal_jatuh_tempo: '',
-      status: '',
+    },
+    inputItem: {
+      id: '',
+      tanggal_cicilan: '',
+      nik: '',
+      jumlah_cicilan: '',
     },
     defaultItem: {
       id: '',
       tanggal_cicilan: '',
       nik: '',
       jumlah_cicilan: '',
-      kekurangan: '',
-      tanggal_jatuh_tempo: '',
-      status: '',
     },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Input Data' : 'Edit Data'
-    },
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
-  },
-
-  created() {
-    this.initialize()
-  },
-
   methods: {
-    initialize() {
-      this.pelunasanPiutang = [
-        {
-          id: 0,
-          tanggal: 5,
-          nama_peminjam: 'budi',
-          nik: 400833,
-          nominal_pelunasan: 50000.0,
-          kekurangan: 3000.0,
-          tanggal_jatuh_tempo: 4,
-        },
-        {
-          id: 1,
-          tanggal: 6,
-          nama_peminjam: 'budi',
-          nik: 400833,
-          nominal_pelunasan: 3000.0,
-          kekurangan: 0.0,
-          tanggal_jatuh_tempo: 4,
-        },
-      ]
+    async handleRefreshList() {
+      this.dataPelunasan = await this.$store.dispatch('getDataPelunasan')
     },
 
-    editItem(item) {
-      this.editedIndex = this.pelunasanPiutang.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
+    async handleInput() {
+      const {
+        // eslint-disable-next-line camelcase
+        tanggal_cicilan,
+        nik,
+        // eslint-disable-next-line camelcase
+        jumlah_cicilan,
+      } = this.inputItem
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('createDataPelunasan', {
+          tanggal_cicilan,
+          nik,
+          jumlah_cicilan,
+        })
+        this.isLoading = false
+        this.handleRefreshList()
+      } catch (error) {
+        this.isLoading = false
+      }
+      this.closeInput()
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.pelunasanPiutang.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    deleteItemConfirm() {
-      this.pelunasanPiutang.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
+    closeInput() {
+      this.dialogInput = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+
+    showEdit({
+      item: {
+        id, // eslint-disable-next-line camelcase
+        tanggal_cicilan,
+        nik,
+        // eslint-disable-next-line camelcase
+        jumlah_cicilan,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        tanggal_cicilan,
+        nik,
+        jumlah_cicilan,
+      }
+    },
+
+    handleEdit() {
+      const { id } = this.editedItem
+      this.isLoading = true
+      this.$store
+        .dispatch('updateDataPelunasanIndividu', [
+          id,
+          {
+            tanggal_cicilan: this.editedItem.tanggal_cicilan,
+            nik: this.editedItem.nik,
+            jumlah_cicilan: this.editedItem.jumlah_cicilan,
+          },
+        ])
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeEdit())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
+    },
+
+    closeEdit() {
+      this.dialogEdit = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    showDelete({ item: { id } }) {
+      this.dialogDelete = true
+      this.editedItem = { ...this.editedItem, id }
+    },
+
+    handleDelete() {
+      this.$store
+        .dispatch('deleteDataPelunasanIndividu', this.editedItem.id)
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeDelete())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
     },
 
     closeDelete() {
@@ -245,28 +325,6 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.pelunasanPiutang[this.editedIndex], this.editedItem)
-      } else {
-        this.pelunasanPiutang.push(this.editedItem)
-      }
-      this.close()
-    },
-
-    getColor(item) {
-      const index = this.pelunasanPiutang.indexOf(item)
-      const isPaidOff = this.pelunasanPiutang[index].kekurangan
-
-      if (isPaidOff === 0.0) {
-        this.pelunasanPiutang[index].status = 'Lunas'
-        return 'green'
-      } else {
-        this.pelunasanPiutang[index].status = 'Belum Lunas'
-        return 'red'
-      }
     },
   },
 }

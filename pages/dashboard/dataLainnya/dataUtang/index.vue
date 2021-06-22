@@ -18,7 +18,8 @@
 
       <!-- popup add/edit data -->
       <v-col class="d-flex justify-end col-md-4">
-        <v-dialog v-model="dialog" max-width="450px">
+        <!-- dialog input data -->
+        <v-dialog v-model="dialogInput" max-width="450px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
               Input Data Utang
@@ -27,46 +28,93 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Input {{ formTitle }} Data Utang</b></span
+                ><b> Form Input Data Utang</b></span
               >
             </v-card-title>
-            <v-card-action class="white">
-              <v-form ref="loginForm" class="px-10 py-5">
-                <v-autocomplete
-                  v-model="editedItem.kategori_utang"
-                  class="pt-1"
-                  :items="kategoriUtang"
-                  label="Kategori Utang"
-                  dense
-                  required
-                ></v-autocomplete>
-                <v-text-field
-                  v-model="editedItem.nominal_utang"
-                  class="pt-1"
-                  label="Nominal"
-                  dense
-                  required
-                ></v-text-field>
-                <v-text-field
-                  v-model="editedItem.keterangan"
-                  class="pt-1"
-                  label="Keterangan"
-                  dense
-                  required
-                ></v-text-field>
-              </v-form>
-            </v-card-action>
+            <v-form class="px-10 pt-10">
+              <v-autocomplete
+                v-model="inputItem.kategori_utang"
+                class="pt-1"
+                :items="kategoriUtang"
+                label="Kategori Utang"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="inputItem.nominal"
+                class="pt-1"
+                label="Nominal"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.keterangan_utang"
+                class="pt-1"
+                label="Keterangan Utang"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Batal </v-btn>
-              <v-btn color="blue darken-1" text @click="save()"> Simpan </v-btn>
+              <v-btn color="blue darken-1" text @click="closeInput">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="handleInput">
+                Simpan
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- dialog edit data -->
+        <v-dialog v-model="dialogEdit" max-width="450px">
+          <v-card class="rounded-xl">
+            <v-card-title class="green darken-1 justify-center">
+              <span class="headline text-body-1 white--text"
+                ><b> Form Edit Data Wakaf</b></span
+              >
+            </v-card-title>
+            <v-form class="px-10 pt-10">
+              <v-autocomplete
+                v-model="editedItem.kategori_utang"
+                class="pt-1"
+                :items="kategoriUtang"
+                label="Kategori Utang"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="editedItem.nominal"
+                class="pt-1"
+                label="Nominal"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.keterangan_utang"
+                class="pt-1"
+                label="Keterangan Utang"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
+
+            <v-card-actions class="pb-5">
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeEdit">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
+                Simpan
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- dialog delete -->
         <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="headline"
+          <v-card class="rounded-xl">
+            <v-card-title class="headline pt-10 py-5 text-body-1"
               >Apa Anda yakin ingin menghapus data ini?</v-card-title
             >
             <v-card-actions>
@@ -74,7 +122,7 @@
               <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
               <v-spacer></v-spacer>
@@ -85,25 +133,21 @@
     </v-row>
 
     <!-- data tabel -->
-    <v-data-table :headers="headers" :items="dataUtang" :search="search">
-      <template #[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+    <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
+      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
+        <span>{{ kategori_utang }}</span>
       </template>
-      <template #no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <template #cell(nominal)="{ item: { nominal } }">
+        <span>{{ nominal }}</span>
       </template>
-      <template #[`item.status`]="{ item }">
-        <v-chip :color="getColor(item)" dark>
-          {{ item.status }}
-        </v-chip>
+      <template #cell(keterangan_utang)="{ item: { keterangan_utang } }">
+        <span>{{ keterangan_utang }}</span>
       </template>
-      <template #[`item.approval`]="{ item }">
-        <v-simple-checkbox
-          v-model="item.approval"
-          show-select
-          @click="selectItem(item)"
-        ></v-simple-checkbox>
+      <template #[`item.aksi`]="row">
+        <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
+      </template>
+      <template #[`item.aksi2`]="row">
+        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -112,104 +156,148 @@
 <script>
 export default {
   layout: 'default',
+  async asyncData({ store }) {
+    return {
+      dataUtang: await store.dispatch('getDataUtang'),
+    }
+  },
+
   data: () => ({
-    kategoriUtang: ['Utang Biaya', 'Utang Jangka Panjang'],
-    colorTheme: '#1B7A13',
-    dialog: false,
+    colorTheme: '#388E3C',
+    dialogInput: false,
+    dialogEdit: false,
     dialogDelete: false,
+    kategoriUtang: [
+      { text: 'Utang Biaya', value: 'biaya' },
+      { text: 'Utang Jangka Panjang', value: 'jangkapanjang' },
+    ],
     search: '',
     headers: [
       { text: 'Kategori Utang', value: 'kategori_utang' },
-      { text: 'Nominal', value: 'nominal_utang' },
-      { text: 'Keterangan', value: 'keterangan' },
-      { text: 'Aksi', value: 'actions', sortable: false },
-      { text: 'Status', value: 'status', sortable: false },
-      { text: 'Approval', value: 'approval', sortable: false },
+      { text: 'Nominal', value: 'nominal' },
+      { text: 'Keterangan', value: 'keterangan_utang' },
+      // { text: 'Approval', value: 'approval', sortable: false },
+      { text: 'Aksi', value: 'aksi', sortable: false },
+      { text: '', value: 'aksi2', sortable: false },
     ],
-    dataUtang: [],
     editedIndex: -1,
     editedItem: {
       id: '',
       kategori_utang: '',
-      nominal_utang: '',
-      keterangan: '',
-      status: 'Checking',
-      approval: false,
+      nominal: '',
+      keterangan_utang: '',
+    },
+    inputItem: {
+      id: '',
+      kategori_utang: '',
+      nominal: '',
+      keterangan_utang: '',
     },
     defaultItem: {
       id: '',
       kategori_utang: '',
-      nominal_utang: '',
-      keterangan: '',
-      status: 'Checking',
-      approval: false,
+      nominal: '',
+      keterangan_utang: '',
     },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Input Data' : 'Edit Data'
-    },
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
-  },
-
-  created() {
-    this.initialize()
-  },
-
   methods: {
-    initialize() {
-      this.dataUtang = [
-        {
-          id: 0,
-          kategori_utang: 'Utang Biaya',
-          nominal_utang: 50000,
-          keterangan: '-',
-          status: 'Approved',
-          approval: true,
-        },
-        {
-          id: 1,
-          kategori_utang: 'Utang Jangka Panjang',
-          nominal_utang: 500000,
-          keterangan: '-',
-          status: 'Checking',
-          approval: false,
-        },
-      ]
+    async handleRefreshList() {
+      this.dataUtang = await this.$store.dispatch('getDataUtang')
     },
 
-    editItem(item) {
-      this.editedIndex = this.dataUtang.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
+    async handleInput() {
+      const {
+        // eslint-disable-next-line camelcase
+        kategori_utang,
+        nominal,
+        // eslint-disable-next-line camelcase
+        keterangan_utang,
+      } = this.inputItem
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('createDataUtang', {
+          kategori_utang,
+          nominal,
+          keterangan_utang,
+        })
+        this.isLoading = false
+        this.handleRefreshList()
+      } catch (error) {
+        this.isLoading = false
+      }
+      this.closeInput()
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.dataUtang.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    deleteItemConfirm() {
-      this.dataUtang.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
+    closeInput() {
+      this.dialogInput = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+
+    showEdit({
+      item: {
+        id, // eslint-disable-next-line camelcase
+        kategori_utang,
+        nominal,
+        // eslint-disable-next-line camelcase
+        keterangan_utang,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        kategori_utang,
+        nominal,
+        keterangan_utang,
+      }
+    },
+
+    handleEdit() {
+      const { id } = this.editedItem
+      this.isLoading = true
+      this.$store
+        .dispatch('updateDataUtang', [
+          id,
+          {
+            kategori_utang: this.editedItem.kategori_utang,
+            nominal: this.editedItem.nominal,
+            keterangan_utang: this.editedItem.keterangan_utang,
+          },
+        ])
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeEdit())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
+    },
+
+    closeEdit() {
+      this.dialogEdit = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    showDelete({ item: { id } }) {
+      this.dialogDelete = true
+      this.editedItem = { ...this.editedItem, id }
+    },
+
+    handleDelete() {
+      this.$store
+        .dispatch('deleteDataUtang', this.editedItem.id)
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeDelete())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
     },
 
     closeDelete() {
@@ -219,34 +307,12 @@ export default {
         this.editedIndex = -1
       })
     },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.dataUtang[this.editedIndex], this.editedItem)
-      } else {
-        this.dataUtang.push(this.editedItem)
-      }
-      this.close()
-    },
-
-    getColor(item) {
-      const index = this.dataUtang.indexOf(item)
-      const isApproved = this.dataUtang[index].approval
-
-      if (isApproved) return 'green'
-      else return 'red'
-    },
-
-    selectItem(item) {
-      const index = this.dataUtang.indexOf(item)
-      const isApproved = this.dataUtang[index].approval
-
-      if (isApproved) {
-        this.dataUtang[index].status = 'Approved'
-      } else {
-        this.dataUtang[index].status = 'Checking'
-      }
-    },
+    // getColor(item) {
+    //   const index = this.dataUtang.indexOf(item)
+    //   const isApproved = this.dataUtang[index].approval
+    //   if (isApproved) return 'green'
+    //   else return 'red'
+    // },
   },
 }
 </script>

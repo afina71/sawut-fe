@@ -16,225 +16,313 @@
       </v-col>
       <v-spacer></v-spacer>
 
-      <!-- popup add/edit data -->
+      <!-- popup -->
       <v-col class="d-flex justify-end col-md-4">
-        <v-dialog v-model="dialog" max-width="600px">
+        <!-- dialog input data -->
+        <v-dialog v-model="dialogInput" max-width="600px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
-              Input Pelunasan Piutang
+              Input Data Aset Tetap
             </v-btn>
           </template>
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Input {{ formTitle }} Pelunasan Piutang</b></span
+                ><b> Form Input Data Aset Tetap</b></span
               >
             </v-card-title>
-            <v-card-actions class="white">
-              <v-form ref="" class="px-10 py-5">
-                <v-row justify="space-between">
-                  <v-col cols="12" sm="6">
-                    <div class="text-subtitle-2">Informasi Umum</div>
-                    <v-text-field
-                      v-model="form.nama_aset"
-                      class="pt-1"
-                      label="Nama Aset"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-autocomplete
-                      v-model="form.kelompok"
-                      class="pt-1"
-                      :items="namaKelompok"
-                      label="Kelompok"
-                      dense
-                      required
-                    ></v-autocomplete>
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :return-value.sync="form.tanggal"
-                      transition="scale-transition"
-                      offset-x
-                      min-width="auto"
-                    >
-                      <template #activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="form.tanggal"
-                          label="Tanggal Beli"
-                          readonly
-                          dense
-                          required
-                          append-icon="mdi-calendar"
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker v-model="form.tanggal" no-title scrollable>
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="menu = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu.save(form.tanggal)"
-                        >
-                          OK
-                        </v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                    <v-text-field
-                      v-model="form.harga_perolehan"
-                      class="pt-1"
-                      label="Harga Perolehan"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.nilai_bersih"
-                      class="pt-1"
-                      label="Nilai Bersih"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.nilai_residu"
-                      class="pt-1"
-                      label="Nilai Residu"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.umur_ekonomis"
-                      class="pt-1"
-                      label="Umur Ekonomis"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.lokasi"
-                      class="pt-1"
-                      label="Lokasi"
-                      dense
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-spacer></v-spacer>
-                  <v-col cols="12" sm="6">
-                    <div class="text-subtitle-2">Akumulasi</div>
-                    <v-text-field
-                      v-model="form.no"
-                      class="pt-1"
-                      label="Nomor"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.departemen"
-                      class="pt-1"
-                      label="Departemen"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.akumulasi_beban"
-                      class="pt-1"
-                      label="Akumulasi beban"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.beban_pertahun"
-                      class="pt-1"
-                      label="Beban Pertahun"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :return-value.sync="form.tanggal"
-                      transition="scale-transition"
-                      offset-x
-                      min-width="auto"
-                    >
-                      <template #activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="form.tanggal2"
-                          label="Terhitung tanggal"
-                          readonly
-                          dense
-                          required
-                          append-icon="mdi-calendar"
-                          v-bind="attrs"
-                          v-on="on"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="form.tanggal2"
-                        no-title
-                        scrollable
-                      >
-                        <v-spacer></v-spacer>
-                        <v-btn text color="primary" @click="menu = false">
-                          Cancel
-                        </v-btn>
-                        <v-btn
-                          text
-                          color="primary"
-                          @click="$refs.menu.save(form.tanggal2)"
-                        >
-                          OK
-                        </v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                    <v-text-field
-                      v-model="form.nilai_buku"
-                      class="pt-1"
-                      label="Nilai Buku"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.beban_perbulan"
-                      class="pt-1"
-                      label="Beban Perbulan"
-                      dense
-                      required
-                    ></v-text-field>
-                    <v-text-field
-                      v-model="form.nilai_penyusutan"
-                      class="pt-1"
-                      label="Nilai Penyusutan"
-                      dense
-                      required
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-form>
-            </v-card-actions>
+            <v-form class="px-10 pt-10">
+              <v-row justify="space-between">
+                <v-col cols="12" sm="6">
+                  <div class="text-subtitle-2">Informasi Umum</div>
+                  <v-text-field
+                    v-model="inputItem.nama_aset"
+                    class="pt-1"
+                    label="Nama Aset"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-autocomplete
+                    v-model="inputItem.kelompok"
+                    class="pt-1"
+                    :items="namaKelompok"
+                    label="Kelompok"
+                    dense
+                    required
+                  ></v-autocomplete>
+                  <v-text-field
+                    v-model="inputItem.tanggal_beli"
+                    class="pt-1"
+                    label="Tanggal Beli"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.harga_perolehan"
+                    class="pt-1"
+                    label="Harga Perolehan"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.nilai_bersih"
+                    class="pt-1"
+                    label="Nilai Bersih"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.nilai_residu"
+                    class="pt-1"
+                    label="Nilai Residu"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.umur_ekonomis"
+                    class="pt-1"
+                    label="Umur Ekonomis"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.lokasi"
+                    class="pt-1"
+                    label="Lokasi"
+                    dense
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer></v-spacer>
+                <v-col cols="12" sm="6">
+                  <div class="text-subtitle-2">Akumulasi</div>
+                  <v-text-field
+                    v-model="inputItem.nomor"
+                    class="pt-1"
+                    label="Nomor"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.departemen"
+                    class="pt-1"
+                    label="Departemen"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.akumulasi_beban"
+                    class="pt-1"
+                    label="Akumulasi beban"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.beban_per_tahun_ini"
+                    class="pt-1"
+                    label="Beban Pertahun"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.terhitung_tanggal"
+                    class="pt-1"
+                    label="Terhitung Tanggal"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.nilai_buku"
+                    class="pt-1"
+                    label="Nilai Buku"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.beban_per_bulan"
+                    class="pt-1"
+                    label="Beban Perbulan"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="inputItem.nilai_penyusutan"
+                    class="pt-1"
+                    label="Nilai Penyusutan"
+                    dense
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
 
             <v-card-actions class="pt-0 pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Batal </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Simpan </v-btn>
+              <v-btn color="blue darken-1" text @click="closeInput">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="handleInput">
+                Simpan
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- dialog edit data -->
+        <v-dialog v-model="dialogEdit" max-width="600px">
+          <v-card class="rounded-xl">
+            <v-card-title class="green darken-1 justify-center">
+              <span class="headline text-body-1 white--text"
+                ><b> Form Edit Data Aset Tetap</b></span
+              >
+            </v-card-title>
+            <v-form class="px-10 pt-10">
+              <v-row justify="space-between">
+                <v-col cols="12" sm="6">
+                  <div class="text-subtitle-2">Informasi Umum</div>
+                  <v-text-field
+                    v-model="editedItem.nama_aset"
+                    class="pt-1"
+                    label="Nama Aset"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-autocomplete
+                    v-model="editedItem.kelompok"
+                    class="pt-1"
+                    :items="namaKelompok"
+                    label="Kelompok"
+                    dense
+                    required
+                  ></v-autocomplete>
+                  <v-text-field
+                    v-model="editedItem.tanggal_beli"
+                    class="pt-1"
+                    label="Tanggal Beli"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.harga_perolehan"
+                    class="pt-1"
+                    label="Harga Perolehan"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.nilai_bersih"
+                    class="pt-1"
+                    label="Nilai Bersih"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.nilai_residu"
+                    class="pt-1"
+                    label="Nilai Residu"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.umur_ekonomis"
+                    class="pt-1"
+                    label="Umur Ekonomis"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.lokasi"
+                    class="pt-1"
+                    label="Lokasi"
+                    dense
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-spacer></v-spacer>
+                <v-col cols="12" sm="6">
+                  <div class="text-subtitle-2">Akumulasi</div>
+                  <v-text-field
+                    v-model="editedItem.nomor"
+                    class="pt-1"
+                    label="Nomor"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.departemen"
+                    class="pt-1"
+                    label="Departemen"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.akumulasi_beban"
+                    class="pt-1"
+                    label="Akumulasi beban"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.beban_per_tahun_ini"
+                    class="pt-1"
+                    label="Beban Pertahun"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.terhitung_tanggal"
+                    class="pt-1"
+                    label="Terhitung Tanggal"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.nilai_buku"
+                    class="pt-1"
+                    label="Nilai Buku"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.beban_per_bulan"
+                    class="pt-1"
+                    label="Beban Perbulan"
+                    dense
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="editedItem.nilai_penyusutan"
+                    class="pt-1"
+                    label="Nilai Penyusutan"
+                    dense
+                    required
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-form>
+
+            <v-card-actions class="pb-5">
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeEdit">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
+                Simpan
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- dialog delete data -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-title
+            <v-card-subtitle class="headline pt-10 text-body-1"
+              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
             >
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
               <v-spacer></v-spacer>
@@ -266,12 +354,47 @@
       <template #cell(harga_perolehan)="{ item: { harga_perolehan } }">
         <span>{{ harga_perolehan }}</span>
       </template>
-      <template #[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-        <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <template #expanded-item="{ item }">
+        <td :colspan="headers.length">
+          <v-list-item two-line>
+            <v-list-item-content>
+              <v-list-item-title>Nilai Bersih</v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.nilai_bersih }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item two-line>
+            <v-list-item-content>
+              <v-list-item-title>Nilai Residu</v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.nilai_bersih }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item two-line>
+            <v-list-item-content>
+              <v-list-item-title>Umur Ekonomis</v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.umur_ekonomis }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item two-line>
+            <v-list-item-content>
+              <v-list-item-title>Lokasi</v-list-item-title>
+              <v-list-item-subtitle>
+                {{ item.lokasi }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </td>
       </template>
-      <template #no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <template #[`item.aksi`]="row">
+        <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
+      </template>
+      <template #[`item.aksi2`]="row">
+        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -285,27 +408,35 @@ export default {
       dataAsetTetap: await store.dispatch('getDataAsetTetap'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
-    dialog: false,
+    dialogInput: false,
+    dialogEdit: false,
     dialogDelete: false,
+    expanded: [],
+    singleExpand: true,
     search: '',
-    namaKelompok: ['Kendaraan', 'Bangunan', 'Tanah'],
+    namaKelompok: [
+      { text: 'Kendaraan', value: 'kendaraan' },
+      { text: 'Gedung', value: 'gedung' },
+      { text: 'Tanah', value: 'tanah' },
+      { text: 'Peralatan', value: 'peralatan' },
+      { text: 'Aset Lain', value: 'lainnya' },
+    ],
     menu: false,
     headers: [
       { text: 'Tanggal Beli', value: 'tanggal_beli' },
       { text: 'Nama Aset', value: 'nama_aset' },
       { text: 'Kelompok', value: 'kelompok' },
       { text: 'Harga Perolehan', value: 'harga_perolehan' },
-      // { text: 'Nilai Bersih', value: 'nilai_bersih' },
-      // { text: 'Nilai Residu', value: 'nilai_residu' },
-      // { text: 'Umur Ekonomis', value: 'umur_ekonomis' },
-      // { text: 'Lokasi', value: 'lokasi' },
-      { text: 'Aksi', value: 'actions', sortable: false },
+      { text: '', value: 'data-table-expand' },
+      { text: 'Aksi', value: 'aksi', sortable: false },
+      { text: '', value: 'aksi2' },
     ],
-    dataAsetTetap: [],
     editedIndex: -1,
-    form: {
+    defaultItem: {
+      id: '',
       tanggal_beli: '',
       nama_aset: '',
       kelompok: '',
@@ -317,99 +448,242 @@ export default {
       nomor: '',
       departemen: '',
       akumulasi_beban: '',
-      beban_pertahun: '',
-      tanggal2: '',
+      beban_per_tahun_ini: '',
+      terhitung_tanggal: '',
       nilai_buku: '',
-      beban_perbulan: '',
+      beban_per_bulan: '',
+      nilai_penyusutan: '',
+    },
+    inputItem: {
+      id: '',
+      tanggal_beli: '',
+      nama_aset: '',
+      kelompok: '',
+      harga_perolehan: '',
+      nilai_bersih: '',
+      nilai_residu: '',
+      umur_ekonomis: '',
+      lokasi: '',
+      nomor: '',
+      departemen: '',
+      akumulasi_beban: '',
+      beban_per_tahun_ini: '',
+      terhitung_tanggal: '',
+      nilai_buku: '',
+      beban_per_bulan: '',
+      nilai_penyusutan: '',
+    },
+    editedItem: {
+      id: '',
+      tanggal_beli: '',
+      nama_aset: '',
+      kelompok: '',
+      harga_perolehan: '',
+      nilai_bersih: '',
+      nilai_residu: '',
+      umur_ekonomis: '',
+      lokasi: '',
+      nomor: '',
+      departemen: '',
+      akumulasi_beban: '',
+      beban_per_tahun_ini: '',
+      terhitung_tanggal: '',
+      nilai_buku: '',
+      beban_per_bulan: '',
       nilai_penyusutan: '',
     },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Input Data' : 'Edit Data'
-    },
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
-  },
-
-  created() {
-    this.initialize()
-  },
-
   methods: {
-    // initialize() {
-    //   this.dataAsetTetap = [
-    //     {
-    //       tanggal: '',
-    //       nama_aset: 'Mobil',
-    //       kelompok: 'Kendaraan',
-    //       harga_perolehan: '200.000.000',
-    //       nilai_bersih: '',
-    //       nilai_residu: '',
-    //       umur_ekonomis: '',
-    //       lokasi: 'Bantul',
-    //     },
-    //     {
-    //       tanggal: '',
-    //       nama_aset: 'Motor',
-    //       kelompok: 'Kendaraan',
-    //       harga_perolehan: '17.000.000',
-    //       nilai_bersih: '',
-    //       nilai_residu: '',
-    //       umur_ekonomis: '',
-    //       lokasi: 'Bantul',
-    //     },
-    //   ]
-    // },
-
-    editItem(item) {
-      this.editedIndex = this.dataAsetTetap.indexOf(item)
-      this.form = Object.assign({}, item)
-      this.dialog = true
+    async handleRefreshList() {
+      this.dataAsetTetap = await this.$store.dispatch('getDataAsetTetap')
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.dataAsetTetap.indexOf(item)
-      this.form = Object.assign({}, item)
-      this.dialogDelete = true
+    async handleInput() {
+      const {
+        // eslint-disable-next-line camelcase
+        tanggal_beli,
+        // eslint-disable-next-line camelcase
+        nama_aset,
+        kelompok,
+        // eslint-disable-next-line camelcase
+        harga_perolehan,
+        // eslint-disable-next-line camelcase
+        nilai_bersih,
+        // eslint-disable-next-line camelcase
+        nilai_residu,
+        // eslint-disable-next-line camelcase
+        umur_ekonomis,
+        lokasi,
+        nomor,
+        departemen,
+        // eslint-disable-next-line camelcase
+        akumulasi_beban,
+        // eslint-disable-next-line camelcase
+        beban_per_tahun_ini,
+        // eslint-disable-next-line camelcase
+        terhitung_tanggal,
+        // eslint-disable-next-line camelcase
+        nilai_buku,
+        // eslint-disable-next-line camelcase
+        beban_per_bulan,
+        // eslint-disable-next-line camelcase
+        nilai_penyusutan,
+      } = this.inputItem
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('createDataAsetTetap', {
+          tanggal_beli,
+          nama_aset,
+          kelompok,
+          harga_perolehan,
+          nilai_bersih,
+          nilai_residu,
+          umur_ekonomis,
+          lokasi,
+          nomor,
+          departemen,
+          akumulasi_beban,
+          beban_per_tahun_ini,
+          terhitung_tanggal,
+          nilai_buku,
+          beban_per_bulan,
+          nilai_penyusutan,
+        })
+        this.isLoading = false
+        this.handleRefreshList()
+      } catch (error) {
+        this.isLoading = false
+      }
+      this.closeInput()
     },
 
-    deleteItemConfirm() {
-      this.dataAsetTetap.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
+    closeInput() {
+      this.dialogInput = false
       this.$nextTick(() => {
-        this.form = Object.assign({}, this.form)
+        this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+
+    showEdit({
+      item: {
+        id, // eslint-disable-next-line camelcase
+        tanggal_beli,
+        // eslint-disable-next-line camelcase
+        nama_aset,
+        kelompok,
+        // eslint-disable-next-line camelcase
+        harga_perolehan,
+        // eslint-disable-next-line camelcase
+        nilai_bersih,
+        // eslint-disable-next-line camelcase
+        nilai_residu,
+        // eslint-disable-next-line camelcase
+        umur_ekonomis,
+        lokasi,
+        nomor,
+        departemen,
+        // eslint-disable-next-line camelcase
+        akumulasi_beban,
+        // eslint-disable-next-line camelcase
+        beban_per_tahun_ini,
+        // eslint-disable-next-line camelcase
+        terhitung_tanggal,
+        // eslint-disable-next-line camelcase
+        nilai_buku,
+        // eslint-disable-next-line camelcase
+        beban_per_bulan,
+        // eslint-disable-next-line camelcase
+        nilai_penyusutan,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        tanggal_beli,
+        nama_aset,
+        kelompok,
+        harga_perolehan,
+        nilai_bersih,
+        nilai_residu,
+        umur_ekonomis,
+        lokasi,
+        nomor,
+        departemen,
+        akumulasi_beban,
+        beban_per_tahun_ini,
+        terhitung_tanggal,
+        nilai_buku,
+        beban_per_bulan,
+        nilai_penyusutan,
+      }
+    },
+
+    handleEdit() {
+      const { id } = this.editedItem
+      this.isLoading = true
+      this.$store
+        .dispatch('updateDataAsetTetap', [
+          id,
+          {
+            tanggal_beli: this.editedItem.tanggal_beli,
+            nama_aset: this.editedItem.nama_aset,
+            kelompok: this.editedItem.kelompok,
+            harga_perolehan: this.editedItem.harga_perolehan,
+            nilai_bersih: this.editedItem.nilai_bersih,
+            nilai_residu: this.editedItem.nilai_residu,
+            umur_ekonomis: this.editedItem.umur_ekonomis,
+            lokasi: this.editedItem.lokasi,
+            nomor: this.editedItem.nomor,
+            departemen: this.editedItem.departemen,
+            akumulasi_beban: this.editedItem.akumulasi_beban,
+            beban_per_tahun_ini: this.editedItem.beban_per_tahun_ini,
+            terhitung_tanggal: this.editedItem.terhitung_tanggal,
+            nilai_buku: this.editedItem.nilai_buku,
+            beban_per_bulan: this.editedItem.beban_per_bulan,
+            nilai_penyusutan: this.editedItem.nilai_penyusutan,
+          },
+        ])
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeEdit())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
+    },
+
+    closeEdit() {
+      this.dialogEdit = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    showDelete({ item: { id } }) {
+      this.dialogDelete = true
+      this.editedItem = { ...this.editedItem, id }
+    },
+
+    handleDelete() {
+      this.$store
+        .dispatch('deleteDataAsetTetap', this.editedItem.id)
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeDelete())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
     },
 
     closeDelete() {
       this.dialogDelete = false
       this.$nextTick(() => {
-        this.form = Object.assign({}, this.form)
+        this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.dataAsetTetap[this.editedIndex], this.form)
-      } else {
-        this.dataAsetTetap.push(this.form)
-      }
-      this.close()
     },
   },
 }
