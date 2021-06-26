@@ -232,8 +232,7 @@ export default {
     closeInput() {
       this.dialogInput = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.inputItem = Object.assign({}, this.defaultItem)
       })
     },
 
@@ -302,10 +301,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
     // getColor(item) {
     //   const index = this.dataUtang.indexOf(item)

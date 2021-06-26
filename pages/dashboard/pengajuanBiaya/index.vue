@@ -163,6 +163,42 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <!-- dialog approval -->
+        <v-dialog v-model="dialogApprove" max-width="500px">
+          <v-card class="rounded-xl">
+            <v-card-subtitle class="headline pt-10 px-10 text-body-1"
+              >Setujui Pengajuan dana ini?</v-card-subtitle
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeApprove"
+                >Batal</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="handleApprove"
+                >Iya</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- dialog pencairan -->
+        <v-dialog v-model="dialogPencairan" max-width="500px">
+          <v-card class="rounded-xl">
+            <v-card-subtitle class="headline pt-10 px-10 text-body-1"
+              >Apakah pengajuan dana ini sudah cair?</v-card-subtitle
+            >
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closePencairan"
+                >Belum</v-btn
+              >
+              <v-btn color="blue darken-1" text @click="handlePencairan"
+                >Iya</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
 
@@ -188,8 +224,17 @@
       <template #cell(sumber_biaya)="{ item: { sumber_biaya } }">
         <span>{{ sumber_biaya }}</span>
       </template>
-      <template #[`item.aproval`]="row">
-        <a @click="showEdit(row)"> approve </a>
+      <template #[`item.approval`]="{ item: { id, approval } }">
+        <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
+        <v-chip v-else color="red" dark @click="showApprove(id)">
+          Unapprove
+        </v-chip>
+      </template>
+      <template #[`item.pencairan`]="{ item: { id, pencairan } }">
+        <v-chip v-if="pencairan === 1" color="green" dark>Sudah Cair</v-chip>
+        <v-chip v-else color="red" dark @click="showPencairan(id)">
+          Belum Cair
+        </v-chip>
       </template>
       <template #[`item.aksi`]="row">
         <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
@@ -197,22 +242,6 @@
       <template #[`item.aksi2`]="row">
         <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
-      <!-- <template #no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
-      </template>
-      <template #[`item.status`]="{ item }" @click="editItem(item)">
-        <v-chip :color="getColor(item)" dark>
-          {{ item.status }}
-        </v-chip>
-      </template>
-      <template #[`item.approval`]="{ item }">
-        <v-simple-checkbox
-          v-model="item.approval"
-          show-select
-          item-key="nama_pengaju"
-          @click="selectItem(item)"
-        ></v-simple-checkbox>
-      </template> -->
     </v-data-table>
   </v-main>
 </template>
@@ -230,6 +259,8 @@ export default {
     dialogInput: false,
     dialogEdit: false,
     dialogDelete: false,
+    dialogApprove: false,
+    dialogPencairan: false,
     search: '',
     kategoriBiaya: [
       { header: 'Beban Pengelolaan dan Pengembangan Wakaf' },
@@ -289,7 +320,7 @@ export default {
       { text: 'Nominal', value: 'nominal' },
       { text: 'Sumber Biaya', value: 'sumber_biaya' },
       { text: 'Approval', value: 'approval', sortable: false },
-      // { text: 'Pencairan', value: 'pencairan' },
+      { text: 'Pencairan', value: 'pencairan' },
       { text: 'Aksi', value: 'aksi' },
       { text: '', value: 'aksi2' },
     ],
@@ -357,8 +388,7 @@ export default {
     closeInput() {
       this.dialogInput = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.inputItem = Object.assign({}, this.defaultItem)
       })
     },
 
@@ -435,6 +465,54 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    showApprove(id) {
+      this.dialogApprove = true
+      this.editedItem = { ...this.editedItem, id }
+    },
+
+    handleApprove() {
+      this.$store
+        .dispatch('editDataPengajuan', this.editedItem.id)
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closeApprove())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
+    },
+
+    closeApprove() {
+      this.dialogApprove = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    showPencairan(id) {
+      this.dialogPencairan = true
+      this.editedItem = { ...this.editedItem, id }
+    },
+
+    handlePencairan() {
+      this.$store
+        .dispatch('pencairanDataPengajuan', this.editedItem.id)
+        .then(() =>
+          this.handleRefreshList()
+            .then(() => this.closePencairan())
+            .then(() => (this.isLoading = false))
+        )
+        .catch(() => (this.isLoading = false))
+    },
+
+    closePencairan() {
+      this.dialogPencairan = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1

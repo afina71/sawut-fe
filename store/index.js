@@ -106,6 +106,12 @@ export const actions = {
       url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
     })
   },
+  editItem({ dispatch }, payload) {
+    return dispatch('useAPI', {
+      method: 'put',
+      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+    })
+  },
 
   // auth-related actions
   login(context, payload) {
@@ -118,9 +124,6 @@ export const actions = {
   },
   createDataWakaf({ dispatch }, payload) {
     return dispatch('createItem', ['wakaf/penerimaan/create', payload])
-  },
-  getDataWakafIndividu({ dispatch }, [id, payload]) {
-    return dispatch('getItems', [`wakaf/penerimaan/${id}/edit`, payload])
   },
   updateDataWakafIndividu({ dispatch }, [id, payload]) {
     return dispatch('updateItem', [`wakaf/penerimaan/${id}`, payload])
@@ -141,6 +144,27 @@ export const actions = {
   getDataPenyaluran({ dispatch }) {
     return dispatch('getItems', 'wakaf/penyaluran')
   },
+  createDataPenyaluran({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/penyaluran/input-1', payload])
+  },
+  updateDataPenyaluran({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/penyaluran/${id}`, payload])
+  },
+  deleteDataPenyaluran({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/penyaluran/${id}`)
+  },
+  persetujuanPenyaluran({ dispatch }, id) {
+    return dispatch('editItem', `wakaf/penyaluran/persetujuan/${id}`)
+  },
+  penyaluranManfaat({ dispatch }, id) {
+    return dispatch('editItem', `wakaf/penyaluran/penyaluran/${id}`)
+  },
+  inputCreditScoringSatu({ dispatch }, [id, payload]) {
+    return dispatch('createItem', [`wakaf/penyaluran/input-2/${id}`, payload])
+  },
+  inputCreditScoringDua({ dispatch }, [id, payload]) {
+    return dispatch('createItem', [`wakaf/penyaluran/input-3/${id}`, payload])
+  },
 
   // pengajuan biaya
   getDataPengajuan({ dispatch }) {
@@ -154,6 +178,12 @@ export const actions = {
   },
   deleteDataPengajuan({ dispatch }, id) {
     return dispatch('deleteItem', `wakaf/pengajuan/${id}`)
+  },
+  editDataPengajuan({ dispatch }, id) {
+    return dispatch('editItem', `wakaf/pengajuan/persetujuan/${id}`)
+  },
+  pencairanDataPengajuan({ dispatch }, id) {
+    return dispatch('editItem', `wakaf/pengajuan/pencairan/${id}`)
   },
 
   // pelunasan piutang
@@ -198,45 +228,25 @@ export const actions = {
     return dispatch('deleteItem', `wakaf/data-utang/${id}`)
   },
 
-  // createUser({ dispatch }, [body, query]) {
-  //   const qs = new URLSearchParams(query).toString()
-  //   return dispatch('createItem', [`signup?${qs}`, body])
-  // },
+  // data akun
+  getDataAkun({ dispatch }) {
+    return dispatch('getItems', 'wakaf/data-akun')
+  },
+  updateDataAkun({ dispatch, payload }) {
+    return dispatch('updateItem', 'wakaf/data-akun', payload)
+  },
 
-  // teacher-dashboard
-  // getClassTeacherById({ dispatch }, userId) {
-  //   return dispatch('getItems', [`teacher/${userId}`])
-  // },
-  // createClass({ dispatch }, payload) {
-  //   return dispatch('createItem', ['teacher', payload])
-  // },
-  // getClassTeacherDetail({ dispatch }, classId) {
-  //   return dispatch('getItems', [`teacher/class/${classId}`])
-  // },
-  // deleteClassTeacher({ dispatch }, payload) {
-  //   return dispatch('deleteItem', `teacherclass/${payload}`)
-  // },
-  // updateClassTeacher({ dispatch }, [classId, data]) {
-  //   return dispatch('updateItem', [`teacher/${classId}`, data])
-  // },
-
-  // // student-dashboard
-  // getAllClass({ dispatch }) {
-  //   return dispatch('getItems', 'student')
-  // },
-  // joinClass({ dispatch }, [userId, data]) {
-  //   return dispatch('updateItem', [`student/${userId}`, data])
-  // },
-  // checkClass({ dispatch }, payload) {
-  //   return dispatch('createItem', ['student', payload])
-  // },
-  // getClassStudentDetail({ dispatch }, classId) {
-  //   return dispatch('getItems', [`student/class/${classId}`])
-  // },
-  // getClassStudentById({ dispatch }, userId) {
-  //   return dispatch('getItems', [`student/${userId}`])
-  // },
-  // deleteStudentFromClass({ dispatch }, { classId, userId }) {
-  //   return dispatch('deleteItem', `teacher/${classId}/${userId}`)
-  // },
+  // data pengguna
+  getDataPengguna({ dispatch }) {
+    return dispatch('getItems', 'wakaf/daftar-pengguna')
+  },
+  createDataPengguna({ dispatch }, payload) {
+    return dispatch('createItem', ['wakaf/daftar-pengguna/create', payload])
+  },
+  updateDataPengguna({ dispatch }, [id, payload]) {
+    return dispatch('updateItem', [`wakaf/daftar-pengguna/${id}`, payload])
+  },
+  deleteDataPengguna({ dispatch }, id) {
+    return dispatch('deleteItem', `wakaf/daftar-pengguna/${id}`)
+  },
 }

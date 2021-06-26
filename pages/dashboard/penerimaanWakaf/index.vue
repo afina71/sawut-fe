@@ -382,15 +382,11 @@ export default {
         value: 'tanggal_transaksi',
       },
       { text: 'Nama', value: 'nama_wakif' },
-      // { text: 'NIK', value: 'NIK' },
       { text: 'Nomor AIW', value: 'nomor_aiw' },
-      // { text: 'Alamat', value: 'alamat' },
-      // { text: 'Phone', value: 'telepon' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
       { text: 'Jangka Temporer', value: 'jangka_waktu_temporer' },
       { text: 'Metode Pembayaran', value: 'metode_pembayaran' },
       { text: 'Nominal Wakaf', value: 'nominal' },
-      // { text: 'Keterangan', value: 'keterangan' },
       { text: '', value: 'data-table-expand' },
       { text: 'Aksi', value: 'aksi' },
       { text: '', value: 'aksi2' },
@@ -438,8 +434,6 @@ export default {
     },
   }),
 
-  computed: {},
-
   methods: {
     async handleRefreshList() {
       this.dataWakaf = await this.$store.dispatch('getDataWakaf')
@@ -480,17 +474,17 @@ export default {
         })
         this.isLoading = false
         this.handleRefreshList()
+        this.closeInput()
+        this.$router.push('/dashboard/penerimaanWakaf')
       } catch (error) {
         this.isLoading = false
       }
-      this.closeInput()
     },
 
     closeInput() {
       this.dialogInput = false
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.inputItem = Object.assign({}, this.defaultItem)
       })
     },
 
@@ -566,7 +560,6 @@ export default {
       })
     },
 
-    // eslint-disable-next-line camelcase
     showDelete({ item: { id } }) {
       this.dialogDelete = true
       this.editedItem = { ...this.editedItem, id }

@@ -1,87 +1,181 @@
 <template>
   <v-main>
-    <v-row class="pt-3">
-      <v-col
-        cols="12"
-        md="8"
-        lg="8"
-        xl="8"
-        class="d-flex flex-column justify-content-center"
-      >
-        <div class="">Data Akun</div>
-        <div class="">
-          You can search for all the classes and then enter the enrollment key
-          form your teacher to join those class
-        </div>
+    <v-row class="py-10 justify-center">
+      <div class="text-h6">Data Akun</div>
+    </v-row>
+    <v-row class="pb-10">
+      <v-spacer></v-spacer>
+      <!-- popup edit data -->
+      <v-col class="d-flex justify-end col-md-4">
+        <v-btn :color="colorTheme" dark depressed @click="showEdit(row)">
+          Edit Data Akun
+        </v-btn>
+        <v-dialog v-model="dialogEdit" max-width="450px">
+          <v-card class="rounded-xl">
+            <v-card-title class="green darken-1 justify-center">
+              <span class="headline text-body-1 white--text"
+                ><b>Form Edit Data Akun</b></span
+              >
+            </v-card-title>
+            <v-form class="px-10 pt-10">
+              <v-text-field
+                v-model="editedItem.nama_pengguna"
+                class="pt-1"
+                label="Nama Pengguna"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.email"
+                class="pt-1"
+                label="Email"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.role_id"
+                class="pt-1"
+                label="Peran"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.password"
+                class="pt-1"
+                label="Password"
+                dense
+                required
+              ></v-text-field>
+            </v-form>
+
+            <v-card-actions class="pb-5">
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeEdit">
+                Batal
+              </v-btn>
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
+                Simpan
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
-    <v-simple-table fixed-header height="300px">
-      <template #default>
-        <thead>
-          <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Calories</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>{{ item.calories }}</td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
+    <v-row class="pb-10 justify-center">
+      <v-avatar :color="colorTheme" size="100">
+        <v-icon large dark> mdi-account-circle </v-icon>
+      </v-avatar>
+    </v-row>
+    <v-row class="py-10 justify-center">
+      <v-col cols="3">
+        <p class="text-h6">Nama Pengguna</p>
+        <br />
+        <p class="text-h6">Email</p>
+        <br />
+        <p class="text-h6">Peran</p>
+      </v-col>
+      <v-col cols="3">
+        <p class="text-h6">
+          : <span class="text-h6">{{ dataAkun.nama_pengguna }}</span>
+        </p>
+        <br />
+        <p class="text-h6">
+          : <span class="text-h6">{{ dataAkun.email }}</span>
+        </p>
+        <br />
+        <p class="text-h6">
+          : <span class="text-h6">{{ dataAkun.role_id }}</span>
+        </p>
+      </v-col>
+    </v-row>
   </v-main>
 </template>
 
 <script>
 export default {
   layout: 'default',
-  data() {
+  async asyncData({ store }) {
     return {
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-        },
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-        },
-        {
-          name: 'Eclair',
-          calories: 262,
-        },
-        {
-          name: 'Cupcake',
-          calories: 305,
-        },
-        {
-          name: 'Gingerbread',
-          calories: 356,
-        },
-        {
-          name: 'Jelly bean',
-          calories: 375,
-        },
-        {
-          name: 'Lollipop',
-          calories: 392,
-        },
-        {
-          name: 'Honeycomb',
-          calories: 408,
-        },
-        {
-          name: 'Donut',
-          calories: 452,
-        },
-        {
-          name: 'KitKat',
-          calories: 518,
-        },
-      ],
+      dataAkun: await store.dispatch('getDataAkun'),
     }
+  },
+  data: () => {
+    return {
+      isPasswordShown: false,
+      colorTheme: '#388E3C',
+      dialogEdit: false,
+      isLoading: false,
+      valid: true,
+      emailRules: [
+        (v) => !!v || 'Mohon masukkan email',
+        (v) => /.+@.+\..+/.test(v) || 'Alamat email tidak valid',
+      ],
+      passwordRules: [(v) => !!v || 'Mohon masukkan password'],
+      editedItem: {
+        id: '',
+        nama_pengguna: '',
+        email: '',
+        role_id: '',
+        password: '',
+      },
+      defaultItem: {
+        nama_pengguna: '',
+        email: '',
+        role_id: '',
+        password: '',
+      },
+    }
+  },
+
+  methods: {
+    showEdit({
+      dataPelunasan: {
+        id,
+        // eslint-disable-next-line camelcase
+        nama_pengguna,
+        email,
+        // eslint-disable-next-line camelcase
+        role_id,
+        password,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        nama_pengguna,
+        email,
+        role_id,
+        password,
+      }
+    },
+
+    handleEdit() {
+      const { id } = this.editedItem
+      this.isLoading = true
+      this.$store
+        .dispatch('', [
+          id,
+          {
+            nama_pengguna: this.editedItem.nama_pengguna,
+            email: this.editedItem.email,
+            password: this.editedItem.password,
+            role_id: this.editedItem.role_id,
+          },
+        ])
+        .then(() => this.closeEdit().then(() => (this.isLoading = false)))
+        .catch(() => (this.isLoading = false))
+    },
+
+    closeEdit() {
+      this.dialogEdit = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
   },
 }
 </script>
+
+<style></style>
