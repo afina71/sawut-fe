@@ -145,7 +145,7 @@ export const actions = {
     return dispatch('getItems', 'wakaf/penyaluran')
   },
   createDataPenyaluran({ dispatch }, payload) {
-    return dispatch('createItem', ['wakaf/penyaluran/input-1', payload])
+    return dispatch('createItem', ['wakaf/penyaluran/create', payload])
   },
   updateDataPenyaluran({ dispatch }, [id, payload]) {
     return dispatch('updateItem', [`wakaf/penyaluran/${id}`, payload])
@@ -233,7 +233,7 @@ export const actions = {
     return dispatch('getItems', 'wakaf/data-akun')
   },
   updateDataAkun({ dispatch, payload }) {
-    return dispatch('updateItem', 'wakaf/data-akun', payload)
+    return dispatch('editItem', 'wakaf/data-akun', payload)
   },
 
   // data pengguna

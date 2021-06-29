@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-row class="py-10 justify-center">
-      <div class="text-h6">Data Utang</div>
+      <div class="text-h6">Daftar Pengguna</div>
     </v-row>
     <v-row class="pb-10">
       <v-col>
@@ -22,46 +22,53 @@
         <v-dialog v-model="dialogInput" max-width="450px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
-              Input Data Utang
+              Input Data Pengguna
             </v-btn>
           </template>
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Input Data Utang</b></span
+                ><b> Form Input Data Pengguna</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
-              <v-autocomplete
-                v-model="inputItem.kategori_utang"
+              <v-text-field
+                v-model="inputItem.nama_pengguna"
                 class="pt-1"
-                :items="kategoriUtang"
-                label="Kategori Utang"
+                label="Nama Pengguna"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.email"
+                class="pt-1"
+                label="Email"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.password"
+                class="pt-1"
+                label="Password"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="inputItem.role_id"
+                class="pt-1"
+                :items="peran"
+                label="Nama Peran"
                 dense
                 required
               ></v-autocomplete>
-              <v-text-field
-                v-model="inputItem.nominal"
-                class="pt-1"
-                label="Nominal"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="inputItem.keterangan_utang"
-                class="pt-1"
-                label="Keterangan Utang"
-                dense
-                required
-              ></v-text-field>
             </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeInput">
+              <v-btn color="blue darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn color="blue darken-1" text @click="handleInput">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -72,58 +79,64 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Wakaf</b></span
+                ><b> Form Edit Data Pengguna</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
-              <v-autocomplete
-                v-model="editedItem.kategori_utang"
+              <v-text-field
+                v-model="editedItem.nama_pengguna"
                 class="pt-1"
-                :items="kategoriUtang"
-                label="Kategori Utang"
+                label="Nama Pengguna"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.email"
+                class="pt-1"
+                label="Email"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.password"
+                class="pt-1"
+                label="Password"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="editedItem.role_id"
+                class="pt-1"
+                :items="peran"
+                label="Nama Peran"
                 dense
                 required
               ></v-autocomplete>
-              <v-text-field
-                v-model="editedItem.nominal"
-                class="pt-1"
-                label="Nominal"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.keterangan_utang"
-                class="pt-1"
-                label="Keterangan Utang"
-                dense
-                required
-              ></v-text-field>
             </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
+              <v-btn color="blue darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn color="blue darken-1" text @click="handleEdit">
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <!-- dialog delete -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
+        <v-dialog v-model="dialogDelete" max-width="450px">
+          <v-card class="rounded-xl">
+            <v-card-title class="headline pt-10 py-5 text-body-1"
+              >Apa Anda yakin ingin menghapus data ini?</v-card-title
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
+              <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
               <v-spacer></v-spacer>
@@ -134,15 +147,15 @@
     </v-row>
 
     <!-- data tabel -->
-    <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
-      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
-        <span>{{ kategori_utang }}</span>
+    <v-data-table :headers="headers" :items="dataPengguna" :search="search">
+      <template #cell(nama_pengguna)="{ item: { nama_pengguna } }">
+        <span>{{ nama_pengguna }}</span>
       </template>
-      <template #cell(nominal)="{ item: { nominal } }">
-        <span>{{ nominal }}</span>
+      <template #cell(email)="{ item: { email } }">
+        <span>{{ email }}</span>
       </template>
-      <template #cell(keterangan_utang)="{ item: { keterangan_utang } }">
-        <span>{{ keterangan_utang }}</span>
+      <template #cell(role_id)="{ item: { role_id } }">
+        <span>{{ role_id }}</span>
       </template>
       <template #[`item.aksi`]="row">
         <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
@@ -159,7 +172,7 @@ export default {
   layout: 'default',
   async asyncData({ store }) {
     return {
-      dataUtang: await store.dispatch('getDataUtang'),
+      dataPengguna: await store.dispatch('getDataPengguna'),
     }
   },
 
@@ -168,59 +181,65 @@ export default {
     dialogInput: false,
     dialogEdit: false,
     dialogDelete: false,
-    kategoriUtang: [
-      { text: 'Utang Biaya', value: 'biaya' },
-      { text: 'Utang Jangka Panjang', value: 'jangkapanjang' },
-    ],
     search: '',
+    peran: [
+      { text: 'Akuntan', value: 'akuntan' },
+      { text: 'Nazhir', value: 'nazhir' },
+      { text: 'Bendahara', value: 'bendahara' },
+    ],
     headers: [
-      { text: 'Kategori Utang', value: 'kategori_utang' },
-      { text: 'Nominal', value: 'nominal' },
-      { text: 'Keterangan', value: 'keterangan_utang' },
-      // { text: 'Approval', value: 'approval', sortable: false },
+      { text: 'Nama Pengguna', value: 'nama_pengguna' },
+      { text: 'Email', value: 'email' },
+      { text: 'Peran', value: 'role_id' },
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2', sortable: false },
     ],
+    // daftarPengguna: [],
     editedIndex: -1,
     editedItem: {
       id: '',
-      kategori_utang: '',
-      nominal: '',
-      keterangan_utang: '',
+      nama_pengguna: '',
+      email: '',
+      password: '',
+      role_id: '',
     },
     inputItem: {
       id: '',
-      kategori_utang: '',
-      nominal: '',
-      keterangan_utang: '',
+      nama_pengguna: '',
+      email: '',
+      password: '',
+      role_id: '',
     },
     defaultItem: {
       id: '',
-      kategori_utang: '',
-      nominal: '',
-      keterangan_utang: '',
+      nama_pengguna: '',
+      email: '',
+      password: '',
+      role_id: '',
     },
   }),
 
   methods: {
     async handleRefreshList() {
-      this.dataUtang = await this.$store.dispatch('getDataUtang')
+      this.dataPengguna = await this.$store.dispatch('getDataPengguna')
     },
 
     async handleInput() {
       const {
         // eslint-disable-next-line camelcase
-        kategori_utang,
-        nominal,
+        nama_pengguna,
+        email,
+        password,
         // eslint-disable-next-line camelcase
-        keterangan_utang,
+        role_id,
       } = this.inputItem
       this.isLoading = true
       try {
-        await this.$store.dispatch('createDataUtang', {
-          kategori_utang,
-          nominal,
-          keterangan_utang,
+        await this.$store.dispatch('createDataPengguna', {
+          nama_pengguna,
+          email,
+          password,
+          role_id,
         })
         this.isLoading = false
         this.handleRefreshList()
@@ -239,20 +258,21 @@ export default {
 
     showEdit({
       item: {
-        id, // eslint-disable-next-line camelcase
-        kategori_utang,
-        nominal,
+        id,
         // eslint-disable-next-line camelcase
-        keterangan_utang,
+        nama_pengguna,
+        email,
+        // eslint-disable-next-line camelcase
+        role_id,
       },
     }) {
       this.dialogEdit = true
       this.editedItem = {
         ...this.editedItem,
         id,
-        kategori_utang,
-        nominal,
-        keterangan_utang,
+        nama_pengguna,
+        email,
+        role_id,
       }
     },
 
@@ -260,12 +280,13 @@ export default {
       const { id } = this.editedItem
       this.isLoading = true
       this.$store
-        .dispatch('updateDataUtang', [
+        .dispatch('updateDataPengguna', [
           id,
           {
-            kategori_utang: this.editedItem.kategori_utang,
-            nominal: this.editedItem.nominal,
-            keterangan_utang: this.editedItem.keterangan_utang,
+            nama_pengguna: this.editedItem.nama_pengguna,
+            email: this.editedItem.email,
+            password: this.editedItem.password,
+            role_id: this.editedItem.role_id,
           },
         ])
         .then(() =>
@@ -291,7 +312,7 @@ export default {
 
     handleDelete() {
       this.$store
-        .dispatch('deleteDataUtang', this.editedItem.id)
+        .dispatch('deleteDataPengguna', this.editedItem.id)
         .then(() =>
           this.handleRefreshList()
             .then(() => this.closeDelete())
@@ -302,13 +323,11 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
     },
-    // getColor(item) {
-    //   const index = this.dataUtang.indexOf(item)
-    //   const isApproved = this.dataUtang[index].approval
-    //   if (isApproved) return 'green'
-    //   else return 'red'
-    // },
   },
 }
 </script>

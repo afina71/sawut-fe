@@ -87,6 +87,29 @@
 
     <v-app-bar app color="green lighten-5" flat>
       <v-toolbar-title>SAWUT</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-menu bottom min-width="200px" rounded offset-y>
+        <template #activator="{ on }">
+          <v-btn icon x-large v-on="on">
+            <v-icon large :color="colorTheme"> mdi-account-circle </v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list-item-content class="justify-center">
+            <div class="mx-auto text-center">
+              <v-avatar :color="colorTheme" size="48">
+                <v-icon dark> mdi-account-circle </v-icon>
+              </v-avatar>
+              <!-- <h3>{{ cobaTampil.nama_pengguna }}</h3> -->
+              <!-- <p class="text-caption mt-1">email</p> -->
+              <v-divider class="my-3"></v-divider>
+              <v-btn depressed rounded text> Edit Akun </v-btn>
+              <v-divider class="my-3"></v-divider>
+              <v-btn depressed rounded text to="/signout"> Keluar </v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card>
+      </v-menu>
     </v-app-bar>
 
     <v-container>
@@ -97,8 +120,14 @@
 
 <script>
 export default {
+  // async asyncData({ store }) {
+  //   return {
+  //     dataAkun: await store.dispatch('getDataAkun'),
+  //   }
+  // },
   data: () => ({
     drawer: null,
+    colorTheme: '#388E3C',
     selectedItem: 1,
     menus: [
       {
@@ -156,6 +185,12 @@ export default {
       { title: 'Data Pengguna', page: '/dashboard/pengaturan/dataPengguna' },
     ],
     mini: true,
+    defaultItem: {
+      nama_pengguna: '',
+      email: '',
+      role_id: '',
+      password: '',
+    },
   }),
 }
 </script>

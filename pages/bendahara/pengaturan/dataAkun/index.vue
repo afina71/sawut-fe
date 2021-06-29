@@ -3,21 +3,18 @@
     <v-row class="py-10 justify-center">
       <div class="text-h6">Data Akun</div>
     </v-row>
-
     <v-row class="pb-10">
       <v-spacer></v-spacer>
       <!-- popup edit data -->
       <v-col class="d-flex justify-end col-md-4">
-        <v-dialog v-model="dialogEdit" max-width="600px">
-          <template #activator="{ on, attrs }">
-            <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
-              Edit Data
-            </v-btn>
-          </template>
+        <v-btn :color="colorTheme" dark depressed @click="showEdit(row)">
+          Edit Data Akun
+        </v-btn>
+        <v-dialog v-model="dialogEdit" max-width="450px">
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Akun</b></span
+                ><b>Form Edit Data Akun</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
@@ -36,6 +33,13 @@
                 required
               ></v-text-field>
               <v-text-field
+                v-model="editedItem.role_id"
+                class="pt-1"
+                label="Peran"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
                 v-model="editedItem.password"
                 class="pt-1"
                 label="Password"
@@ -46,10 +50,10 @@
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
+              <v-btn color="blue darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -57,14 +61,11 @@
         </v-dialog>
       </v-col>
     </v-row>
-
     <v-row class="pb-10 justify-center">
       <v-avatar :color="colorTheme" size="100">
         <v-icon large dark> mdi-account-circle </v-icon>
       </v-avatar>
     </v-row>
-
-    <!-- informasi akun -->
     <v-row class="py-10 justify-center">
       <v-col cols="3">
         <p class="text-h6">Nama Pengguna</p>
@@ -87,21 +88,6 @@
         </p>
       </v-col>
     </v-row>
-
-    <!-- <v-data-table :headers="headers" :items="dataAkun.data">
-      <template #cell(nama_pengguna)="{ item: { nama_pengguna } }">
-        <span>{{ nama_pengguna }}</span>
-      </template>
-      <template #cell(email)="{ item: { email } }">
-        <span>{{ email }}</span>
-      </template>
-      <template #cell(role_id)="{ item: { role_id } }">
-        <span>{{ role_id }}</span>
-      </template>
-      <template #[`item.aksi`]="row">
-        <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
-      </template>
-    </v-data-table> -->
   </v-main>
 </template>
 
@@ -115,46 +101,69 @@ export default {
   },
   data: () => {
     return {
+      isPasswordShown: false,
       colorTheme: '#388E3C',
       dialogEdit: false,
       isLoading: false,
+      valid: true,
+      emailRules: [
+        (v) => !!v || 'Mohon masukkan email',
+        (v) => /.+@.+\..+/.test(v) || 'Alamat email tidak valid',
+      ],
+      passwordRules: [(v) => !!v || 'Mohon masukkan password'],
       editedItem: {
         id: '',
         nama_pengguna: '',
         email: '',
+        role_id: '',
         password: '',
       },
       defaultItem: {
-        id: '',
         nama_pengguna: '',
         email: '',
+        role_id: '',
         password: '',
       },
     }
   },
 
   methods: {
-    async handleRefreshList() {
-      this.dataAkun = await this.$store.dispatch('getDataAkun')
+    showEdit({
+      dataPelunasan: {
+        id,
+        // eslint-disable-next-line camelcase
+        nama_pengguna,
+        email,
+        // eslint-disable-next-line camelcase
+        role_id,
+        password,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        nama_pengguna,
+        email,
+        role_id,
+        password,
+      }
     },
 
     handleEdit() {
       const { id } = this.editedItem
       this.isLoading = true
       this.$store
-        .dispatch('updateDataAkun', [
+        .dispatch('', [
           id,
           {
             nama_pengguna: this.editedItem.nama_pengguna,
             email: this.editedItem.email,
             password: this.editedItem.password,
+            role_id: this.editedItem.role_id,
           },
         ])
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeEdit())
-            .then(() => (this.isLoading = false))
-        )
+        .then(() => this.closeEdit().then(() => (this.isLoading = false)))
         .catch(() => (this.isLoading = false))
     },
 

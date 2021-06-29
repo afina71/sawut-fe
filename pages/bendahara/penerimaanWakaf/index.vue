@@ -19,9 +19,16 @@
       <!-- popup -->
       <v-col class="d-flex justify-end col-md-4">
         <!-- input data -->
-        <v-dialog v-model="dialogInput" max-width="600px">
+        <v-dialog v-model="dialogInput" max-width="450px">
           <template #activator="{ on, attrs }">
-            <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
+            <v-btn
+              :color="colorTheme"
+              dark
+              depressed
+              :v-show="dataAkun.role_id === 3"
+              v-bind="attrs"
+              v-on="on"
+            >
               Input Data
             </v-btn>
           </template>
@@ -32,219 +39,233 @@
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
-              <v-row>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakif</div>
+              <v-text-field
+                v-model="inputItem.tanggal_transaksi"
+                class="pt-1"
+                label="Tanggal Transaksi"
+                dense
+                required
+              ></v-text-field>
+              <!-- <v-menu
+                ref="menu"
+                v-model="menu"
+                :close-on-content-click="false"
+                :return-value.sync="inputItem.tanggal_transaksi"
+                transition="scale-transition"
+                offset-x
+                min-width="auto"
+              >
+                <template #activator="{ on, attrs }">
                   <v-text-field
                     v-model="inputItem.tanggal_transaksi"
-                    class="pt-1"
-                    label="Tanggal Transaksi"
+                    label="Tanggal Beli"
                     dense
                     required
+                    append-icon="mdi-calendar"
+                    v-bind="attrs"
+                    v-on="on"
                   ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.nama_wakif"
-                    class="pt-1"
-                    label="Nama Wakif"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.nik"
-                    class="pt-1"
-                    label="NIK"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.telepon"
-                    class="pt-1"
-                    label="Nomor Telepon"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.alamat"
-                    class="pt-1"
-                    label="Alamat"
-                    dense
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakaf</div>
-                  <v-text-field
-                    v-model="inputItem.nomor_aiw"
-                    class="pt-1"
-                    label="Nomor AIW"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="inputItem.jenis_wakaf"
-                    class="pt-1"
-                    :items="jenisWakaf"
-                    label="Jenis Wakaf"
-                    dense
-                    required
-                  ></v-autocomplete>
-                  <v-text-field
-                    v-model="inputItem.jangka_waktu_temporer"
-                    class="pt-1"
-                    label="Jangka Waktu"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.nominal"
-                    class="pt-1"
-                    label="Nominal Wakaf"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="inputItem.metode_pembayaran"
-                    class="pt-1"
-                    :items="metode"
-                    label="Metode Pembayaran"
-                    dense
-                    required
-                  ></v-autocomplete>
-                </v-col>
-              </v-row>
+                </template>
+                <v-date-picker
+                  v-model="inputItem.tanggal_transaksi"
+                  no-title
+                  scrollable
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="menu = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.menu.save(inputItem.tanggal_transaksi)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu> -->
+              <v-text-field
+                v-model="inputItem.nama_wakif"
+                class="pt-1"
+                label="Nama Wakif"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.nik"
+                class="pt-1"
+                label="NIK"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.nomor_aiw"
+                class="pt-1"
+                label="Nomor AIW"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.telepon"
+                class="pt-1"
+                label="Nomor Telepon"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="inputItem.jenis_wakaf"
+                class="pt-1"
+                :items="jenisWakaf"
+                label="Jenis Wakaf"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="inputItem.jangka_waktu_temporer"
+                class="pt-1"
+                label="Jangka Waktu"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="inputItem.nominal"
+                class="pt-1"
+                label="Nominal Wakaf"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="inputItem.metode_pembayaran"
+                class="pt-1"
+                :items="metode"
+                label="Metode Pembayaran"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="inputItem.alamat"
+                class="pt-1"
+                label="Alamat"
+                dense
+                required
+              ></v-text-field>
             </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeInput">
+              <v-btn color="blue darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
-                Simpan
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="save"> Simpan </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-
         <!-- edit data -->
-        <v-dialog v-model="dialogEdit" max-width="600px">
+        <v-dialog v-model="dialogEdit" max-width="450px">
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
                 ><b> Form Edit Data Wakaf</b></span
               >
             </v-card-title>
-
             <v-form class="px-10 pt-10">
-              <v-row justify="space-between">
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakif</div>
-                  <v-text-field
-                    v-model="editedItem.tanggal_transaksi"
-                    class="pt-1"
-                    label="Tanggal Transaksi"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nama_wakif"
-                    class="pt-1"
-                    label="Nama Wakif"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nik"
-                    class="pt-1"
-                    label="NIK"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.telepon"
-                    class="pt-1"
-                    label="Nomor Telepon"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.alamat"
-                    class="pt-1"
-                    label="Alamat"
-                    dense
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakaf</div>
-                  <v-text-field
-                    v-model="editedItem.nomor_aiw"
-                    class="pt-1"
-                    label="Nomor AIW"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="editedItem.jenis_wakaf"
-                    class="pt-1"
-                    :items="jenisWakaf"
-                    label="Jenis Wakaf"
-                    dense
-                    required
-                  ></v-autocomplete>
-                  <v-text-field
-                    v-model="editedItem.jangka_waktu_temporer"
-                    class="pt-1"
-                    label="Jangka Waktu"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nominal"
-                    class="pt-1"
-                    label="Nominal Wakaf"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="editedItem.metode_pembayaran"
-                    class="pt-1"
-                    :items="metode"
-                    label="Metode Pembayaran"
-                    dense
-                    required
-                  ></v-autocomplete>
-                </v-col>
-              </v-row>
+              <v-text-field
+                v-model="editedItem.tanggal_transaksi"
+                class="pt-1"
+                label="Tanggal Transaksi"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.nama_wakif"
+                class="pt-1"
+                label="Nama Wakif"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.nik"
+                class="pt-1"
+                label="NIK"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.nomor_aiw"
+                class="pt-1"
+                label="Nomor AIW"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.telepon"
+                class="pt-1"
+                label="Nomor Telepon"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="editedItem.jenis_wakaf"
+                class="pt-1"
+                :items="jenisWakaf"
+                label="Jenis Wakaf"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="editedItem.jangka_waktu_temporer"
+                class="pt-1"
+                label="Jangka Waktu"
+                dense
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="editedItem.nominal"
+                class="pt-1"
+                label="Nominal Wakaf"
+                dense
+                required
+              ></v-text-field>
+              <v-autocomplete
+                v-model="editedItem.metode_pembayaran"
+                class="pt-1"
+                :items="metode"
+                label="Metode Pembayaran"
+                dense
+                required
+              ></v-autocomplete>
+              <v-text-field
+                v-model="editedItem.alamat"
+                class="pt-1"
+                label="Alamat"
+                dense
+                required
+              ></v-text-field>
             </v-form>
 
             <v-card-actions class="pb-5">
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
+              <v-btn color="blue darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-
         <!-- delete data -->
         <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
+          <v-card class="rounded-xl">
+            <v-card-subtitle class="headline pt-10 text-body-1"
               >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
+              <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
               <v-spacer></v-spacer>
@@ -339,6 +360,7 @@ export default {
   async asyncData({ store }) {
     return {
       dataWakaf: await store.dispatch('getDataWakaf'),
+      dataAkun: await store.dispatch('getDataAkun'),
     }
   },
 
@@ -361,7 +383,12 @@ export default {
     ],
 
     headers: [
-      { text: 'Tanggal', value: 'tanggal_transaksi' },
+      {
+        text: 'Tanggal',
+        align: 'start',
+        sortable: false,
+        value: 'tanggal_transaksi',
+      },
       { text: 'Nama', value: 'nama_wakif' },
       { text: 'Nomor AIW', value: 'nomor_aiw' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
@@ -420,7 +447,7 @@ export default {
       this.dataWakaf = await this.$store.dispatch('getDataWakaf')
     },
 
-    async handleInput() {
+    async save() {
       const {
         // eslint-disable-next-line camelcase
         tanggal_transaksi,

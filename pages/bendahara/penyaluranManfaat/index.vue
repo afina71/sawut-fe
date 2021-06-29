@@ -130,7 +130,7 @@
               <v-btn color="blue darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn color="blue darken-1" text @click.prevent="handleEdit">
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -139,20 +139,18 @@
 
         <!-- delete data -->
         <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
+          <v-card class="rounded-xl">
+            <v-card-subtitle class="headline pt-10 text-body-1"
               >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
             >
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
+              <v-btn color="blue darken-1" text @click="closeDelete"
                 >Batal</v-btn
               >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
+              <v-btn color="blue darken-1" text @click="handleDelete"
                 >Iya</v-btn
               >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>

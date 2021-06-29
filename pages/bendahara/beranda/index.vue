@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-row class="py-10 justify-center">
-      <div class="text-h6">Informasi Kegiatan Wakaf</div>
+      <div class="text-h6">Informasi Kegiatan Wakaf bendahara</div>
     </v-row>
     <v-row class="px-10">
       <v-col class="col-md-4">

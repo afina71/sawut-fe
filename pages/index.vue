@@ -124,7 +124,12 @@ export default {
         this.$axios.setToken(`Bearer ${user.token}`)
         // await this.$store.dispatch('login', { email, password })
         this.isLoading = false
-        this.$router.push(`/dashboard/beranda`)
+        if (user.role_id === 4) {
+          this.$router.push(`/bendahara/beranda`)
+        } else {
+          this.$router.push(`/dashboard/beranda`)
+        }
+        // this.$router.push(`/dashboard/beranda`)
       } catch (error) {
         this.isLoading = false
       }
