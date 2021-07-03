@@ -120,11 +120,6 @@
 
 <script>
 export default {
-  // async asyncData({ store }) {
-  //   return {
-  //     dataAkun: await store.dispatch('getDataAkun'),
-  //   }
-  // },
   data: () => ({
     drawer: null,
     colorTheme: '#388E3C',
@@ -133,56 +128,56 @@ export default {
       {
         title: 'Beranda',
         icon: 'mdi-home-outline',
-        page: '/dashboard/beranda',
+        page: '/admin/beranda',
       },
       {
         title: 'Penerimaan Wakaf',
         icon: 'mdi-inbox-arrow-down-outline',
-        page: '/dashboard/penerimaanWakaf',
+        page: '/admin/penerimaanWakaf',
       },
       {
         title: 'Pengelolaan Wakaf',
         icon: 'mdi-chart-box-outline',
-        page: '/dashboard/pengelolaanWakaf',
+        page: '/admin/pengelolaanWakaf',
       },
       {
         title: 'Penyaluran Manfaat',
         icon: 'mdi-handshake-outline',
-        page: '/dashboard/penyaluranManfaat',
+        page: '/admin/penyaluranManfaat',
       },
       {
         title: 'Pengajuan Biaya',
         icon: 'mdi-swap-horizontal-circle-outline',
-        page: '/dashboard/pengajuanBiaya',
+        page: '/admin/pengajuanBiaya',
       },
       {
         title: 'Pelunasan Piutang',
         icon: 'mdi-cash-check',
-        page: '/dashboard/pelunasanPiutang',
+        page: '/admin/pelunasanPiutang',
       },
     ],
     submenu1: [
-      { title: 'Posisi Keuangan', page: '/dashboard/laporan/posisiKeuangan' },
+      { title: 'Posisi Keuangan', page: '/admin/laporan/posisiKeuangan' },
       {
         title: 'Rincian Aset Wakaf',
-        page: '/dashboard/laporan/rincianAsetWakaf',
+        page: '/admin/laporan/rincianAsetWakaf',
       },
-      { title: 'Aktivitas', page: '/dashboard/laporan/aktivitas' },
-      { title: 'Arus Kas', page: '/dashboard/laporan/arusKas' },
+      { title: 'Aktivitas', page: '/admin/laporan/aktivitas' },
+      { title: 'Arus Kas', page: '/admin/laporan/arusKas' },
     ],
     submenu2: [
       {
         title: 'Data Aset Tetap',
-        page: '/dashboard/dataLainnya/dataAsetTetap',
+        page: '/admin/dataLainnya/dataAsetTetap',
       },
       {
         title: 'Data Utang',
-        page: '/dashboard/dataLainnya/dataUtang',
+        page: '/admin/dataLainnya/dataUtang',
       },
     ],
     submenu3: [
-      { title: 'Data Akun', page: '/dashboard/pengaturan/dataAkun' },
-      { title: 'Data Pengguna', page: '/dashboard/pengaturan/dataPengguna' },
+      { title: 'Data Akun', page: '/admin/pengaturan/dataAkun' },
+      { title: 'Data Pengguna', page: '/admin/pengaturan/dataPengguna' },
     ],
     mini: true,
     defaultItem: {

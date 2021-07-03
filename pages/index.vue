@@ -65,7 +65,7 @@ export default {
         password: '',
       },
       isPasswordShown: false,
-      colorTheme: '#1B7A13',
+      colorTheme: '#388E3C',
       isLoading: false,
       valid: true,
       emailRules: [
@@ -92,29 +92,7 @@ export default {
     togglePassword(e) {
       this.isPasswordShown = !this.isPasswordShown
     },
-    // submitForm() {
-    //   this.isLoading = true
-    //   this.$axios
-    //     .post('http://127.0.0.1:8000/api/auth/login', {
-    //       email: this.form.email,
-    //       password: this.form.password,
-    //     })
-    //     .then((response) => {
-    //       this.isLoading = false
-    //       console.log(response)
-    //       this.$store.commit('SAVE_TOKEN', response)
-    //       // this.$axios.interceptors.request.use((config) => {
-    //       //   const token = this.$store.load('SAVE_TOKEN')
-    //       //   if (token) config.headers.Authorization = `Bearer ${token}`
-    //       //   return config
-    //       // })
-    //       this.$router.push(`/dashboard/beranda`)
-    //     })
-    //     .catch((error) => {
-    //       this.isLoading = false
-    //       console.log(error)
-    //     })
-    // },
+
     async submitForm() {
       const { email, password } = this.form
       this.isLoading = true
@@ -124,10 +102,14 @@ export default {
         this.$axios.setToken(`Bearer ${user.token}`)
         // await this.$store.dispatch('login', { email, password })
         this.isLoading = false
-        if (user.role_id === 4) {
+        if (user.role_id === 1) {
+          this.$router.push(`/admin/beranda`)
+        } else if (user.role_id === 4) {
           this.$router.push(`/bendahara/beranda`)
+        } else if (user.role_id === 2) {
+          this.$router.push(`/akuntan/beranda`)
         } else {
-          this.$router.push(`/dashboard/beranda`)
+          this.$router.push(`/nazhir/beranda`)
         }
         // this.$router.push(`/dashboard/beranda`)
       } catch (error) {

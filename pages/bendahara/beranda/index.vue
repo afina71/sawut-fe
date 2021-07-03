@@ -1,7 +1,7 @@
 <template>
   <v-main>
     <v-row class="py-10 justify-center">
-      <div class="text-h6">Informasi Kegiatan Wakaf bendahara</div>
+      <div class="text-h6">Informasi Kegiatan Wakaf</div>
     </v-row>
     <v-row class="px-10">
       <v-col class="col-md-4">
@@ -64,7 +64,7 @@
 
 <script>
 export default {
-  layout: 'default',
+  layout: 'bendahara',
   data: () => ({
     colorTheme: '#1B7A13',
   }),

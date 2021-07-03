@@ -36,6 +36,7 @@ export const mutations = {
     state.authenticated = true
   },
 }
+
 export const actions = {
   useAPI(context, { method, url, data, token }) {
     return new Promise((resolve, reject) => {
@@ -248,5 +249,13 @@ export const actions = {
   },
   deleteDataPengguna({ dispatch }, id) {
     return dispatch('deleteItem', `wakaf/daftar-pengguna/${id}`)
+  },
+
+  // laporan
+  getLaporanAktivitas({ dispatch }) {
+    return dispatch('getItems', 'wakaf/laporan/aktivitas/download')
+  },
+  tampilLaporanAktivitas({ dispatch }) {
+    return dispatch('getItems', 'wakaf/laporan/aktivitas/generate')
   },
 }
