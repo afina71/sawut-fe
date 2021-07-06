@@ -1,59 +1,58 @@
 <template>
   <v-main>
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Data Umum Penyaluran Manfaat</div>
-      <v-row justify="space-between">
+    <v-form v-model="valid" class="pb-10 pt-10">
+      <div class="text-h6 py-10">Data Umum Penyaluran Manfaat</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">Nama Penerima</div>
           <v-text-field
             v-model="inputItem.nama_penerima"
             class="pt-1"
             label="Masukkan Nama"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Nominal Peminjaman</div>
           <v-text-field
             v-model="inputItem.nominal_peminjaman"
             class="pt-1"
             label="Masukkan Nominal"
-            dense
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Nomor Induk Kependudukan</div>
           <v-text-field
             v-model="inputItem.nik"
             class="pt-1"
             label="Masukkan NIK"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Nomor Telepon</div>
           <v-text-field
             v-model="inputItem.telepon"
             class="pt-1"
             label="Masukkan Nomor Telepon"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Alamat</div>
           <v-text-field
             v-model="inputItem.alamat"
             class="pt-1"
             label="Masukkan Alamat"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Jenis Usaha</div>
           <v-autocomplete
             v-model="inputItem.jenis_usaha"
             class="pt-1"
             :items="jenisUsaha"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">Deskripsi Usaha</div>
           <v-text-field
             v-model="inputItem.deskripsi_usaha"
             class="pt-1"
+            :rules="required"
             label="Deskripsi"
-            required
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6">
@@ -62,47 +61,45 @@
             v-model="inputItem.jenis_piutang"
             class="pt-1"
             :items="jenisPiutang"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">Sumber Biaya</div>
           <v-autocomplete
             v-model="inputItem.sumber_biaya"
             class="pt-1"
             :items="sumberBiaya"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">Periode Peminjaman (Bulan)</div>
           <v-text-field
             v-model="inputItem.periode_peminjaman"
             class="pt-1"
             label="Masukkan Lama Periode"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Periode Awal</div>
           <v-text-field
             v-model="inputItem.periode_awal"
             class="pt-1"
             label="Tahun-Bulan-Tanggal"
-            required
+            :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Periode Akhir</div>
           <v-text-field
             v-model="inputItem.periode_akhir"
             class="pt-1"
             label="Tahun-Bulan-Tanggal"
-            required
+            :rules="required"
           ></v-text-field>
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider></v-divider>
-    <!-- Categori 1 -->
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Kategori 1: Capacity</div>
-      <v-row justify="space-between">
+      <v-divider></v-divider>
+      <!-- Categori 1 -->
+      <div class="text-h6 py-10">Kategori 1: Capacity</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">
             Berapa nominal pinjaman yang diinginkan oleh Peminjam?
@@ -111,8 +108,8 @@
             v-model="inputItem.answer_1"
             class="pt-1"
             :items="pertanyaan1"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa lama usaha sejak didirikan hingga saat ini?
@@ -120,9 +117,9 @@
           <v-autocomplete
             v-model="inputItem.answer_2"
             class="pt-1"
+            :rules="required"
             :items="pertanyaan2"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa rata-rata omset dalam sebulan?
@@ -130,9 +127,9 @@
           <v-autocomplete
             v-model="inputItem.answer_3"
             class="pt-1"
+            :rules="required"
             :items="pertanyaan3"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6">
@@ -142,9 +139,9 @@
           <v-autocomplete
             v-model="inputItem.answer_4"
             class="pt-1"
+            :rules="required"
             :items="pertanyaan4"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa jumlah karyawan dalam usaha tersebut?
@@ -152,9 +149,9 @@
           <v-autocomplete
             v-model="inputItem.answer_5"
             class="pt-1"
+            :rules="required"
             :items="pertanyaan5"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapakah proporsi dari penjualan yang dijual dengan cara tunai?
@@ -162,19 +159,17 @@
           <v-autocomplete
             v-model="inputItem.answer_6"
             class="pt-1"
+            :rules="required"
             :items="pertanyaan6"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider></v-divider>
-    <!-- Categori 2 -->
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Kategori 2: Capital</div>
-      <v-row justify="space-between">
+      <v-divider></v-divider>
+      <!-- Categori 2 -->
+      <div class="text-h6 py-10">Kategori 2: Capital</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">
             Apakah memiliki hutang di tempat lain?
@@ -183,8 +178,8 @@
             v-model="inputItem.answer_7"
             class="pt-1"
             :items="pertanyaan7"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa nominal hutang di tempat lain yang tersisa?
@@ -195,7 +190,6 @@
             :items="pertanyaan8"
             :disabled="inputItem.answer_7 === '30'"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa jumlah angsuran per bulan di tempat lain?
@@ -206,7 +200,6 @@
             :items="pertanyaan9"
             :disabled="inputItem.answer_7 === '30'"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6">
@@ -219,7 +212,6 @@
             :items="pertanyaan10"
             :disabled="inputItem.answer_7 === '30'"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Berapa sisa lama angsuran di tempat lain? Pernahkan anda terlambat
@@ -232,25 +224,22 @@
             :items="pertanyaan11"
             :disabled="inputItem.answer_7 === '30'"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider></v-divider>
-    <!-- Categori 3 -->
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Kategori 3: Condition of Economy</div>
-      <v-row justify="space-between">
+      <v-divider></v-divider>
+      <!-- Categori 3 -->
+      <div class="text-h6 py-10">Kategori 3: Condition of Economy</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">Berapa jumlah tanggungan keluarga?</div>
           <v-autocomplete
             v-model="inputItem.answer_12"
             class="pt-1"
             :items="pertanyaan12"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6">
@@ -261,18 +250,16 @@
             v-model="inputItem.answer_13"
             class="pt-1"
             :items="pertanyaan13"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider></v-divider>
-    <!-- Categori 4 -->
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Kategori 4: Collateral</div>
-      <v-row justify="space-between">
+      <v-divider></v-divider>
+      <!-- Categori 4 -->
+      <div class="text-h6 py-10">Kategori 4: Collateral</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">
             Berapa jangka waktu pengembalian pinjaman?
@@ -281,18 +268,16 @@
             v-model="inputItem.answer_14"
             class="pt-1"
             :items="pertanyaan14"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
       </v-row>
-    </v-form>
 
-    <v-divider></v-divider>
-    <!-- Categori 5 -->
-    <v-form class="pb-10 pt-10">
-      <div class="text-h6 pb-5">Kategori 5: Character</div>
-      <v-row justify="space-between">
+      <v-divider></v-divider>
+      <!-- Categori 5 -->
+      <div class="text-h6 py-10">Kategori 5: Character</div>
+      <v-row class="pb-10">
         <v-col cols="12" sm="6">
           <div class="text-subtitle-2">
             Bagaimana penilaian masyarakat sekitar terhadap calon peminjam?
@@ -301,8 +286,8 @@
             v-model="inputItem.answer_15"
             class="pt-1"
             :items="pertanyaan15"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
           <div class="text-subtitle-2">
             Bagaimana sikap kooperatif peminjam?
@@ -311,8 +296,8 @@
             v-model="inputItem.answer_16"
             class="pt-1"
             :items="pertanyaan16"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6">
@@ -323,8 +308,8 @@
             v-model="inputItem.answer_17"
             class="pt-1"
             :items="pertanyaan17"
+            :rules="required"
             label="Pilih"
-            required
           ></v-autocomplete>
         </v-col>
       </v-row>
@@ -332,7 +317,13 @@
 
     <v-row class="pt-10 pb-10">
       <v-spacer></v-spacer>
-      <v-btn depressed dark color="green darken-1" @click="handleInput">
+      <v-btn
+        x-large
+        depressed
+        class="white--text rounded-lg green darken-1"
+        :disabled="isLoading || !valid"
+        @click="handleInput"
+      >
         Simpan
       </v-btn>
     </v-row>
@@ -341,13 +332,18 @@
 
 <script>
 export default {
-  layout: 'cs',
+  layout: 'csnazhir',
   async asyncData({ store }) {
     return {
       dataPenyaluran: await store.dispatch('getDataPenyaluran'),
     }
   },
   data: () => ({
+    isLoading: false,
+    valid: true,
+    required: [(v) => !!v || 'Form harus diisi'],
+    required2: [(v) => !!v || 'Form harus diisi'],
+
     jenisUsaha: [
       { text: 'Perdagangan', value: 'perdagangan' },
       { text: 'Fashion', value: 'fashion' },
@@ -443,7 +439,7 @@ export default {
     // Category 3
     pertanyaan12: [
       { text: 'Kurang dari 2 orang', value: '50' },
-      { text: '2  5 orang', value: '51' },
+      { text: '2 - 5 orang', value: '51' },
       { text: 'Lebih dari 5 orang', value: '52' },
     ],
     pertanyaan13: [
@@ -543,6 +539,12 @@ export default {
     },
   }),
 
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+  },
+
   methods: {
     async handleInput() {
       const {
@@ -637,10 +639,10 @@ export default {
             answer_17,
           })
           .catch(() => (this.isLoading = false))
-        // this.isLoading = false
         this.$router.push(`/nazhir/penyaluranManfaat`)
       } catch (error) {
         this.isLoading = false
+        this.valid = true
       }
     },
   },

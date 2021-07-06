@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="green lighten-5" flat>
-      <v-btn icon to="/admin/penyaluranManfaat">
+      <v-btn icon to="/nazhir/penyaluranManfaat">
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <v-toolbar-title>Input Data Penyaluran Manfaat</v-toolbar-title>

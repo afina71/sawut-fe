@@ -74,6 +74,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog edit data -->
         <v-dialog v-model="dialogEdit" max-width="450px">
           <v-card class="rounded-xl">
@@ -114,17 +115,23 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog delete -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card class="rounded-xl px-5 pt-10 pb-5">
@@ -155,8 +162,11 @@
       <template #cell(email)="{ item: { email } }">
         <span>{{ email }}</span>
       </template>
-      <template #cell(role_id)="{ item: { role_id } }">
-        <span>{{ role_id }}</span>
+      <template #[`item.role_id`]="{ item: { role_id } }">
+        <span v-if="role_id === 'nazhir'">Nazhir</span>
+        <span v-if="role_id === 'bendahara'">Bendahara</span>
+        <span v-if="role_id === 'akuntan'">Akuntan</span>
+        <span v-else>Admin</span>
       </template>
       <template #[`item.aksi`]="row">
         <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
@@ -195,8 +205,7 @@ export default {
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2', sortable: false },
     ],
-    // daftarPengguna: [],
-    editedIndex: -1,
+
     editedItem: {
       id: '',
       nama_pengguna: '',
@@ -205,20 +214,27 @@ export default {
       role_id: '',
     },
     inputItem: {
-      id: '',
       nama_pengguna: '',
       email: '',
       password: '',
       role_id: '',
     },
     defaultItem: {
-      id: '',
       nama_pengguna: '',
       email: '',
       password: '',
       role_id: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((v) => !v)
+    },
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -302,7 +318,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 
@@ -324,10 +339,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

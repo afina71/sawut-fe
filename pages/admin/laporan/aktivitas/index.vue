@@ -1,16 +1,14 @@
 <template>
   <v-main>
     <v-row class="py-10 justify-center">
-      <div class="text-h6">Laporan Aktivitas</div>
-    </v-row>
-    <v-row class="pb-10">
-      <v-spacer></v-spacer>
-      <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
-        >Download</v-btn
-      >
-    </v-row>
-    <v-row class="justify-center">
-      <pdf :src="pdfsrc"></pdf>
+      <v-col cols="10">
+        <pdf :src="pdfsrc"></pdf>
+      </v-col>
+      <v-col cols="2" class="pb-10">
+        <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
+          >Download</v-btn
+        >
+      </v-col>
     </v-row>
   </v-main>
 </template>
@@ -24,12 +22,6 @@ export default {
   },
 
   layout: 'default',
-
-  // async asyncData({ store }) {
-  //   return {
-  //     preview: await store.dispatch('tampilLaporanAktivitas'),
-  //   }
-  // },
 
   data: () => ({
     colorTheme: '#388E3C',
@@ -55,7 +47,6 @@ export default {
 
   methods: {
     async downloadPDF() {
-      // this.download = await this.$store.dispatch('getLaporanAktivitas')
       await this.$axios({
         url:
           'https://sawut-laravel.herokuapp.com/api/wakaf/laporan/aktivitas/download',

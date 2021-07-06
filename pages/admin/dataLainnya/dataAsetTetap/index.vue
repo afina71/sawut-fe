@@ -40,7 +40,6 @@
                     class="pt-1"
                     label="Nama Aset"
                     dense
-                    required
                   ></v-text-field>
                   <v-autocomplete
                     v-model="inputItem.kelompok"
@@ -48,49 +47,61 @@
                     :items="namaKelompok"
                     label="Kelompok"
                     dense
-                    required
                   ></v-autocomplete>
-                  <v-text-field
-                    v-model="inputItem.tanggal_beli"
-                    class="pt-1"
-                    label="Tanggal Beli"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="inputTanggal1"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="inputItem.tanggal_beli"
+                        label="Tanggal Beli"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="inputItem.tanggal_beli"
+                      color="green darken-1"
+                      @input="inputTanggal1 = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="inputItem.harga_perolehan"
                     class="pt-1"
                     label="Harga Perolehan"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.nilai_bersih"
                     class="pt-1"
                     label="Nilai Bersih"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.nilai_residu"
                     class="pt-1"
                     label="Nilai Residu"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.umur_ekonomis"
                     class="pt-1"
                     label="Umur Ekonomis"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.lokasi"
                     class="pt-1"
                     label="Lokasi"
                     dense
-                    required
                   ></v-text-field>
                 </v-col>
                 <v-spacer></v-spacer>
@@ -101,72 +112,89 @@
                     class="pt-1"
                     label="Nomor"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.departemen"
                     class="pt-1"
                     label="Departemen"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.akumulasi_beban"
                     class="pt-1"
                     label="Akumulasi beban"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.beban_per_tahun_ini"
                     class="pt-1"
                     label="Beban Pertahun"
                     dense
-                    required
                   ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.terhitung_tanggal"
-                    class="pt-1"
-                    label="Terhitung Tanggal"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="inputTanggal2"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="inputItem.terhitung_tanggal"
+                        label="Terhitung Tanggal"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="inputItem.terhitung_tanggal"
+                      color="green darken-1"
+                      @input="inputTanggal2 = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="inputItem.nilai_buku"
                     class="pt-1"
                     label="Nilai Buku"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.beban_per_bulan"
                     class="pt-1"
                     label="Beban Perbulan"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.nilai_penyusutan"
                     class="pt-1"
                     label="Nilai Penyusutan"
                     dense
-                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
 
-            <v-card-actions class="pt-0 pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog edit data -->
         <v-dialog v-model="dialogEdit" max-width="600px">
           <v-card class="rounded-xl">
@@ -184,7 +212,6 @@
                     class="pt-1"
                     label="Nama Aset"
                     dense
-                    required
                   ></v-text-field>
                   <v-autocomplete
                     v-model="editedItem.kelompok"
@@ -192,49 +219,61 @@
                     :items="namaKelompok"
                     label="Kelompok"
                     dense
-                    required
                   ></v-autocomplete>
-                  <v-text-field
-                    v-model="editedItem.tanggal_beli"
-                    class="pt-1"
-                    label="Tanggal Beli"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="editedTanggal1"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="editedItem.tanggal_beli"
+                        label="Tanggal Beli"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="editedItem.tanggal_beli"
+                      color="green darken-1"
+                      @input="editedTanggal1 = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="editedItem.harga_perolehan"
                     class="pt-1"
                     label="Harga Perolehan"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.nilai_bersih"
                     class="pt-1"
                     label="Nilai Bersih"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.nilai_residu"
                     class="pt-1"
                     label="Nilai Residu"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.umur_ekonomis"
                     class="pt-1"
                     label="Umur Ekonomis"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.lokasi"
                     class="pt-1"
                     label="Lokasi"
                     dense
-                    required
                   ></v-text-field>
                 </v-col>
                 <v-spacer></v-spacer>
@@ -245,72 +284,89 @@
                     class="pt-1"
                     label="Nomor"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.departemen"
                     class="pt-1"
                     label="Departemen"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.akumulasi_beban"
                     class="pt-1"
                     label="Akumulasi beban"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.beban_per_tahun_ini"
                     class="pt-1"
                     label="Beban Pertahun"
                     dense
-                    required
                   ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.terhitung_tanggal"
-                    class="pt-1"
-                    label="Terhitung Tanggal"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="editedTanggal2"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="editedItem.terhitung_tanggal"
+                        label="Terhitung Tanggal"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="editedItem.terhitung_tanggal"
+                      color="green darken-1"
+                      @input="editedTanggal2 = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="editedItem.nilai_buku"
                     class="pt-1"
                     label="Nilai Buku"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.beban_per_bulan"
                     class="pt-1"
                     label="Beban Perbulan"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="editedItem.nilai_penyusutan"
                     class="pt-1"
                     label="Nilai Penyusutan"
                     dense
-                    required
                   ></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog delete data -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card class="rounded-xl px-5 pt-10 pb-5">
@@ -349,8 +405,12 @@
       <template #cell(nama_aset)="{ item: { nama_aset } }">
         <span>{{ nama_aset }}</span>
       </template>
-      <template #cell(kelompok)="{ item: { kelompok } }">
-        <span>{{ kelompok }}</span>
+      <template #[`item.kelompok`]="{ item: { kelompok } }">
+        <span v-if="kelompok === 'kendaraan'">Kendaraan</span>
+        <span v-else-if="kelompok === 'gedung'">Gedung</span>
+        <span v-else-if="kelompok === 'tanah'">Tanah</span>
+        <span v-else-if="kelompok === 'peralatan'">Peralatan</span>
+        <span v-else>Lainnya</span>
       </template>
       <template #cell(harga_perolehan)="{ item: { harga_perolehan } }">
         <span>{{ harga_perolehan }}</span>
@@ -415,9 +475,14 @@ export default {
     dialogInput: false,
     dialogEdit: false,
     dialogDelete: false,
+    inputTanggal1: false,
+    inputTanggal2: false,
+    editedTanggal1: false,
+    editedTanggal2: false,
     expanded: [],
     singleExpand: true,
     search: '',
+    isLoading: false,
     namaKelompok: [
       { text: 'Kendaraan', value: 'kendaraan' },
       { text: 'Gedung', value: 'gedung' },
@@ -425,7 +490,6 @@ export default {
       { text: 'Peralatan', value: 'peralatan' },
       { text: 'Aset Lain', value: 'lainnya' },
     ],
-    menu: false,
     headers: [
       { text: 'Tanggal Beli', value: 'tanggal_beli' },
       { text: 'Nama Aset', value: 'nama_aset' },
@@ -435,9 +499,8 @@ export default {
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2' },
     ],
-    editedIndex: -1,
+
     defaultItem: {
-      id: '',
       tanggal_beli: '',
       nama_aset: '',
       kelompok: '',
@@ -456,7 +519,6 @@ export default {
       nilai_penyusutan: '',
     },
     inputItem: {
-      id: '',
       tanggal_beli: '',
       nama_aset: '',
       kelompok: '',
@@ -494,6 +556,15 @@ export default {
       nilai_penyusutan: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((v) => !v)
+    },
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -658,7 +729,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 
@@ -680,10 +750,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

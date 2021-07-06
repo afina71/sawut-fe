@@ -100,8 +100,8 @@ export default {
         const user = await this.$store.dispatch('login', { email, password })
         this.$store.commit('setUser', user)
         this.$axios.setToken(`Bearer ${user.token}`)
-        // await this.$store.dispatch('login', { email, password })
         this.isLoading = false
+
         if (user.role_id === 1) {
           this.$router.push(`/admin/beranda`)
         } else if (user.role_id === 4) {
@@ -111,25 +111,10 @@ export default {
         } else {
           this.$router.push(`/nazhir/beranda`)
         }
-        // this.$router.push(`/dashboard/beranda`)
       } catch (error) {
         this.isLoading = false
       }
     },
-    // async submitForm() {
-    //   this.isLoading = true
-    //   try {
-    //     await this.$auth.loginWith('local', {
-    //       data: {
-    //         email: this.form.email,
-    //         password: this.form.password,
-    //       },
-    //     })
-    //     this.isLoading = false
-    //   } catch (error) {
-    //     this.isLoading = false
-    //   }
-    // },
   },
 }
 </script>

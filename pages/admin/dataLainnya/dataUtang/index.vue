@@ -56,17 +56,23 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog edit data -->
         <v-dialog v-model="dialogEdit" max-width="450px">
           <v-card class="rounded-xl">
@@ -100,17 +106,23 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog delete -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card class="rounded-xl px-5 pt-10 pb-5">
@@ -135,8 +147,9 @@
 
     <!-- data tabel -->
     <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
-      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
-        <span>{{ kategori_utang }}</span>
+      <template #[`item.kategori_utang`]="{ item: { kategori_utang } }">
+        <span v-if="kategori_utang === 'biaya'">Biaya</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
@@ -177,11 +190,10 @@ export default {
       { text: 'Kategori Utang', value: 'kategori_utang' },
       { text: 'Nominal', value: 'nominal' },
       { text: 'Keterangan', value: 'keterangan_utang' },
-      // { text: 'Approval', value: 'approval', sortable: false },
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2', sortable: false },
     ],
-    editedIndex: -1,
+
     editedItem: {
       id: '',
       kategori_utang: '',
@@ -189,18 +201,25 @@ export default {
       keterangan_utang: '',
     },
     inputItem: {
-      id: '',
       kategori_utang: '',
       nominal: '',
       keterangan_utang: '',
     },
     defaultItem: {
-      id: '',
       kategori_utang: '',
       nominal: '',
       keterangan_utang: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((v) => !v)
+    },
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -280,7 +299,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 
@@ -303,12 +321,6 @@ export default {
     closeDelete() {
       this.dialogDelete = false
     },
-    // getColor(item) {
-    //   const index = this.dataUtang.indexOf(item)
-    //   const isApproved = this.dataUtang[index].approval
-    //   if (isApproved) return 'green'
-    //   else return 'red'
-    // },
   },
 }
 </script>

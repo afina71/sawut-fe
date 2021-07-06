@@ -73,17 +73,23 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog edit data -->
         <v-dialog v-model="dialogEdit" max-width="450px">
           <v-card class="rounded-xl">
@@ -134,17 +140,23 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog delete -->
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card class="rounded-xl px-5 pt-10 pb-5">
@@ -164,6 +176,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
         <!-- dialog approval -->
         <v-dialog v-model="dialogApprove" max-width="500px">
           <v-card class="rounded-xl px-5 pt-10 pb-5">
@@ -225,8 +238,10 @@
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
       </template>
-      <template #cell(sumber_biaya)="{ item: { sumber_biaya } }">
-        <span>{{ sumber_biaya }}</span>
+      <template #[`item.sumber_biaya`]="{ item: { sumber_biaya } }">
+        <span v-if="sumber_biaya === 'tunai'">Tunai</span>
+        <span v-else-if="sumber_biaya === 'bagihasil'">Bagi Hasil</span>
+        <span v-else>Non Bagi hasil</span>
       </template>
       <template #[`item.approval`]="{ item: { id, approval } }">
         <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
@@ -328,7 +343,6 @@ export default {
       { text: 'Aksi', value: 'aksi' },
       { text: '', value: 'aksi2' },
     ],
-    editedIndex: -1,
     editedItem: {
       id: '',
       nama_pengaju: '',
@@ -338,7 +352,6 @@ export default {
       sumber_biaya: '',
     },
     inputItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -346,7 +359,6 @@ export default {
       sumber_biaya: '',
     },
     defaultItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -354,6 +366,15 @@ export default {
       sumber_biaya: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -469,10 +490,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     showApprove(id) {
@@ -493,10 +510,6 @@ export default {
 
     closeApprove() {
       this.dialogApprove = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     showPencairan(id) {
@@ -517,10 +530,6 @@ export default {
 
     closePencairan() {
       this.dialogPencairan = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

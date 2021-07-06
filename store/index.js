@@ -250,12 +250,4 @@ export const actions = {
   deleteDataPengguna({ dispatch }, id) {
     return dispatch('deleteItem', `wakaf/daftar-pengguna/${id}`)
   },
-
-  // laporan
-  getLaporanAktivitas({ dispatch }) {
-    return dispatch('getItems', 'wakaf/laporan/aktivitas/download')
-  },
-  tampilLaporanAktivitas({ dispatch }) {
-    return dispatch('getItems', 'wakaf/laporan/aktivitas/generate')
-  },
 }

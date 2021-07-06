@@ -1,17 +1,14 @@
 <template>
   <v-main>
     <v-row class="py-10 justify-center">
-      <div class="text-h6">Laporan Posisi Keuangan</div>
-    </v-row>
-    <v-row class="pb-10">
-      <v-spacer></v-spacer>
-      <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
-        >Download</v-btn
-      >
-    </v-row>
-    <!-- <pdf :src="pdfsrc"></pdf> -->
-    <v-row class="justify-center">
-      <pdf :src="pdfsrc"></pdf>
+      <v-col cols="10">
+        <pdf :src="pdfsrc"></pdf>
+      </v-col>
+      <v-col cols="2" class="pb-10">
+        <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
+          >Download</v-btn
+        >
+      </v-col>
     </v-row>
   </v-main>
 </template>
