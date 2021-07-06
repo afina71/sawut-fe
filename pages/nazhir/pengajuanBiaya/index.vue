@@ -73,34 +73,19 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <!-- dialog delete -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
-                >Batal</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
-                >Iya</v-btn
-              >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -126,8 +111,10 @@
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
       </template>
-      <template #cell(sumber_biaya)="{ item: { sumber_biaya } }">
-        <span>{{ sumber_biaya }}</span>
+      <template #[`item.sumber_biaya`]="{ item: { sumber_biaya } }">
+        <span v-if="sumber_biaya === 'tunai'">Tunai</span>
+        <span v-else-if="sumber_biaya === 'bagihasil'">Bagi Hasil</span>
+        <span v-else>Non Bagi hasil</span>
       </template>
       <template #[`item.approval`]="{ item: { approval } }">
         <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
@@ -136,9 +123,6 @@
       <template #[`item.pencairan`]="{ item: { pencairan } }">
         <v-chip v-if="pencairan === 1" color="green" dark>Sudah Cair</v-chip>
         <v-chip v-else color="red" dark> Belum Cair </v-chip>
-      </template>
-      <template #[`item.aksi2`]="row">
-        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -155,7 +139,6 @@ export default {
   data: () => ({
     colorTheme: '#388E3C',
     dialogInput: false,
-    dialogDelete: false,
     search: '',
     kategoriBiaya: [
       { header: 'Beban Pengelolaan dan Pengembangan Wakaf' },
@@ -216,10 +199,9 @@ export default {
       { text: 'Sumber Biaya', value: 'sumber_biaya' },
       { text: 'Approval', value: 'approval', sortable: false },
       { text: 'Pencairan', value: 'pencairan' },
-      { text: 'Aksi', value: 'aksi2' },
     ],
+
     inputItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -227,7 +209,6 @@ export default {
       sumber_biaya: '',
     },
     defaultItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -235,6 +216,12 @@ export default {
       sumber_biaya: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -274,30 +261,6 @@ export default {
       this.dialogInput = false
       this.$nextTick(() => {
         this.inputItem = Object.assign({}, this.defaultItem)
-      })
-    },
-
-    showDelete({ item: { id } }) {
-      this.dialogDelete = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleDelete() {
-      this.$store
-        .dispatch('deleteDataPengajuan', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeDelete())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
   },

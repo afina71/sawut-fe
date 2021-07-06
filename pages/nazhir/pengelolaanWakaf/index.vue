@@ -29,33 +29,10 @@ export default {
       dataKas: await store.dispatch('getDataKas'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
-    dialog: false,
-    dialogDelete: false,
     search: '',
-    namaKas: [
-      {
-        text: 'Kas Tunai',
-        value: 'tunai',
-      },
-      {
-        text: 'Kas Tabungan Wakaf',
-        value: 'tabwakaf',
-      },
-      {
-        text: 'Kas Deposito',
-        value: 'deposito',
-      },
-      {
-        text: 'Kas Tabungan Bagi Hasil',
-        value: 'tabbagihasil',
-      },
-      {
-        text: 'Kas Tabungan Non Bagi Hasil',
-        value: 'tabnonbagihasil',
-      },
-    ],
     headers: [
       { text: 'Nama Akun', value: 'kas' },
       { text: 'Saldo', value: 'saldo' },

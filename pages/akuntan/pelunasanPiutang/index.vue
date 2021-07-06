@@ -23,17 +23,35 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Wakaf</b></span
+                ><b> Form Edit Data Pelunasan</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
-              <v-text-field
-                v-model="editedItem.tanggal_cicilan"
-                class="pt-1"
-                label="Tanggal Cicilan"
-                dense
-                required
-              ></v-text-field>
+              <v-menu
+                v-model="editedTanggal"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template #activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="editedItem.tanggal_cicilan"
+                    label="Tanggal Cicilan"
+                    append-icon="mdi-calendar"
+                    readonly
+                    dense
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="editedItem.tanggal_cicilan"
+                  color="green darken-1"
+                  @input="editedTanggal = false"
+                ></v-date-picker>
+              </v-menu>
               <v-text-field
                 v-model="editedItem.nik"
                 class="pt-1"
@@ -50,12 +68,17 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -135,10 +158,12 @@ export default {
       dataPelunasan: await store.dispatch('getDataPelunasan'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
     dialogEdit: false,
     dialogDelete: false,
+    editedTanggal: false,
     search: '',
     headers: [
       { text: 'Tgl. Cicilan', value: 'tanggal_cicilan' },
@@ -151,6 +176,7 @@ export default {
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2', sortable: false },
     ],
+
     editedItem: {
       id: '',
       tanggal_cicilan: '',
@@ -158,12 +184,17 @@ export default {
       jumlah_cicilan: '',
     },
     defaultItem: {
-      id: '',
       tanggal_cicilan: '',
       nik: '',
       jumlah_cicilan: '',
     },
   }),
+
+  computed: {
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -213,7 +244,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 
@@ -235,10 +265,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

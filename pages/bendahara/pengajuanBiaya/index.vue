@@ -79,8 +79,10 @@
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
       </template>
-      <template #cell(sumber_biaya)="{ item: { sumber_biaya } }">
-        <span>{{ sumber_biaya }}</span>
+      <template #[`item.sumber_biaya`]="{ item: { sumber_biaya } }">
+        <span v-if="sumber_biaya === 'tunai'">Tunai</span>
+        <span v-else-if="sumber_biaya === 'bagihasil'">Bagi Hasil</span>
+        <span v-else>Non Bagi hasil</span>
       </template>
       <template #[`item.approval`]="{ item: { id, approval } }">
         <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
@@ -110,8 +112,8 @@ export default {
     colorTheme: '#388E3C',
     dialogApprove: false,
     dialogPencairan: false,
+    isLoading: false,
     search: '',
-
     headers: [
       { text: 'Nama Pengaju', value: 'nama_pengaju' },
       { text: 'Kategori Biaya', value: 'kategori_biaya' },
@@ -121,7 +123,6 @@ export default {
       { text: 'Approval', value: 'approval', sortable: false },
       { text: 'Pencairan', value: 'pencairan' },
     ],
-
     editedItem: {
       id: '',
       nama_pengaju: '',
@@ -130,9 +131,7 @@ export default {
       nominal: '',
       sumber_biaya: '',
     },
-
     defaultItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -164,10 +163,6 @@ export default {
 
     closeApprove() {
       this.dialogApprove = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     showPencairan(id) {
@@ -188,10 +183,6 @@ export default {
 
     closePencairan() {
       this.dialogPencairan = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

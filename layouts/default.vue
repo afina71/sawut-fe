@@ -97,14 +97,6 @@
         <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
-              <v-avatar :color="colorTheme" size="48">
-                <v-icon dark> mdi-account-circle </v-icon>
-              </v-avatar>
-              <!-- <h3>{{ cobaTampil.nama_pengguna }}</h3> -->
-              <!-- <p class="text-caption mt-1">email</p> -->
-              <v-divider class="my-3"></v-divider>
-              <v-btn depressed rounded text> Edit Akun </v-btn>
-              <v-divider class="my-3"></v-divider>
               <v-btn depressed rounded text to="/signout"> Keluar </v-btn>
             </div>
           </v-list-item-content>

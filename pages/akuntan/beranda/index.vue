@@ -13,7 +13,9 @@
           </v-row>
           <v-row class="pt-4 align-center">
             <v-col>
-              <span class="text-h5 font-weight-bold">20</span>
+              <span class="text-h5 font-weight-bold green--text text--darken-1"
+                >20</span
+              >
             </v-col>
             <v-spacer></v-spacer>
             <v-col>
@@ -30,7 +32,9 @@
           </v-row>
           <v-row class="pt-4 align-center">
             <v-col>
-              <span class="text-h5 font-weight-bold">20</span>
+              <span class="text-h5 font-weight-bold green--text text--darken-1"
+                >20</span
+              >
             </v-col>
             <v-spacer></v-spacer>
             <v-col>
@@ -49,7 +53,9 @@
           </v-row>
           <v-row class="pt-4 align-center">
             <v-col>
-              <span class="text-h5 font-weight-bold">14</span>
+              <span class="text-h5 font-weight-bold green--text text--darken-1"
+                >14</span
+              >
             </v-col>
             <v-spacer></v-spacer>
             <v-col>

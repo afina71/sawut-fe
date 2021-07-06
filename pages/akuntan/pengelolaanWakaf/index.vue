@@ -50,10 +50,15 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="close"> Batal </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="pindahSaldo">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="pindahSaldo"
+              >
                 Pindah
               </v-btn>
             </v-card-actions>
@@ -87,10 +92,10 @@ export default {
       dataKas: await store.dispatch('getDataKas'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
     dialog: false,
-    dialogDelete: false,
     search: '',
     namaKas: [
       {
@@ -118,20 +123,13 @@ export default {
       { text: 'Nama Akun', value: 'kas' },
       { text: 'Saldo', value: 'saldo' },
     ],
-    // pengelolaanwakaf: [],
-    // editedIndex: -1,
     editedItem: { akun_asal: '', akun_tujuan: '', saldo: '' },
-    // defaultItem: { nama_akun: '', jumlah_pemindahan: '' },
+    defaultItem: { akun_asal: '', akun_tujuan: '', saldo: '' },
   }),
 
-  computed: {},
-
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
+  computed: {
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
     },
   },
 
@@ -166,7 +164,6 @@ export default {
       this.dialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
   },

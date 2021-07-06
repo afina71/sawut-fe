@@ -59,12 +59,13 @@
 
 <script>
 export default {
-  layout: 'beranda',
+  layout: 'bendahara',
   async asyncData({ store }) {
     return {
       dataPelunasan: await store.dispatch('getDataPelunasan'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
     search: '',
@@ -76,15 +77,7 @@ export default {
       { text: 'Kekurangan', value: 'kekurangan' },
       { text: 'Tgl. Jatuh Tempo', value: 'tanggal_jatuh_tempo' },
       { text: 'Status', value: 'pelunasan' },
-      { text: 'Aksi', value: 'aksi', sortable: false },
-      { text: '', value: 'aksi2', sortable: false },
     ],
-    defaultItem: {
-      id: '',
-      tanggal_cicilan: '',
-      nik: '',
-      jumlah_cicilan: '',
-    },
   }),
 }
 </script>

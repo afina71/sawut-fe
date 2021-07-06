@@ -88,12 +88,6 @@
         <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
-              <v-avatar :color="colorTheme" size="48">
-                <v-icon dark> mdi-account-circle </v-icon>
-              </v-avatar>
-              <v-divider class="my-3"></v-divider>
-              <v-btn depressed rounded text> Edit Akun </v-btn>
-              <v-divider class="my-3"></v-divider>
               <v-btn depressed rounded text to="/signout"> Keluar </v-btn>
             </div>
           </v-list-item-content>

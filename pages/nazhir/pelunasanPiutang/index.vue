@@ -18,7 +18,7 @@
 
       <!-- popup form -->
       <v-col class="d-flex justify-end col-md-4">
-        <!-- popup input data -->
+        <!-- popup add data -->
         <v-dialog v-model="dialogInput" max-width="450px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
@@ -32,13 +32,31 @@
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
-              <v-text-field
-                v-model="inputItem.tanggal_cicilan"
-                class="pt-1"
-                label="Tanggal Cicilan"
-                dense
-                required
-              ></v-text-field>
+              <v-menu
+                v-model="inputTanggal"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template #activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="inputItem.tanggal_cicilan"
+                    label="Tanggal Transaksi"
+                    append-icon="mdi-calendar"
+                    readonly
+                    dense
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="inputItem.tanggal_cicilan"
+                  color="green darken-1"
+                  @input="inputTanggal = false"
+                ></v-date-picker>
+              </v-menu>
               <v-text-field
                 v-model="inputItem.nik"
                 class="pt-1"
@@ -55,34 +73,19 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <!-- popup delete data -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
-                >Batal</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
-                >Iya</v-btn
-              >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -122,9 +125,6 @@
           {{ item.pelunasan }}
         </v-chip>
       </template>
-      <template #[`item.aksi2`]="row">
-        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
-      </template>
     </v-data-table>
   </v-main>
 </template>
@@ -137,10 +137,11 @@ export default {
       dataPelunasan: await store.dispatch('getDataPelunasan'),
     }
   },
+
   data: () => ({
     colorTheme: '#388E3C',
     dialogInput: false,
-    dialogDelete: false,
+    inputTanggal: false,
     search: '',
     headers: [
       { text: 'Tgl. Cicilan', value: 'tanggal_cicilan' },
@@ -150,21 +151,25 @@ export default {
       { text: 'Kekurangan', value: 'kekurangan' },
       { text: 'Tgl. Jatuh Tempo', value: 'tanggal_jatuh_tempo' },
       { text: 'Status', value: 'pelunasan' },
-      { text: 'Aksi', value: 'aksi2', sortable: false },
     ],
+
     inputItem: {
-      id: '',
       tanggal_cicilan: '',
       nik: '',
       jumlah_cicilan: '',
     },
     defaultItem: {
-      id: '',
       tanggal_cicilan: '',
       nik: '',
       jumlah_cicilan: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -199,26 +204,6 @@ export default {
       this.$nextTick(() => {
         this.inputItem = Object.assign({}, this.defaultItem)
       })
-    },
-
-    showDelete({ item: { id } }) {
-      this.dialogDelete = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleDelete() {
-      this.$store
-        .dispatch('deleteDataPelunasanIndividu', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeDelete())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
     },
   },
 }

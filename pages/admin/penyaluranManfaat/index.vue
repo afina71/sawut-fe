@@ -26,7 +26,7 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Wakaf</b></span
+                ><b> Form Edit Data Penyaluran Wakaf</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">

@@ -22,53 +22,67 @@
         <v-dialog v-model="dialogInput" max-width="600px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
-              Input Data
+              Input Data Penerimaan
             </v-btn>
           </template>
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Input Data Wakaf</b></span
+                ><b> Form Input Data Penerimaan</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
               <v-row>
                 <v-col cols="12" sm="6">
                   <div class="text-subtitle-2">Informasi Wakif</div>
-                  <v-text-field
-                    v-model="inputItem.tanggal_transaksi"
-                    class="pt-1"
-                    label="Tanggal Transaksi"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="inputTanggal"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="inputItem.tanggal_transaksi"
+                        label="Tanggal Transaksi"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="inputItem.tanggal_transaksi"
+                      color="green darken-1"
+                      @input="inputTanggal = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="inputItem.nama_wakif"
                     class="pt-1"
                     label="Nama Wakif"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.nik"
                     class="pt-1"
                     label="NIK"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.telepon"
                     class="pt-1"
                     label="Nomor Telepon"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.alamat"
                     class="pt-1"
                     label="Alamat"
                     dense
-                    required
                   ></v-text-field>
                 </v-col>
                 <v-spacer></v-spacer>
@@ -79,7 +93,6 @@
                     class="pt-1"
                     label="Nomor AIW"
                     dense
-                    required
                   ></v-text-field>
                   <v-autocomplete
                     v-model="inputItem.jenis_wakaf"
@@ -87,21 +100,18 @@
                     :items="jenisWakaf"
                     label="Jenis Wakaf"
                     dense
-                    required
                   ></v-autocomplete>
                   <v-text-field
                     v-model="inputItem.jangka_waktu_temporer"
                     class="pt-1"
-                    label="Jangka Waktu"
+                    label="Jangka Waktu (Bulan)"
                     dense
-                    required
                   ></v-text-field>
                   <v-text-field
                     v-model="inputItem.nominal"
                     class="pt-1"
                     label="Nominal Wakaf"
                     dense
-                    required
                   ></v-text-field>
                   <v-autocomplete
                     v-model="inputItem.metode_pembayaran"
@@ -109,40 +119,24 @@
                     :items="metode"
                     label="Metode Pembayaran"
                     dense
-                    required
                   ></v-autocomplete>
                 </v-col>
               </v-row>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <!-- delete data -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
-                >Batal</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
-                >Iya</v-btn
-              >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -171,8 +165,9 @@
       <template #cell(telepon)="{ item: { telepon } }">
         <span>{{ telepon }}</span>
       </template>
-      <template #cell(jenis_wakaf)="{ item: { jenis_wakaf } }">
-        <span>{{ jenis_wakaf }}</span>
+      <template #[`item.jenis_wakaf`]="{ item: { jenis_wakaf } }">
+        <span v-if="jenis_wakaf === 'temporer'">Wakaf Temporer</span>
+        <span v-else>Wakaf Permanen</span>
       </template>
       <template
         #cell(jangka_waktu_temporer)="{ item: { jangka_waktu_temporer } }"
@@ -211,15 +206,15 @@
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Metode Pembayaran</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ item.metode_pembayaran }}
+              <v-list-item-subtitle
+                v-if="item.metode_pembayaran === 'transfer'"
+              >
+                Transfer
               </v-list-item-subtitle>
+              <v-list-item-subtitle v-else> Tunai </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </td>
-      </template>
-      <template #[`item.aksi2`]="row">
-        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -237,7 +232,8 @@ export default {
   data: () => ({
     colorTheme: '#388E3C',
     dialogInput: false,
-    dialogDelete: false,
+    inputTanggal: false,
+    isLoading: false,
     search: '',
     expanded: [],
     singleExpand: true,
@@ -257,14 +253,11 @@ export default {
       { text: 'Nomor AIW', value: 'nomor_aiw' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
       { text: 'Jangka Temporer', value: 'jangka_waktu_temporer' },
-      { text: 'Metode Pembayaran', value: 'metode_pembayaran' },
       { text: 'Nominal Wakaf', value: 'nominal' },
       { text: '', value: 'data-table-expand' },
-      { text: 'Aksi', value: 'aksi2' },
     ],
 
     inputItem: {
-      id: '',
       tanggal_transaksi: '',
       nama_wakif: '',
       nik: '',
@@ -277,7 +270,6 @@ export default {
       nominal: '',
     },
     defaultItem: {
-      id: '',
       tanggal_transaksi: '',
       nama_wakif: '',
       nik: '',
@@ -290,6 +282,12 @@ export default {
       nominal: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -331,11 +329,10 @@ export default {
         })
         this.isLoading = false
         this.handleRefreshList()
-        this.closeInput()
-        this.$router.push('/dashboard/penerimaanWakaf')
       } catch (error) {
         this.isLoading = false
       }
+      this.closeInput()
     },
 
     closeInput() {
@@ -343,26 +340,6 @@ export default {
       this.$nextTick(() => {
         this.inputItem = Object.assign({}, this.defaultItem)
       })
-    },
-
-    showDelete({ item: { id } }) {
-      this.dialogDelete = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleDelete() {
-      this.$store
-        .dispatch('deleteDataWakafIndividu', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeDelete())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
     },
   },
 }

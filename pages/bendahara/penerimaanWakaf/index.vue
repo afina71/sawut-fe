@@ -42,8 +42,9 @@
       <template #cell(telepon)="{ item: { telepon } }">
         <span>{{ telepon }}</span>
       </template>
-      <template #cell(jenis_wakaf)="{ item: { jenis_wakaf } }">
-        <span>{{ jenis_wakaf }}</span>
+      <template #[`item.jenis_wakaf`]="{ item: { jenis_wakaf } }">
+        <span v-if="jenis_wakaf === 'temporer'">Wakaf Temporer</span>
+        <span v-else>Wakaf Permanen</span>
       </template>
       <template
         #cell(jangka_waktu_temporer)="{ item: { jangka_waktu_temporer } }"
@@ -82,9 +83,12 @@
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Metode Pembayaran</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ item.metode_pembayaran }}
+              <v-list-item-subtitle
+                v-if="item.metode_pembayaran === 'transfer'"
+              >
+                Transfer
               </v-list-item-subtitle>
+              <v-list-item-subtitle v-else> Tunai </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </td>
@@ -114,23 +118,9 @@ export default {
       { text: 'Nomor AIW', value: 'nomor_aiw' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
       { text: 'Jangka Temporer', value: 'jangka_waktu_temporer' },
-      { text: 'Metode Pembayaran', value: 'metode_pembayaran' },
       { text: 'Nominal Wakaf', value: 'nominal' },
+      { text: '', value: 'data-table-expand' },
     ],
-
-    defaultItem: {
-      id: '',
-      tanggal_transaksi: '',
-      nama_wakif: '',
-      nik: '',
-      nomor_aiw: '',
-      alamat: '',
-      telepon: '',
-      jenis_wakaf: '',
-      jangka_waktu_temporer: '',
-      metode_pembayaran: '',
-      nominal: '',
-    },
   }),
 }
 </script>

@@ -68,12 +68,17 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -121,8 +126,10 @@
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
       </template>
-      <template #cell(sumber_biaya)="{ item: { sumber_biaya } }">
-        <span>{{ sumber_biaya }}</span>
+      <template #[`item.sumber_biaya`]="{ item: { sumber_biaya } }">
+        <span v-if="sumber_biaya === 'tunai'">Tunai</span>
+        <span v-else-if="sumber_biaya === 'bagihasil'">Bagi Hasil</span>
+        <span v-else>Non Bagi hasil</span>
       </template>
       <template #[`item.approval`]="{ item: { approval } }">
         <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
@@ -217,7 +224,6 @@ export default {
       { text: 'Aksi', value: 'aksi' },
       { text: '', value: 'aksi2' },
     ],
-    editedIndex: -1,
     editedItem: {
       id: '',
       nama_pengaju: '',
@@ -227,7 +233,6 @@ export default {
       sumber_biaya: '',
     },
     defaultItem: {
-      id: '',
       nama_pengaju: '',
       kategori_biaya: '',
       keterangan_biaya: '',
@@ -235,6 +240,12 @@ export default {
       sumber_biaya: '',
     },
   }),
+
+  computed: {
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -314,58 +325,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    showApprove(id) {
-      this.dialogApprove = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleApprove() {
-      this.$store
-        .dispatch('editDataPengajuan', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeApprove())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeApprove() {
-      this.dialogApprove = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    showPencairan(id) {
-      this.dialogPencairan = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handlePencairan() {
-      this.$store
-        .dispatch('pencairanDataPengajuan', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closePencairan())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closePencairan() {
-      this.dialogPencairan = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

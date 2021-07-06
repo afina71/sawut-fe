@@ -80,8 +80,9 @@
       <template #cell(nominal_peminjaman)="{ item: { nominal_peminjaman } }">
         <span>{{ nominal_peminjaman }}</span>
       </template>
-      <template #cell(jenis_piutang)="{ item: { jenis_piutang } }">
-        <span>{{ jenis_piutang }}</span>
+      <template #[`item.jenis_piutang`]="{ item: { jenis_piutang } }">
+        <span v-if="jenis_piutang === 'pjp'">Jangka Pendek</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(periode_akhir)="{ item: { periode_akhir } }">
         <span>{{ periode_akhir }}</span>
@@ -119,9 +120,28 @@
               <v-list-item two-line>
                 <v-list-item-content>
                   <v-list-item-title>Jenis Usaha</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.jenis_usaha }}
+                  <v-list-item-subtitle
+                    v-if="item.jenis_usaha === 'perdagangan'"
+                  >
+                    Perdagangan
                   </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-else-if="item.jenis_usaha === 'fashion'"
+                  >
+                    Fashion
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="item.jenis_usaha === 'otomotif'">
+                    Otomotif
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-else-if="item.jenis_usaha === 'kerajinan'"
+                  >
+                    Kerajinan
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else-if="item.jenis_usaha === 'it'">
+                    IT
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else> Lainnya </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item two-line>
@@ -153,8 +173,13 @@
               <v-list-item two-line>
                 <v-list-item-content>
                   <v-list-item-title>Sumber Biaya</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.sumber_biaya }}
+                  <v-list-item-subtitle
+                    v-if="item.sumber_biaya === 'bagihasil'"
+                  >
+                    Bagi Hasil
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else>
+                    Non Bagi Hasil
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -199,7 +224,6 @@ export default {
     search: '',
     expanded: [],
     singleExpand: true,
-
     headers: [
       { text: 'Nama', value: 'nama_penerima' },
       { text: 'Nominal', value: 'nominal_peminjaman' },
@@ -266,10 +290,6 @@ export default {
 
     closeApprove() {
       this.dialogApprove = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
 
     showPenyaluran(id) {
@@ -290,10 +310,6 @@ export default {
 
     closePenyaluran() {
       this.dialogPenyaluran = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

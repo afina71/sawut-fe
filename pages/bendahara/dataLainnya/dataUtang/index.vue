@@ -4,7 +4,7 @@
       <div class="text-h6">Data Utang</div>
     </v-row>
     <v-row class="pb-10">
-      <v-col cols="12">
+      <v-col>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -15,12 +15,16 @@
         ></v-text-field>
       </v-col>
       <v-spacer></v-spacer>
+
+      <!-- popup add/edit data -->
+      <v-col class="d-flex justify-end col-md-4"></v-col>
     </v-row>
 
     <!-- data tabel -->
     <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
-      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
-        <span>{{ kategori_utang }}</span>
+      <template #[`item.kategori_utang`]="{ item: { kategori_utang } }">
+        <span v-if="kategori_utang === 'biaya'">Biaya</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
@@ -49,12 +53,6 @@ export default {
       { text: 'Nominal', value: 'nominal' },
       { text: 'Keterangan', value: 'keterangan_utang' },
     ],
-    defaultItem: {
-      id: '',
-      kategori_utang: '',
-      nominal: '',
-      keterangan_utang: '',
-    },
   }),
 }
 </script>

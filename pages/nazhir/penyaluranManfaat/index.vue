@@ -18,29 +18,9 @@
 
       <!-- popup -->
       <v-col class="d-flex justify-end col-md-4">
-        <v-btn :color="colorTheme" dark depressed to="/dashboard/creditScoring">
+        <v-btn :color="colorTheme" dark depressed to="/nazhir/creditScoring">
           Input Data Penyaluran
         </v-btn>
-
-        <!-- delete data -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
-                >Batal</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
-                >Iya</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
       </v-col>
     </v-row>
 
@@ -60,8 +40,9 @@
       <template #cell(nominal_peminjaman)="{ item: { nominal_peminjaman } }">
         <span>{{ nominal_peminjaman }}</span>
       </template>
-      <template #cell(jenis_piutang)="{ item: { jenis_piutang } }">
-        <span>{{ jenis_piutang }}</span>
+      <template #[`item.jenis_piutang`]="{ item: { jenis_piutang } }">
+        <span v-if="jenis_piutang === 'pjp'">Jangka Pendek</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(periode_akhir)="{ item: { periode_akhir } }">
         <span>{{ periode_akhir }}</span>
@@ -99,9 +80,28 @@
               <v-list-item two-line>
                 <v-list-item-content>
                   <v-list-item-title>Jenis Usaha</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.jenis_usaha }}
+                  <v-list-item-subtitle
+                    v-if="item.jenis_usaha === 'perdagangan'"
+                  >
+                    Perdagangan
                   </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-else-if="item.jenis_usaha === 'fashion'"
+                  >
+                    Fashion
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="item.jenis_usaha === 'otomotif'">
+                    Otomotif
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    v-else-if="item.jenis_usaha === 'kerajinan'"
+                  >
+                    Kerajinan
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else-if="item.jenis_usaha === 'it'">
+                    IT
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else> Lainnya </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item two-line>
@@ -133,8 +133,13 @@
               <v-list-item two-line>
                 <v-list-item-content>
                   <v-list-item-title>Sumber Biaya</v-list-item-title>
-                  <v-list-item-subtitle>
-                    {{ item.sumber_biaya }}
+                  <v-list-item-subtitle
+                    v-if="item.sumber_biaya === 'bagihasil'"
+                  >
+                    Bagi Hasil
+                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-else>
+                    Non Bagi Hasil
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -143,21 +148,18 @@
         </td>
       </template>
       <template #[`item.kelayakan`]="{ item }">
-        <v-chip v-if="item.kelayakan === `0`" color="red" dark>
+        <v-chip v-if="item.kelayakan === 0" color="red" dark>
           Tidak Layak
         </v-chip>
         <v-chip v-else color="green" dark> Layak </v-chip>
       </template>
       <template #[`item.approval`]="{ item: { approval } }">
-        <v-chip v-if="approval === `1`" color="green" dark>Approved</v-chip>
+        <v-chip v-if="approval === 1" color="green" dark>Approved</v-chip>
         <v-chip v-else color="red" dark> Unapprove </v-chip>
       </template>
       <template #[`item.penyaluran`]="{ item: { penyaluran } }">
-        <v-chip v-if="penyaluran === `1`" color="green" dark>Disalurkan</v-chip>
+        <v-chip v-if="penyaluran === 1" color="green" dark>Disalurkan</v-chip>
         <v-chip v-else color="red" dark> Belum Disalurkan </v-chip>
-      </template>
-      <template #[`item.aksi2`]="row">
-        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -173,8 +175,6 @@ export default {
   },
   data: () => ({
     colorTheme: '#388E3C',
-    dialogInput: false,
-    dialogDelete: false,
     search: '',
     expanded: [],
     singleExpand: true,
@@ -204,64 +204,7 @@ export default {
       { text: 'Kelayakan', value: 'kelayakan' },
       { text: 'Status', value: 'approval' },
       { text: 'Penyaluran', value: 'penyaluran' },
-      { text: 'Aksi', value: 'aksi2' },
     ],
-    inputItem: {
-      id: '',
-      nama_penerima: '',
-      nik: '',
-      telepon: '',
-      alamat: '',
-      jenis_usaha: '',
-      deskripsi_usaha: '',
-      nominal_peminjaman: '',
-      jenis_piutang: '',
-      sumber_biaya: '',
-      periode_peminjaman: '',
-      periode_awal: '',
-      periode_akhir: '',
-    },
-    defaultItem: {
-      id: '',
-      nama_penerima: '',
-      nik: '',
-      telepon: '',
-      alamat: '',
-      jenis_usaha: '',
-      deskripsi_usaha: '',
-      nominal_peminjaman: '',
-      jenis_piutang: '',
-      sumber_biaya: '',
-      periode_peminjaman: '',
-      periode_awal: '',
-      periode_akhir: '',
-    },
   }),
-
-  methods: {
-    async handleRefreshList() {
-      this.dataPenyaluran = await this.$store.dispatch('getDataPenyaluran')
-    },
-
-    showDelete({ item: { id } }) {
-      this.dialogDelete = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleDelete() {
-      this.$store
-        .dispatch('deleteDataPenyaluran', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeDelete())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-    },
-  },
 }
 </script>

@@ -4,7 +4,7 @@
       <div class="text-h6">Data Aset Tetap</div>
     </v-row>
     <v-row class="pb-10">
-      <v-col cols="6">
+      <v-col>
         <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
@@ -15,6 +15,9 @@
         ></v-text-field>
       </v-col>
       <v-spacer></v-spacer>
+
+      <!-- popup -->
+      <v-col class="d-flex justify-end col-md-4"></v-col>
     </v-row>
 
     <!-- data tabel -->
@@ -33,8 +36,12 @@
       <template #cell(nama_aset)="{ item: { nama_aset } }">
         <span>{{ nama_aset }}</span>
       </template>
-      <template #cell(kelompok)="{ item: { kelompok } }">
-        <span>{{ kelompok }}</span>
+      <template #[`item.kelompok`]="{ item: { kelompok } }">
+        <span v-if="kelompok === 'kendaraan'">Kendaraan</span>
+        <span v-else-if="kelompok === 'gedung'">Gedung</span>
+        <span v-else-if="kelompok === 'tanah'">Tanah</span>
+        <span v-else-if="kelompok === 'peralatan'">Peralatan</span>
+        <span v-else>Lainnya</span>
       </template>
       <template #cell(harga_perolehan)="{ item: { harga_perolehan } }">
         <span>{{ harga_perolehan }}</span>
@@ -93,6 +100,7 @@ export default {
     expanded: [],
     singleExpand: true,
     search: '',
+    isLoading: false,
     headers: [
       { text: 'Tanggal Beli', value: 'tanggal_beli' },
       { text: 'Nama Aset', value: 'nama_aset' },
@@ -100,25 +108,6 @@ export default {
       { text: 'Harga Perolehan', value: 'harga_perolehan' },
       { text: '', value: 'data-table-expand' },
     ],
-    defaultItem: {
-      id: '',
-      tanggal_beli: '',
-      nama_aset: '',
-      kelompok: '',
-      harga_perolehan: '',
-      nilai_bersih: '',
-      nilai_residu: '',
-      umur_ekonomis: '',
-      lokasi: '',
-      nomor: '',
-      departemen: '',
-      akumulasi_beban: '',
-      beban_per_tahun_ini: '',
-      terhitung_tanggal: '',
-      nilai_buku: '',
-      beban_per_bulan: '',
-      nilai_penyusutan: '',
-    },
   }),
 }
 </script>

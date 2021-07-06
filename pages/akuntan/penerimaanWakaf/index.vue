@@ -23,7 +23,7 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Wakaf</b></span
+                ><b> Form Edit Data Penerinaan</b></span
               >
             </v-card-title>
 
@@ -31,13 +31,31 @@
               <v-row justify="space-between">
                 <v-col cols="12" sm="6">
                   <div class="text-subtitle-2">Informasi Wakif</div>
-                  <v-text-field
-                    v-model="editedItem.tanggal_transaksi"
-                    class="pt-1"
-                    label="Tanggal Transaksi"
-                    dense
-                    required
-                  ></v-text-field>
+                  <v-menu
+                    v-model="editedTanggal"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template #activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="editedItem.tanggal_transaksi"
+                        label="Tanggal Transaksi"
+                        append-icon="mdi-calendar"
+                        readonly
+                        dense
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="editedItem.tanggal_transaksi"
+                      color="green darken-1"
+                      @input="editedTanggal = false"
+                    ></v-date-picker>
+                  </v-menu>
                   <v-text-field
                     v-model="editedItem.nama_wakif"
                     class="pt-1"
@@ -88,7 +106,7 @@
                   <v-text-field
                     v-model="editedItem.jangka_waktu_temporer"
                     class="pt-1"
-                    label="Jangka Waktu"
+                    label="Jangka Waktu (Bulan)"
                     dense
                     required
                   ></v-text-field>
@@ -111,12 +129,17 @@
               </v-row>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -167,8 +190,9 @@
       <template #cell(telepon)="{ item: { telepon } }">
         <span>{{ telepon }}</span>
       </template>
-      <template #cell(jenis_wakaf)="{ item: { jenis_wakaf } }">
-        <span>{{ jenis_wakaf }}</span>
+      <template #[`item.jenis_wakaf`]="{ item: { jenis_wakaf } }">
+        <span v-if="jenis_wakaf === 'temporer'">Wakaf Temporer</span>
+        <span v-else>Wakaf Permanen</span>
       </template>
       <template
         #cell(jangka_waktu_temporer)="{ item: { jangka_waktu_temporer } }"
@@ -207,9 +231,12 @@
           <v-list-item two-line>
             <v-list-item-content>
               <v-list-item-title>Metode Pembayaran</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ item.metode_pembayaran }}
+              <v-list-item-subtitle
+                v-if="item.metode_pembayaran === 'transfer'"
+              >
+                Transfer
               </v-list-item-subtitle>
+              <v-list-item-subtitle v-else> Tunai </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </td>
@@ -237,6 +264,8 @@ export default {
     colorTheme: '#388E3C',
     dialogEdit: false,
     dialogDelete: false,
+    editedTanggal: false,
+    isLoading: false,
     search: '',
     expanded: [],
     singleExpand: true,
@@ -256,14 +285,12 @@ export default {
       { text: 'Nomor AIW', value: 'nomor_aiw' },
       { text: 'Jenis Wakaf', value: 'jenis_wakaf' },
       { text: 'Jangka Temporer', value: 'jangka_waktu_temporer' },
-      { text: 'Metode Pembayaran', value: 'metode_pembayaran' },
       { text: 'Nominal Wakaf', value: 'nominal' },
       { text: '', value: 'data-table-expand' },
       { text: 'Aksi', value: 'aksi' },
       { text: '', value: 'aksi2' },
     ],
 
-    editedIndex: -1,
     editedItem: {
       id: '',
       tanggal_transaksi: '',
@@ -278,7 +305,6 @@ export default {
       nominal: '',
     },
     defaultItem: {
-      id: '',
       tanggal_transaksi: '',
       nama_wakif: '',
       nik: '',
@@ -291,6 +317,15 @@ export default {
       nominal: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((value) => !value)
+    },
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -387,10 +422,6 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
     },
   },
 }

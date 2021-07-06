@@ -16,7 +16,7 @@
       </v-col>
       <v-spacer></v-spacer>
 
-      <!-- popup add/edit data -->
+      <!-- popup -->
       <v-col class="d-flex justify-end col-md-4">
         <!-- dialog input data -->
         <v-dialog v-model="dialogInput" max-width="450px">
@@ -56,34 +56,19 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <!-- dialog delete -->
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card class="rounded-xl px-5 pt-10 pb-5">
-            <v-card-subtitle class="headline text-body-1"
-              >Apa Anda yakin ingin menghapus data ini?</v-card-subtitle
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeDelete"
-                >Batal</v-btn
-              >
-              <v-spacer></v-spacer>
-              <v-btn :color="colorTheme" dark depressed @click="handleDelete"
-                >Iya</v-btn
-              >
-              <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -92,17 +77,15 @@
 
     <!-- data tabel -->
     <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
-      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
-        <span>{{ kategori_utang }}</span>
+      <template #[`item.kategori_utang`]="{ item: { kategori_utang } }">
+        <span v-if="kategori_utang === 'biaya'">Biaya</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
       </template>
       <template #cell(keterangan_utang)="{ item: { keterangan_utang } }">
         <span>{{ keterangan_utang }}</span>
-      </template>
-      <template #[`item.aksi2`]="row">
-        <v-icon small @click="showDelete(row)"> mdi-delete </v-icon>
       </template>
     </v-data-table>
   </v-main>
@@ -120,7 +103,6 @@ export default {
   data: () => ({
     colorTheme: '#388E3C',
     dialogInput: false,
-    dialogDelete: false,
     kategoriUtang: [
       { text: 'Utang Biaya', value: 'biaya' },
       { text: 'Utang Jangka Panjang', value: 'jangkapanjang' },
@@ -130,21 +112,25 @@ export default {
       { text: 'Kategori Utang', value: 'kategori_utang' },
       { text: 'Nominal', value: 'nominal' },
       { text: 'Keterangan', value: 'keterangan_utang' },
-      { text: 'Aksi', value: 'aksi2', sortable: false },
     ],
+
     inputItem: {
-      id: '',
       kategori_utang: '',
       nominal: '',
       keterangan_utang: '',
     },
     defaultItem: {
-      id: '',
       kategori_utang: '',
       nominal: '',
       keterangan_utang: '',
     },
   }),
+
+  computed: {
+    areAllInputsEmpty() {
+      return Object.values(this.inputItem).some((v) => !v)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -179,26 +165,6 @@ export default {
       this.$nextTick(() => {
         this.inputItem = Object.assign({}, this.defaultItem)
       })
-    },
-
-    showDelete({ item: { id } }) {
-      this.dialogDelete = true
-      this.editedItem = { ...this.editedItem, id }
-    },
-
-    handleDelete() {
-      this.$store
-        .dispatch('deleteDataUtang', this.editedItem.id)
-        .then(() =>
-          this.handleRefreshList()
-            .then(() => this.closeDelete())
-            .then(() => (this.isLoading = false))
-        )
-        .catch(() => (this.isLoading = false))
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
     },
   },
 }

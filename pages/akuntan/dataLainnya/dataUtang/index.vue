@@ -23,7 +23,7 @@
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
-                ><b> Form Edit Data Wakaf</b></span
+                ><b> Form Edit Data Utang</b></span
               >
             </v-card-title>
             <v-form class="px-10 pt-10">
@@ -51,12 +51,17 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -87,8 +92,9 @@
 
     <!-- data tabel -->
     <v-data-table :headers="headers" :items="dataUtang.data" :search="search">
-      <template #cell(kategori_utang)="{ item: { kategori_utang } }">
-        <span>{{ kategori_utang }}</span>
+      <template #[`item.kategori_utang`]="{ item: { kategori_utang } }">
+        <span v-if="kategori_utang === 'biaya'">Biaya</span>
+        <span v-else>Jangka Panjang</span>
       </template>
       <template #cell(nominal)="{ item: { nominal } }">
         <span>{{ nominal }}</span>
@@ -117,7 +123,6 @@ export default {
 
   data: () => ({
     colorTheme: '#388E3C',
-    dialogInput: false,
     dialogEdit: false,
     dialogDelete: false,
     kategoriUtang: [
@@ -132,6 +137,7 @@ export default {
       { text: 'Aksi', value: 'aksi', sortable: false },
       { text: '', value: 'aksi2', sortable: false },
     ],
+
     editedItem: {
       id: '',
       kategori_utang: '',
@@ -139,12 +145,17 @@ export default {
       keterangan_utang: '',
     },
     defaultItem: {
-      id: '',
       kategori_utang: '',
       nominal: '',
       keterangan_utang: '',
     },
   }),
+
+  computed: {
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
 
   methods: {
     async handleRefreshList() {
@@ -194,7 +205,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 

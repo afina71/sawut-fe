@@ -80,19 +80,59 @@
             :rules="required"
           ></v-text-field>
           <div class="text-subtitle-2">Periode Awal</div>
-          <v-text-field
-            v-model="inputItem.periode_awal"
-            class="pt-1"
-            label="Tahun-Bulan-Tanggal"
-            :rules="required"
-          ></v-text-field>
+          <v-menu
+            v-model="inputTanggal1"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="inputItem.periode_awal"
+                label="Masukkan Tanggal"
+                append-icon="mdi-calendar"
+                class="pt-1"
+                readonly
+                :rules="required"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="inputItem.periode_awal"
+              color="green darken-1"
+              @input="inputTanggal1 = false"
+            ></v-date-picker>
+          </v-menu>
           <div class="text-subtitle-2">Periode Akhir</div>
-          <v-text-field
-            v-model="inputItem.periode_akhir"
-            class="pt-1"
-            label="Tahun-Bulan-Tanggal"
-            :rules="required"
-          ></v-text-field>
+          <v-menu
+            v-model="inputTanggal2"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="inputItem.periode_akhir"
+                label="Periode Akhir"
+                append-icon="mdi-calendar"
+                class="pt-1"
+                readonly
+                :rules="required"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="inputItem.periode_akhir"
+              color="green darken-1"
+              @input="inputTanggal2 = false"
+            ></v-date-picker>
+          </v-menu>
         </v-col>
       </v-row>
 
@@ -341,8 +381,9 @@ export default {
   data: () => ({
     isLoading: false,
     valid: true,
+    inputTanggal1: false,
+    inputTanggal2: false,
     required: [(v) => !!v || 'Form harus diisi'],
-    required2: [(v) => !!v || 'Form harus diisi'],
 
     jenisUsaha: [
       { text: 'Perdagangan', value: 'perdagangan' },
@@ -539,12 +580,6 @@ export default {
     },
   }),
 
-  computed: {
-    areAllInputsEmpty() {
-      return Object.values(this.inputItem).some((value) => !value)
-    },
-  },
-
   methods: {
     async handleInput() {
       const {
@@ -642,7 +677,7 @@ export default {
         this.$router.push(`/nazhir/penyaluranManfaat`)
       } catch (error) {
         this.isLoading = false
-        this.valid = true
+        this.valid = false
       }
     },
   },

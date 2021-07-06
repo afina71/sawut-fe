@@ -8,12 +8,15 @@
       <v-spacer></v-spacer>
       <!-- popup edit data -->
       <v-col class="d-flex justify-end col-md-4">
+        <v-btn :color="colorTheme" dark depressed @click="showEdit()">
+          Edit Data
+        </v-btn>
         <v-dialog v-model="dialogEdit" max-width="600px">
-          <template #activator="{ on, attrs }">
+          <!-- <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">
               Edit Data
             </v-btn>
-          </template>
+          </template> -->
           <v-card class="rounded-xl">
             <v-card-title class="green darken-1 justify-center">
               <span class="headline text-body-1 white--text"
@@ -88,7 +91,7 @@
       </v-col>
     </v-row>
 
-    <!-- <v-data-table :headers="headers" :items="dataAkun.data">
+    <v-data-table :headers="headers" :items="dataAkun.data">
       <template #cell(nama_pengguna)="{ item: { nama_pengguna } }">
         <span>{{ nama_pengguna }}</span>
       </template>
@@ -101,13 +104,13 @@
       <template #[`item.aksi`]="row">
         <v-icon small @click="showEdit(row)"> mdi-pencil </v-icon>
       </template>
-    </v-data-table> -->
+    </v-data-table>
   </v-main>
 </template>
 
 <script>
 export default {
-  layout: 'default',
+  layout: 'bendahara',
   async asyncData({ store }) {
     return {
       dataAkun: await store.dispatch('getDataAkun'),
@@ -118,6 +121,18 @@ export default {
       colorTheme: '#388E3C',
       dialogEdit: false,
       isLoading: false,
+      peran: [
+        { text: 'Akuntan', value: 'akuntan' },
+        { text: 'Nazhir', value: 'nazhir' },
+        { text: 'Bendahara', value: 'bendahara' },
+      ],
+      headers: [
+        { text: 'Nama Pengguna', value: 'nama_pengguna' },
+        { text: 'Email', value: 'email' },
+        { text: 'Peran', value: 'role_id' },
+        { text: 'Aksi', value: 'aksi', sortable: false },
+      ],
+      editedIndex: -1,
       editedItem: {
         id: '',
         nama_pengguna: '',
@@ -138,6 +153,24 @@ export default {
       this.dataAkun = await this.$store.dispatch('getDataAkun')
     },
 
+    showEdit({
+      item: {
+        id, // eslint-disable-next-line camelcase
+        nama_pengguna,
+        email,
+        password,
+      },
+    }) {
+      this.dialogEdit = true
+      this.editedItem = {
+        ...this.editedItem,
+        id,
+        nama_pengguna,
+        email,
+        password,
+      }
+    },
+
     handleEdit() {
       const { id } = this.editedItem
       this.isLoading = true
@@ -145,6 +178,8 @@ export default {
         .dispatch('updateDataAkun', [
           id,
           {
+            // nama_pengguna: this.$refs.nama_pengguna.value,
+            // email: this.$refs.email.value,
             nama_pengguna: this.editedItem.nama_pengguna,
             email: this.editedItem.email,
             password: this.editedItem.password,
