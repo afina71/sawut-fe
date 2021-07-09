@@ -47,12 +47,17 @@
               ></v-text-field>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeEdit">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleEdit">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllEditsEmpty"
+                @click="handleEdit"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -135,27 +140,33 @@ export default {
     }
   },
 
+  computed: {
+    areAllEditsEmpty() {
+      return Object.values(this.editedItem).some((value) => !value)
+    },
+  },
+
   methods: {
     async handleRefreshList() {
       this.dataAkun = await this.$store.dispatch('getDataAkun')
     },
 
-    showEdit({
-      item: {
-        // eslint-disable-next-line camelcase
-        nama_pengguna,
-        email,
-        password,
-      },
-    }) {
-      this.dialogEdit = true
-      this.editedItem = {
-        ...this.editedItem,
-        nama_pengguna,
-        email,
-        password,
-      }
-    },
+    // showEdit({
+    //   item: {
+    //     // eslint-disable-next-line camelcase
+    //     nama_pengguna,
+    //     email,
+    //     password,
+    //   },
+    // }) {
+    //   this.dialogEdit = true
+    //   this.editedItem = {
+    //     ...this.editedItem,
+    //     nama_pengguna,
+    //     email,
+    //     password,
+    //   }
+    // },
 
     handleEdit() {
       this.isLoading = true
