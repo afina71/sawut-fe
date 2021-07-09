@@ -233,8 +233,8 @@ export const actions = {
   getDataAkun({ dispatch }) {
     return dispatch('getItems', 'wakaf/data-akun')
   },
-  updateDataAkun({ dispatch, payload }) {
-    return dispatch('editItem', 'wakaf/data-akun', payload)
+  updateDataAkun({ dispatch }, [payload]) {
+    return dispatch('updateItem', ['wakaf/data-akun', payload])
   },
 
   // data pengguna

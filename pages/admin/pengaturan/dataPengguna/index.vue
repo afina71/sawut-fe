@@ -63,12 +63,17 @@
               ></v-autocomplete>
             </v-form>
 
-            <v-card-actions class="pb-5">
+            <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
               <v-btn color="green darken-1" text @click="closeInput">
                 Batal
               </v-btn>
-              <v-btn :color="colorTheme" dark depressed @click="handleInput">
+              <v-btn
+                depressed
+                class="white--text rounded-lg green darken-1"
+                :disabled="areAllInputsEmpty"
+                @click="handleInput"
+              >
                 Simpan
               </v-btn>
             </v-card-actions>
@@ -155,7 +160,11 @@
     </v-row>
 
     <!-- data tabel -->
-    <v-data-table :headers="headers" :items="dataPengguna" :search="search">
+    <v-data-table
+      :headers="headers"
+      :items="dataPengguna.data"
+      :search="search"
+    >
       <template #cell(nama_pengguna)="{ item: { nama_pengguna } }">
         <span>{{ nama_pengguna }}</span>
       </template>
@@ -163,9 +172,9 @@
         <span>{{ email }}</span>
       </template>
       <template #[`item.role_id`]="{ item: { role_id } }">
-        <span v-if="role_id === 'nazhir'">Nazhir</span>
-        <span v-if="role_id === 'bendahara'">Bendahara</span>
-        <span v-if="role_id === 'akuntan'">Akuntan</span>
+        <span v-if="role_id === 3">Nazhir</span>
+        <span v-else-if="role_id === 4">Bendahara</span>
+        <span v-else-if="role_id === 2">Akuntan</span>
         <span v-else>Admin</span>
       </template>
       <template #[`item.aksi`]="row">
@@ -194,9 +203,9 @@ export default {
     dialogDelete: false,
     search: '',
     peran: [
-      { text: 'Akuntan', value: 'akuntan' },
-      { text: 'Nazhir', value: 'nazhir' },
-      { text: 'Bendahara', value: 'bendahara' },
+      { text: 'Akuntan', value: '2' },
+      { text: 'Nazhir', value: '3' },
+      { text: 'Bendahara', value: '4' },
     ],
     headers: [
       { text: 'Nama Pengguna', value: 'nama_pengguna' },
