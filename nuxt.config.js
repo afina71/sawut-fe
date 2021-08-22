@@ -1,6 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  // mode: 'spa',
   // Global page headers: https://go.nuxtjs.dev/config-head
 
   // env: {
@@ -45,44 +46,13 @@ export default {
     '@nuxtjs/auth',
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  // axios: {
-  //   baseURL: 'http://127.0.0.1:8000',
-  //   credentials: true,
-  //   init(axios) {
-  //     axios.defaults.withCredentials = true
-  //   },
-  // },
-
-  // auth: {
-  //   cookies: false,
-  //   strategies: {
-  //     local: {
-  //       endpoint: {
-  //         login: {
-  //           url: '/api/auth/login',
-  //           method: 'post',
-  //         },
-  //         user: {
-  //           url: '/api/auth/user',
-  //           method: 'get',
-  //           propertyName: false,
-  //         },
-  //       },
-  //       tokenType: 'Token',
-  //       tokenName: 'Authorization',
-  //     },
-  //   },
-  // },
-
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
       light: true,
       themes: {
         light: {
-          primary: colors.blue.darken2,
+          primary: colors.green.lighten5,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,
