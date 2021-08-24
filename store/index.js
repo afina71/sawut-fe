@@ -55,32 +55,40 @@ export const actions = {
         )
     })
   },
+
   // getItems({ dispatch }, payload) {
   //   return dispatch('useAPI', {
   //     method: 'get',
-  //     url: `https://laravel-sawut.herokuapp.com/api/${payload}`,
+  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
   //   })
   // },
   // createItem({ dispatch }, [url, data]) {
   //   return dispatch('useAPI', {
   //     method: 'post',
-  //     url: `https://laravel-sawut.herokuapp.com/api/${url}`,
+  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${url}`,
   //     data,
   //   })
   // },
   // updateItem({ dispatch }, [url, data]) {
   //   return dispatch('useAPI', {
-  //     method: 'patch',
-  //     url: `https://laravel-sawut.herokuapp.com/api/${url}`,
+  //     method: 'put',
+  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${url}`,
   //     data,
   //   })
   // },
   // deleteItem({ dispatch }, payload) {
   //   return dispatch('useAPI', {
   //     method: 'delete',
-  //     url: `https://laravel-sawut.herokuapp.com/api/${payload}`,
+  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
   //   })
   // },
+  // editItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'put',
+  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+  //   })
+  // },
+
   getItems({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'get',
