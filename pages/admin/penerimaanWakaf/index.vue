@@ -31,7 +31,26 @@
                 ><b> Form Input Data Penerimaan Wakaf</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
+
+            <ValidationObserver>
+              <v-form class="px-10 pt-10">
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  name="name"
+                  rules="required|email"
+                >
+                  <v-text-field
+                    v-model="inputItem.nama_wakif"
+                    class="pt-1"
+                    label="Nama Wakif"
+                    dense
+                  ></v-text-field>
+                  <span>{{ errors[0] }}</span>
+                </ValidationProvider>
+              </v-form>
+            </ValidationObserver>
+
+            <!-- <v-form class="px-10 pt-10">
               <v-row>
                 <v-col cols="12" sm="6">
                   <div class="text-subtitle-2">Informasi Wakif</div>
@@ -122,7 +141,7 @@
                   ></v-autocomplete>
                 </v-col>
               </v-row>
-            </v-form>
+            </v-form> -->
 
             <v-card-actions class="py-5 pb-5 pr-10">
               <v-spacer></v-spacer>
@@ -375,7 +394,9 @@
 </template>
 
 <script>
-export default {
+import Vue from 'vue'
+
+export default Vue.extend({
   layout: 'default',
   async asyncData({ store }) {
     return {
@@ -609,5 +630,5 @@ export default {
       this.dialogDelete = false
     },
   },
-}
+})
 </script>

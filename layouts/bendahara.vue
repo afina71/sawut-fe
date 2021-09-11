@@ -15,7 +15,7 @@
           </v-list-item-icon>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item-group v-model="selectedItem" color="primary">
+        <v-list-item-group v-model="selectedItem" color="highlight">
           <v-list-item v-for="menu in menus" :key="menu.title" :to="menu.page">
             <v-list-item-icon>
               <v-icon>{{ menu.icon }}</v-icon>
