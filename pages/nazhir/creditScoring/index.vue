@@ -1,377 +1,544 @@
 <template>
   <v-main>
-    <v-form v-model="valid" class="pb-10 pt-10">
-      <div class="text-h6 py-10">Data Umum Penyaluran Manfaat</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">Nama Penerima</div>
-          <v-text-field
-            v-model="inputItem.nama_penerima"
-            class="pt-1"
-            label="Masukkan Nama"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Nominal Peminjaman</div>
-          <v-text-field
-            v-model="inputItem.nominal_peminjaman"
-            class="pt-1"
-            label="Masukkan Nominal"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Nomor Induk Kependudukan</div>
-          <v-text-field
-            v-model="inputItem.nik"
-            class="pt-1"
-            label="Masukkan NIK"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Nomor Telepon</div>
-          <v-text-field
-            v-model="inputItem.telepon"
-            class="pt-1"
-            label="Masukkan Nomor Telepon"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Alamat</div>
-          <v-text-field
-            v-model="inputItem.alamat"
-            class="pt-1"
-            label="Masukkan Alamat"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Jenis Usaha</div>
-          <v-autocomplete
-            v-model="inputItem.jenis_usaha"
-            class="pt-1"
-            :items="jenisUsaha"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">Deskripsi Usaha</div>
-          <v-text-field
-            v-model="inputItem.deskripsi_usaha"
-            class="pt-1"
-            :rules="required"
-            label="Deskripsi"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">Jenis Piutang</div>
-          <v-autocomplete
-            v-model="inputItem.jenis_piutang"
-            class="pt-1"
-            :items="jenisPiutang"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">Sumber Biaya</div>
-          <v-autocomplete
-            v-model="inputItem.sumber_biaya"
-            class="pt-1"
-            :items="sumberBiaya"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">Periode Peminjaman (Bulan)</div>
-          <v-text-field
-            v-model="inputItem.periode_peminjaman"
-            class="pt-1"
-            label="Masukkan Lama Periode"
-            :rules="required"
-          ></v-text-field>
-          <div class="text-subtitle-2">Periode Awal</div>
-          <v-menu
-            v-model="inputTanggal1"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template #activator="{ on, attrs }">
+    <validation-observer ref="observer" v-slot="{ invalid }">
+      <v-form class="pb-10 pt-10" @submit.prevent="handleInput">
+        <div class="text-h6 py-10">Data Umum Penyaluran Manfaat</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">Nama Penerima</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Nama Penerima"
+              rules="required|alpha_spaces"
+            >
               <v-text-field
+                v-model="inputItem.nama_penerima"
+                :error-messages="errors"
+                label="Masukkan Nama"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Nominal Peminjaman</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Nominal Peminjaman"
+              rules="required|numeric"
+            >
+              <v-text-field
+                v-model="inputItem.nominal_peminjaman"
+                :error-messages="errors"
+                label="Masukkan Nominal"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Nomor Induk Kependudukan</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="NIK"
+              rules="required|numeric"
+            >
+              <v-text-field
+                v-model="inputItem.nik"
+                :error-messages="errors"
+                label="Masukkan NIK"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Nomor Telepon</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Nomor Telepon"
+              rules="required|numeric"
+            >
+              <v-text-field
+                v-model="inputItem.telepon"
+                :error-messages="errors"
+                label="Masukkan Nomor Telepon"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Alamat</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Alamat"
+              rules="required"
+            >
+              <v-text-field
+                v-model="inputItem.alamat"
+                :error-messages="errors"
+                label="Masukkan Alamat"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Jenis Usaha</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Jenis Usaha"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.jenis_usaha"
+                :error-messages="errors"
+                :items="jenisUsaha"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">Deskripsi Usaha</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Deskripsi Usaha"
+              rules="required"
+            >
+              <v-text-field
+                v-model="inputItem.deskripsi_usaha"
+                :error-messages="errors"
+                label="Deskripsi"
+              ></v-text-field>
+            </validation-provider>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">Jenis Piutang</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Jenis Piutang"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.jenis_piutang"
+                :error-messages="errors"
+                :items="jenisPiutang"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">Sumber Biaya</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Sumber Biaya"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.sumber_biaya"
+                :error-messages="errors"
+                :items="sumberBiaya"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">Periode Peminjaman (Bulan)</div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Periode Peminjaman (Bulan)"
+              rules="required|numeric"
+            >
+              <v-text-field
+                v-model="inputItem.periode_peminjaman"
+                :error-messages="errors"
+                label="Masukkan Lama Periode"
+              ></v-text-field>
+            </validation-provider>
+            <div class="text-subtitle-2">Periode Awal</div>
+            <v-menu
+              v-model="inputTanggal1"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template #activator="{ on, attrs }">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Periode Awal"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="inputItem.periode_awal"
+                    :error-messages="errors"
+                    label="Masukkan Tanggal"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </validation-provider>
+              </template>
+              <v-date-picker
                 v-model="inputItem.periode_awal"
-                label="Masukkan Tanggal"
-                append-icon="mdi-calendar"
-                class="pt-1"
-                readonly
-                :rules="required"
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="inputItem.periode_awal"
-              color="green darken-1"
-              @input="inputTanggal1 = false"
-            ></v-date-picker>
-          </v-menu>
-          <div class="text-subtitle-2">Periode Akhir</div>
-          <v-menu
-            v-model="inputTanggal2"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template #activator="{ on, attrs }">
-              <v-text-field
+                color="green darken-1"
+                @input="inputTanggal1 = false"
+              ></v-date-picker>
+            </v-menu>
+            <div class="text-subtitle-2">Periode Akhir</div>
+            <v-menu
+              v-model="inputTanggal2"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template #activator="{ on, attrs }">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Periode Akhir"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="inputItem.periode_akhir"
+                    :error-messages="errors"
+                    label="Periode Akhir"
+                    append-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </validation-provider>
+              </template>
+              <v-date-picker
                 v-model="inputItem.periode_akhir"
-                label="Periode Akhir"
-                append-icon="mdi-calendar"
+                color="green darken-1"
+                @input="inputTanggal2 = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
+
+        <v-divider></v-divider>
+        <!-- Categori 1 -->
+        <div class="text-h6 py-10">Kategori 1: Capacity</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa nominal pinjaman yang diinginkan oleh Peminjam?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_1"
+                :error-messages="errors"
                 class="pt-1"
-                readonly
-                :rules="required"
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              v-model="inputItem.periode_akhir"
-              color="green darken-1"
-              @input="inputTanggal2 = false"
-            ></v-date-picker>
-          </v-menu>
-        </v-col>
-      </v-row>
+                :items="pertanyaan1"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Berapa lama usaha sejak didirikan hingga saat ini?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_2"
+                :error-messages="errors"
+                class="pt-1"
+                :items="pertanyaan2"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Berapa rata-rata omset dalam sebulan?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_3"
+                :error-messages="errors"
+                class="pt-1"
+                :items="pertanyaan3"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa laba bersih yang diperoleh dalam sebulan?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_4"
+                :error-messages="errors"
+                class="pt-1"
+                :items="pertanyaan4"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Berapa jumlah karyawan dalam usaha tersebut?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_5"
+                :error-messages="errors"
+                class="pt-1"
+                :items="pertanyaan5"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Berapakah proporsi dari penjualan yang dijual dengan cara tunai?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_6"
+                :error-messages="errors"
+                class="pt-1"
+                :items="pertanyaan6"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-      <!-- Categori 1 -->
-      <div class="text-h6 py-10">Kategori 1: Capacity</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Berapa nominal pinjaman yang diinginkan oleh Peminjam?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_1"
-            class="pt-1"
-            :items="pertanyaan1"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa lama usaha sejak didirikan hingga saat ini?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_2"
-            class="pt-1"
-            :rules="required"
-            :items="pertanyaan2"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa rata-rata omset dalam sebulan?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_3"
-            class="pt-1"
-            :rules="required"
-            :items="pertanyaan3"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Berapa laba bersih yang diperoleh dalam sebulan?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_4"
-            class="pt-1"
-            :rules="required"
-            :items="pertanyaan4"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa jumlah karyawan dalam usaha tersebut?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_5"
-            class="pt-1"
-            :rules="required"
-            :items="pertanyaan5"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapakah proporsi dari penjualan yang dijual dengan cara tunai?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_6"
-            class="pt-1"
-            :rules="required"
-            :items="pertanyaan6"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+        <v-divider></v-divider>
+        <!-- Categori 2 -->
+        <div class="text-h6 py-10">Kategori 2: Capital</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Apakah memiliki hutang di tempat lain?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_7"
+                :error-messages="errors"
+                :items="pertanyaan7"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Berapa nominal hutang di tempat lain yang tersisa?
+            </div>
+            <v-autocomplete
+              v-model="inputItem.answer_8"
+              :items="pertanyaan8"
+              :disabled="inputItem.answer_7 === '30'"
+              label="Pilih"
+            ></v-autocomplete>
+            <div class="text-subtitle-2">
+              Berapa jumlah angsuran per bulan di tempat lain?
+            </div>
+            <v-autocomplete
+              v-model="inputItem.answer_9"
+              :items="pertanyaan9"
+              :disabled="inputItem.answer_7 === '30'"
+              label="Pilih"
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa sisa lama angsuran di tempat lain?
+            </div>
+            <v-autocomplete
+              v-model="inputItem.answer_10"
+              :items="pertanyaan10"
+              :disabled="inputItem.answer_7 === '30'"
+              label="Pilih"
+            ></v-autocomplete>
+            <div class="text-subtitle-2">
+              Berapa sisa lama angsuran di tempat lain? Pernahkan anda terlambat
+              dalam melunasi utang? Jika iya berapa jumlah keterlambatan
+              pelunasan?
+            </div>
+            <v-autocomplete
+              v-model="inputItem.answer_11"
+              :items="pertanyaan11"
+              :disabled="inputItem.answer_7 === '30'"
+              label="Pilih"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-      <!-- Categori 2 -->
-      <div class="text-h6 py-10">Kategori 2: Capital</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Apakah memiliki hutang di tempat lain?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_7"
-            class="pt-1"
-            :items="pertanyaan7"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa nominal hutang di tempat lain yang tersisa?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_8"
-            class="pt-1"
-            :items="pertanyaan8"
-            :disabled="inputItem.answer_7 === '30'"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa jumlah angsuran per bulan di tempat lain?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_9"
-            class="pt-1"
-            :items="pertanyaan9"
-            :disabled="inputItem.answer_7 === '30'"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Berapa sisa lama angsuran di tempat lain?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_10"
-            class="pt-1"
-            :items="pertanyaan10"
-            :disabled="inputItem.answer_7 === '30'"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Berapa sisa lama angsuran di tempat lain? Pernahkan anda terlambat
-            dalam melunasi utang? Jika iya berapa jumlah keterlambatan
-            pelunasan?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_11"
-            class="pt-1"
-            :items="pertanyaan11"
-            :disabled="inputItem.answer_7 === '30'"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+        <v-divider></v-divider>
+        <!-- Categori 3 -->
+        <div class="text-h6 py-10">Kategori 3: Condition of Economy</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa jumlah tanggungan keluarga?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_12"
+                :error-messages="errors"
+                :items="pertanyaan12"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa nominal pengeluaran rumah tangga per bulan?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_13"
+                :error-messages="errors"
+                :items="pertanyaan13"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-      <!-- Categori 3 -->
-      <div class="text-h6 py-10">Kategori 3: Condition of Economy</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">Berapa jumlah tanggungan keluarga?</div>
-          <v-autocomplete
-            v-model="inputItem.answer_12"
-            class="pt-1"
-            :items="pertanyaan12"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Berapa nominal pengeluaran rumah tangga per bulan?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_13"
-            class="pt-1"
-            :items="pertanyaan13"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+        <v-divider></v-divider>
+        <!-- Categori 4 -->
+        <div class="text-h6 py-10">Kategori 4: Collateral</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Berapa jangka waktu pengembalian pinjaman?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_14"
+                :error-messages="errors"
+                :items="pertanyaan14"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-      <!-- Categori 4 -->
-      <div class="text-h6 py-10">Kategori 4: Collateral</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Berapa jangka waktu pengembalian pinjaman?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_14"
-            class="pt-1"
-            :items="pertanyaan14"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+        <v-divider></v-divider>
+        <!-- Categori 5 -->
+        <div class="text-h6 py-10">Kategori 5: Character</div>
+        <v-row class="pb-10">
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Bagaimana penilaian masyarakat sekitar terhadap calon peminjam?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_15"
+                :error-messages="errors"
+                :items="pertanyaan15"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+            <div class="text-subtitle-2">
+              Bagaimana sikap kooperatif peminjam?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_16"
+                :error-messages="errors"
+                :items="pertanyaan16"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <div class="text-subtitle-2">
+              Bagaimana sikap tanggung jawab peminjam?
+            </div>
+            <validation-provider
+              v-slot="{ errors }"
+              name="Form"
+              rules="required"
+            >
+              <v-autocomplete
+                v-model="inputItem.answer_17"
+                :error-messages="errors"
+                :items="pertanyaan17"
+                label="Pilih"
+              ></v-autocomplete>
+            </validation-provider>
+          </v-col>
+        </v-row>
 
-      <v-divider></v-divider>
-      <!-- Categori 5 -->
-      <div class="text-h6 py-10">Kategori 5: Character</div>
-      <v-row class="pb-10">
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Bagaimana penilaian masyarakat sekitar terhadap calon peminjam?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_15"
-            class="pt-1"
-            :items="pertanyaan15"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-          <div class="text-subtitle-2">
-            Bagaimana sikap kooperatif peminjam?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_16"
-            class="pt-1"
-            :items="pertanyaan16"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <div class="text-subtitle-2">
-            Bagaimana sikap tanggung jawab peminjam?
-          </div>
-          <v-autocomplete
-            v-model="inputItem.answer_17"
-            class="pt-1"
-            :items="pertanyaan17"
-            :rules="required"
-            label="Pilih"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
-    </v-form>
-
-    <v-row class="pt-10 pb-10">
-      <v-spacer></v-spacer>
-      <v-btn
-        x-large
-        depressed
-        class="white--text rounded-lg green darken-1"
-        :disabled="isLoading || !valid"
-        @click="handleInput"
-      >
-        Simpan
-      </v-btn>
-    </v-row>
+        <v-row class="pt-5">
+          <v-spacer></v-spacer>
+          <v-btn
+            x-large
+            depressed
+            class="white--text rounded-lg green darken-1"
+            type="submit"
+            :disabled="invalid"
+          >
+            Simpan
+          </v-btn>
+        </v-row>
+      </v-form>
+    </validation-observer>
   </v-main>
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  alpha_spaces,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('alpha_spaces', {
+  // eslint-disable-next-line camelcase
+  ...alpha_spaces,
+  message: '{_field_} hanya dapat diisi dengan huruf',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'csnazhir',
   async asyncData({ store }) {
     return {

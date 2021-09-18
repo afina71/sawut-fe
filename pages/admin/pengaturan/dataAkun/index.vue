@@ -8,9 +8,6 @@
       <v-spacer></v-spacer>
       <!-- popup edit data -->
       <v-col class="d-flex justify-end col-md-4">
-        <!-- <v-btn :color="colorTheme" dark depressed @click="showEdit()">
-          Edit Data
-        </v-btn> -->
         <v-dialog v-model="dialogEdit" max-width="600px">
           <template #activator="{ on, attrs }">
             <v-btn :color="colorTheme" dark depressed v-bind="attrs" v-on="on">

@@ -498,18 +498,6 @@
         </v-row>
       </v-form>
     </validation-observer>
-    <!-- <v-row class="pt-10 pb-10">
-      <v-spacer></v-spacer>
-      <v-btn
-        x-large
-        depressed
-        class="white--text rounded-lg green darken-1"
-        :disabled="isLoading || !valid"
-        @click="handleInput"
-      >
-        Simpan
-      </v-btn>
-    </v-row> -->
   </v-main>
 </template>
 
