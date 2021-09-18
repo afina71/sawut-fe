@@ -20,48 +20,64 @@
                 ><b> Pemindahan Saldo Kas </b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-autocomplete
-                v-model="editedItem.akun_asal"
-                class="pt-1"
-                :items="namaKas"
-                item-text="text"
-                item-value="value"
-                label="Akun Asal"
-                dense
-                required
-              ></v-autocomplete>
-              <v-autocomplete
-                v-model="editedItem.akun_tujuan"
-                class="pt-1"
-                :items="namaKas"
-                item-text="text"
-                item-value="value"
-                label="Akun Tujuan"
-                dense
-                required
-              ></v-autocomplete>
-              <v-text-field
-                v-model="editedItem.saldo"
-                class="pt-1"
-                label="Jumlah"
-                dense
-                required
-              ></v-text-field>
-            </v-form>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="pindahSaldo">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Akun Asal"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.akun_asal"
+                    :error-messages="errors"
+                    :items="namaKas"
+                    item-text="text"
+                    item-value="value"
+                    label="Akun Asal"
+                  ></v-autocomplete>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Akun Tujuan"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.akun_tujuan"
+                    :error-messages="errors"
+                    :items="namaKas"
+                    item-text="text"
+                    item-value="value"
+                    label="Akun Tujuan"
+                  ></v-autocomplete>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Jumlah"
+                  rules="required|numeric|is_not:0"
+                >
+                  <v-text-field
+                    v-model="editedItem.saldo"
+                    :error-messages="errors"
+                    label="Jumlah"
+                  ></v-text-field>
+                </validation-provider>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="close"> Batal </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="pindahSaldo"
-              >
-                Pindah
-              </v-btn>
-            </v-card-actions>
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="close">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Pindah
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
       </v-col>
@@ -85,7 +101,43 @@
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  is_not,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('is_not', {
+  // eslint-disable-next-line camelcase
+  ...is_not,
+  message: '{_field_} tidak boleh bernilai 0',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'default',
   async asyncData({ store }) {
     return {
@@ -128,11 +180,7 @@ export default {
     defaultItem: { akun_asal: '', akun_tujuan: '', saldo: '' },
   }),
 
-  computed: {
-    areAllEditsEmpty() {
-      return Object.values(this.editedItem).some((value) => !value)
-    },
-  },
+  computed: {},
 
   methods: {
     async pindahSaldo() {
@@ -150,6 +198,7 @@ export default {
           akun_tujuan,
           saldo,
         })
+        this.$refs.observer.reset()
         this.isLoading = false
         this.handleRefreshList()
       } catch (error) {
@@ -164,6 +213,7 @@ export default {
     close() {
       this.dialog = false
       this.$nextTick(() => {
+        this.$refs.observer.reset()
         this.editedItem = Object.assign({}, this.defaultItem)
       })
     },

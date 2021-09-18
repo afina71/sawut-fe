@@ -32,131 +32,166 @@
               >
             </v-card-title>
 
-            <ValidationObserver>
-              <v-form class="px-10 pt-10">
-                <ValidationProvider
-                  v-slot="{ errors }"
-                  name="name"
-                  rules="required|email"
-                >
-                  <v-text-field
-                    v-model="inputItem.nama_wakif"
-                    class="pt-1"
-                    label="Nama Wakif"
-                    dense
-                  ></v-text-field>
-                  <span>{{ errors[0] }}</span>
-                </ValidationProvider>
-              </v-form>
-            </ValidationObserver>
-
-            <!-- <v-form class="px-10 pt-10">
-              <v-row>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakif</div>
-                  <v-menu
-                    v-model="inputTanggal"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template #activator="{ on, attrs }">
-                      <v-text-field
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleInput">
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Informasi Wakif</div>
+                    <v-menu
+                      v-model="inputTanggal"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template #activator="{ on, attrs }">
+                        <validation-provider
+                          v-slot="{ errors }"
+                          name="Tanggal"
+                          rules="required"
+                        >
+                          <v-text-field
+                            v-model="inputItem.tanggal_transaksi"
+                            :error-messages="errors"
+                            label="Tanggal Transaksi"
+                            append-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </validation-provider>
+                      </template>
+                      <v-date-picker
                         v-model="inputItem.tanggal_transaksi"
-                        label="Tanggal Transaksi"
-                        append-icon="mdi-calendar"
-                        readonly
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
+                        color="green darken-1"
+                        @input="inputTanggal = false"
+                      ></v-date-picker>
+                    </v-menu>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nama Wakif"
+                      rules="required|alpha_spaces"
+                    >
+                      <v-text-field
+                        v-model="inputItem.nama_wakif"
+                        :error-messages="errors"
+                        label="Nama Wakif"
                       ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="inputItem.tanggal_transaksi"
-                      color="green darken-1"
-                      @input="inputTanggal = false"
-                    ></v-date-picker>
-                  </v-menu>
-                  <v-text-field
-                    v-model="inputItem.nama_wakif"
-                    class="pt-1"
-                    label="Nama Wakif"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.nik"
-                    class="pt-1"
-                    label="NIK"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.telepon"
-                    class="pt-1"
-                    label="Nomor Telepon"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.alamat"
-                    class="pt-1"
-                    label="Alamat"
-                    dense
-                  ></v-text-field>
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakaf</div>
-                  <v-text-field
-                    v-model="inputItem.nomor_aiw"
-                    class="pt-1"
-                    label="Nomor AIW"
-                    dense
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="inputItem.jenis_wakaf"
-                    class="pt-1"
-                    :items="jenisWakaf"
-                    label="Jenis Wakaf"
-                    dense
-                  ></v-autocomplete>
-                  <v-text-field
-                    v-model="inputItem.jangka_waktu_temporer"
-                    class="pt-1"
-                    label="Jangka Waktu (Bulan)"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="inputItem.nominal"
-                    class="pt-1"
-                    label="Nominal Wakaf"
-                    dense
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="inputItem.metode_pembayaran"
-                    class="pt-1"
-                    :items="metode"
-                    label="Metode Pembayaran"
-                    dense
-                  ></v-autocomplete>
-                </v-col>
-              </v-row>
-            </v-form> -->
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="NIK"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="inputItem.nik"
+                        :error-messages="errors"
+                        label="NIK"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nomor Telepon"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="inputItem.telepon"
+                        :error-messages="errors"
+                        label="Nomor Telepon"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Alamat"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="inputItem.alamat"
+                        :error-messages="errors"
+                        label="Alamat"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Informasi Wakaf</div>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nomor AIW"
+                      rules="required|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="inputItem.nomor_aiw"
+                        :error-messages="errors"
+                        label="Nomor AIW"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Jenis Wakaf"
+                      rules="required"
+                    >
+                      <v-autocomplete
+                        v-model="inputItem.jenis_wakaf"
+                        :error-messages="errors"
+                        :items="jenisWakaf"
+                        label="Jenis Wakaf"
+                      ></v-autocomplete>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Jangka Waktu"
+                      rules="required|numeric|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="inputItem.jangka_waktu_temporer"
+                        :error-messages="errors"
+                        label="Jangka Waktu (Bulan)"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nominal Wakaf"
+                      rules="required|numeric|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="inputItem.nominal"
+                        :error-messages="errors"
+                        label="Nominal Wakaf"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Metode Pembayaran"
+                      rules="required"
+                    >
+                      <v-autocomplete
+                        v-model="inputItem.metode_pembayaran"
+                        :error-messages="errors"
+                        :items="metode"
+                        label="Metode Pembayaran"
+                      ></v-autocomplete>
+                    </validation-provider>
+                  </v-col>
+                </v-row>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeInput">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllInputsEmpty"
-                @click="handleInput"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+                <v-row>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeInput">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -169,122 +204,166 @@
               >
             </v-card-title>
 
-            <v-form class="px-10 pt-10">
-              <v-row justify="space-between">
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakif</div>
-                  <v-menu
-                    v-model="editedTanggal"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template #activator="{ on, attrs }">
-                      <v-text-field
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Informasi Wakif</div>
+                    <v-menu
+                      v-model="editedTanggal"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template #activator="{ on, attrs }">
+                        <validation-provider
+                          v-slot="{ errors }"
+                          name="Tanggal"
+                          rules="required"
+                        >
+                          <v-text-field
+                            v-model="editedItem.tanggal_transaksi"
+                            :error-messages="errors"
+                            label="Tanggal Transaksi"
+                            append-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </validation-provider>
+                      </template>
+                      <v-date-picker
                         v-model="editedItem.tanggal_transaksi"
-                        label="Tanggal Transaksi"
-                        append-icon="mdi-calendar"
-                        readonly
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
+                        color="green darken-1"
+                        @input="editedTanggal = false"
+                      ></v-date-picker>
+                    </v-menu>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nama Wakif"
+                      rules="required|alpha_spaces"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nama_wakif"
+                        :error-messages="errors"
+                        label="Nama Wakif"
                       ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="editedItem.tanggal_transaksi"
-                      color="green darken-1"
-                      @input="editedTanggal = false"
-                    ></v-date-picker>
-                  </v-menu>
-                  <v-text-field
-                    v-model="editedItem.nama_wakif"
-                    class="pt-1"
-                    label="Nama Wakif"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nik"
-                    class="pt-1"
-                    label="NIK"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.telepon"
-                    class="pt-1"
-                    label="Nomor Telepon"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.alamat"
-                    class="pt-1"
-                    label="Alamat"
-                    dense
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Wakaf</div>
-                  <v-text-field
-                    v-model="editedItem.nomor_aiw"
-                    class="pt-1"
-                    label="Nomor AIW"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="editedItem.jenis_wakaf"
-                    class="pt-1"
-                    :items="jenisWakaf"
-                    label="Jenis Wakaf"
-                    dense
-                    required
-                  ></v-autocomplete>
-                  <v-text-field
-                    v-model="editedItem.jangka_waktu_temporer"
-                    class="pt-1"
-                    label="Jangka Waktu (Bulan)"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nominal"
-                    class="pt-1"
-                    label="Nominal Wakaf"
-                    dense
-                    required
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="editedItem.metode_pembayaran"
-                    class="pt-1"
-                    :items="metode"
-                    label="Metode Pembayaran"
-                    dense
-                    required
-                  ></v-autocomplete>
-                </v-col>
-              </v-row>
-            </v-form>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="NIK"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nik"
+                        :error-messages="errors"
+                        label="NIK"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nomor Telepon"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.telepon"
+                        :error-messages="errors"
+                        label="Nomor Telepon"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Alamat"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="editedItem.alamat"
+                        :error-messages="errors"
+                        label="Alamat"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Informasi Wakaf</div>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nomor AIW"
+                      rules="required|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nomor_aiw"
+                        :error-messages="errors"
+                        label="Nomor AIW"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Jenis Wakaf"
+                      rules="required"
+                    >
+                      <v-autocomplete
+                        v-model="editedItem.jenis_wakaf"
+                        :error-messages="errors"
+                        :items="jenisWakaf"
+                        label="Jenis Wakaf"
+                      ></v-autocomplete>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Jangka Waktu"
+                      rules="required|numeric|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="editedItem.jangka_waktu_temporer"
+                        :error-messages="errors"
+                        label="Jangka Waktu (Bulan)"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nominal Wakaf"
+                      rules="required|numeric|is_not:0"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nominal"
+                        :error-messages="errors"
+                        label="Nominal Wakaf"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Metode Pembayaran"
+                      rules="required"
+                    >
+                      <v-autocomplete
+                        v-model="editedItem.metode_pembayaran"
+                        :error-messages="errors"
+                        :items="metode"
+                        label="Metode Pembayaran"
+                      ></v-autocomplete>
+                    </validation-provider>
+                  </v-col>
+                </v-row>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+                <v-row>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -394,10 +473,53 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  alpha_spaces,
+  // eslint-disable-next-line camelcase
+  is_not,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
 
-export default Vue.extend({
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('alpha_spaces', {
+  // eslint-disable-next-line camelcase
+  ...alpha_spaces,
+  message: '{_field_} hanya dapat diisi dengan huruf',
+})
+
+extend('is_not', {
+  // eslint-disable-next-line camelcase
+  ...is_not,
+  message: '{_field_} tidak boleh bernilai 0',
+})
+
+export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'default',
+
   async asyncData({ store }) {
     return {
       dataWakaf: await store.dispatch('getDataWakaf'),
@@ -476,14 +598,7 @@ export default Vue.extend({
     },
   }),
 
-  computed: {
-    areAllInputsEmpty() {
-      return Object.values(this.inputItem).some((value) => !value)
-    },
-    areAllEditsEmpty() {
-      return Object.values(this.editedItem).some((value) => !value)
-    },
-  },
+  computed: {},
 
   methods: {
     async handleRefreshList() {
@@ -523,6 +638,7 @@ export default Vue.extend({
           metode_pembayaran,
           nominal,
         })
+        this.$refs.observer.reset()
         this.isLoading = false
         this.handleRefreshList()
       } catch (error) {
@@ -534,6 +650,7 @@ export default Vue.extend({
     closeInput() {
       this.dialogInput = false
       this.$nextTick(() => {
+        this.$refs.observer.reset()
         this.inputItem = Object.assign({}, this.defaultItem)
       })
     },
@@ -606,7 +723,6 @@ export default Vue.extend({
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
 
@@ -630,5 +746,5 @@ export default Vue.extend({
       this.dialogDelete = false
     },
   },
-})
+}
 </script>

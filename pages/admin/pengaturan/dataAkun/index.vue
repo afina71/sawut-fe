@@ -23,44 +23,59 @@
                 ><b> Form Edit Data Akun</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-text-field
-                v-model="editedItem.nama_pengguna"
-                class="pt-1"
-                label="Nama Pengguna"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.email"
-                class="pt-1"
-                label="Email"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.password"
-                class="pt-1"
-                label="Password"
-                dense
-                required
-              ></v-text-field>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Nama Pengguna"
+                  rules="required|alpha_spaces"
+                >
+                  <v-text-field
+                    v-model="editedItem.nama_pengguna"
+                    :error-messages="errors"
+                    label="Nama Pengguna"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Email"
+                  rules="required|email"
+                >
+                  <v-text-field
+                    v-model="editedItem.email"
+                    :error-messages="errors"
+                    label="Email"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Password"
+                  rules="required|min:6"
+                >
+                  <v-text-field
+                    v-model="editedItem.password"
+                    :error-messages="errors"
+                    label="Password"
+                  ></v-text-field>
+                </validation-provider>
+
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
       </v-col>
@@ -104,7 +119,49 @@
 </template>
 
 <script>
+import {
+  required,
+  email,
+  min,
+  // eslint-disable-next-line camelcase
+  alpha_spaces,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('email', {
+  ...email,
+  message: '{_field_} tidak valid',
+})
+
+extend('min', {
+  ...min,
+  message: '{_field_} tidak boleh kurang dari {length} karakter',
+})
+
+extend('alpha_spaces', {
+  // eslint-disable-next-line camelcase
+  ...alpha_spaces,
+  message: '{_field_} hanya dapat diisi dengan huruf',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'admin',
   async asyncData({ store }) {
     return {
@@ -140,33 +197,12 @@ export default {
     }
   },
 
-  computed: {
-    areAllEditsEmpty() {
-      return Object.values(this.editedItem).some((value) => !value)
-    },
-  },
+  computed: {},
 
   methods: {
     async handleRefreshList() {
       this.dataAkun = await this.$store.dispatch('getDataAkun')
     },
-
-    // showEdit({
-    //   item: {
-    //     // eslint-disable-next-line camelcase
-    //     nama_pengguna,
-    //     email,
-    //     password,
-    //   },
-    // }) {
-    //   this.dialogEdit = true
-    //   this.editedItem = {
-    //     ...this.editedItem,
-    //     nama_pengguna,
-    //     email,
-    //     password,
-    //   }
-    // },
 
     handleEdit() {
       this.isLoading = true
@@ -190,7 +226,6 @@ export default {
       this.dialogEdit = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
       })
     },
   },

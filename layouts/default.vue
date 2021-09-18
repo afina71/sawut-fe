@@ -27,13 +27,18 @@
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-group :value="false" prepend-icon="mdi-file-table-outline">
+          <v-list-group
+            :value="false"
+            prepend-icon="mdi-file-table-outline"
+            active-class="highlight--text"
+          >
             <template #activator>
               <v-list-item-title class="text-body-2">Laporan</v-list-item-title>
             </template>
             <v-list-item
               v-for="laporan in submenu1"
               :key="laporan.title"
+              active-class="highlight--text"
               :to="laporan.page"
               link
             >
@@ -46,6 +51,7 @@
           <v-list-group
             :value="false"
             prepend-icon="mdi-hexagon-multiple-outline"
+            active-class="highlight--text"
           >
             <template #activator>
               <v-list-item-title class="text-body-2"
@@ -55,6 +61,7 @@
             <v-list-item
               v-for="lain in submenu2"
               :key="lain.title"
+              active-class="highlight--text"
               :to="lain.page"
               link
             >
@@ -64,7 +71,11 @@
             </v-list-item>
           </v-list-group>
 
-          <v-list-group :value="false" prepend-icon="mdi-cog-outline">
+          <v-list-group
+            :value="false"
+            prepend-icon="mdi-cog-outline"
+            active-class="highlight--text"
+          >
             <template #activator>
               <v-list-item-title class="text-body-2"
                 >Pengaturan</v-list-item-title
@@ -73,6 +84,7 @@
             <v-list-item
               v-for="pengaturan in submenu3"
               :key="pengaturan.title"
+              active-class="highlight--text"
               :to="pengaturan.page"
               link
             >

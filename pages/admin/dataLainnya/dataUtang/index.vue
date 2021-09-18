@@ -31,45 +31,60 @@
                 ><b> Form Input Data Utang</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-autocomplete
-                v-model="inputItem.kategori_utang"
-                class="pt-1"
-                :items="kategoriUtang"
-                label="Kategori Utang"
-                dense
-                required
-              ></v-autocomplete>
-              <v-text-field
-                v-model="inputItem.nominal"
-                class="pt-1"
-                label="Nominal"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="inputItem.keterangan_utang"
-                class="pt-1"
-                label="Keterangan Utang"
-                dense
-                required
-              ></v-text-field>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeInput">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllInputsEmpty"
-                @click="handleInput"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleInput">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Kategori Utang"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="inputItem.kategori_utang"
+                    :error-messages="errors"
+                    :items="kategoriUtang"
+                    label="Kategori Utang"
+                  ></v-autocomplete>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Nominal"
+                  rules="required|numeric"
+                >
+                  <v-text-field
+                    v-model="inputItem.nominal"
+                    :error-messages="errors"
+                    label="Nominal (Rupiah)"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Keterangan Utang"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="inputItem.keterangan_utang"
+                    :error-messages="errors"
+                    label="Keterangan Utang"
+                  ></v-text-field>
+                </validation-provider>
+
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeInput">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -81,45 +96,60 @@
                 ><b> Form Edit Data Utang</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-autocomplete
-                v-model="editedItem.kategori_utang"
-                class="pt-1"
-                :items="kategoriUtang"
-                label="Kategori Utang"
-                dense
-                required
-              ></v-autocomplete>
-              <v-text-field
-                v-model="editedItem.nominal"
-                class="pt-1"
-                label="Nominal"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.keterangan_utang"
-                class="pt-1"
-                label="Keterangan Utang"
-                dense
-                required
-              ></v-text-field>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Kategori Utang"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.kategori_utang"
+                    :error-messages="errors"
+                    :items="kategoriUtang"
+                    label="Kategori Utang"
+                  ></v-autocomplete>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Nominal"
+                  rules="required|numeric"
+                >
+                  <v-text-field
+                    v-model="editedItem.nominal"
+                    :error-messages="errors"
+                    label="Nominal"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Keterangan Utang"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="editedItem.keterangan_utang"
+                    :error-messages="errors"
+                    label="Keterangan Utang"
+                  ></v-text-field>
+                </validation-provider>
+
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -168,7 +198,43 @@
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  is_not,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('is_not', {
+  // eslint-disable-next-line camelcase
+  ...is_not,
+  message: '{_field_} tidak boleh bernilai 0',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'default',
   async asyncData({ store }) {
     return {
@@ -212,14 +278,7 @@ export default {
     },
   }),
 
-  computed: {
-    areAllInputsEmpty() {
-      return Object.values(this.inputItem).some((v) => !v)
-    },
-    areAllEditsEmpty() {
-      return Object.values(this.editedItem).some((value) => !value)
-    },
-  },
+  computed: {},
 
   methods: {
     async handleRefreshList() {
@@ -241,6 +300,7 @@ export default {
           nominal,
           keterangan_utang,
         })
+        this.$refs.observer.reset()
         this.isLoading = false
         this.handleRefreshList()
       } catch (error) {
@@ -252,6 +312,7 @@ export default {
     closeInput() {
       this.dialogInput = false
       this.$nextTick(() => {
+        this.$refs.observer.reset()
         this.inputItem = Object.assign({}, this.defaultItem)
       })
     },
