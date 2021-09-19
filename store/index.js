@@ -56,71 +56,71 @@ export const actions = {
     })
   },
 
-  // getItems({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'get',
-  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-  //   })
-  // },
-  // createItem({ dispatch }, [url, data]) {
-  //   return dispatch('useAPI', {
-  //     method: 'post',
-  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${url}`,
-  //     data,
-  //   })
-  // },
-  // updateItem({ dispatch }, [url, data]) {
-  //   return dispatch('useAPI', {
-  //     method: 'put',
-  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${url}`,
-  //     data,
-  //   })
-  // },
-  // deleteItem({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'delete',
-  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-  //   })
-  // },
-  // editItem({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'put',
-  //     url: `sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-  //   })
-  // },
-
   getItems({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'get',
-      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
   createItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
       method: 'post',
-      url: `https://sawut-laravel.herokuapp.com/api/${url}`,
+      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
       data,
     })
   },
   updateItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
       method: 'put',
-      url: `https://sawut-laravel.herokuapp.com/api/${url}`,
+      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
       data,
     })
   },
   deleteItem({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'delete',
-      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
   editItem({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'put',
-      url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
+
+  // getItems({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'get',
+  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+  //   })
+  // },
+  // createItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'post',
+  //     url: `https://sawut-laravel.herokuapp.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // updateItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'put',
+  //     url: `https://sawut-laravel.herokuapp.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // deleteItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'delete',
+  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+  //   })
+  // },
+  // editItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'put',
+  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
+  //   })
+  // },
 
   // auth-related actions
   login(context, payload) {
