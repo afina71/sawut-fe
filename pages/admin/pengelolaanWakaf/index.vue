@@ -20,6 +20,7 @@
                 ><b> Pemindahan Saldo Kas </b></span
               >
             </v-card-title>
+
             <validation-observer ref="observer" v-slot="{ invalid }">
               <v-form class="pa-10" @submit.prevent="pindahSaldo">
                 <validation-provider

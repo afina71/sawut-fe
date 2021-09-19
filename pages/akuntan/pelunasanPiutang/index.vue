@@ -26,62 +26,79 @@
                 ><b> Form Edit Data Pelunasan</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-menu
-                v-model="editedTanggal"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template #activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="editedItem.tanggal_cicilan"
-                    label="Tanggal Cicilan"
-                    append-icon="mdi-calendar"
-                    readonly
-                    dense
-                    v-bind="attrs"
-                    v-on="on"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="editedItem.tanggal_cicilan"
-                  color="green darken-1"
-                  @input="editedTanggal = false"
-                ></v-date-picker>
-              </v-menu>
-              <v-text-field
-                v-model="editedItem.nik"
-                class="pt-1"
-                label="Nomor Induk Kependudukan"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.jumlah_cicilan"
-                class="pt-1"
-                label="Jumlah Cicilan"
-                dense
-                required
-              ></v-text-field>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <v-menu
+                  v-model="editedTanggal"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template #activator="{ on, attrs }">
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Tanggal Transaksi"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="editedItem.tanggal_cicilan"
+                        :error-messages="errors"
+                        label="Tanggal Cicilan"
+                        append-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-text-field>
+                    </validation-provider>
+                  </template>
+                  <v-date-picker
+                    v-model="editedItem.tanggal_cicilan"
+                    color="green darken-1"
+                    @input="editedTanggal = false"
+                  ></v-date-picker>
+                </v-menu>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="NIK"
+                  rules="required|numeric|is_not:0"
+                >
+                  <v-text-field
+                    v-model="editedItem.nik"
+                    :error-messages="errors"
+                    label="NIK"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Jumlah Cicilan"
+                  rules="required|numeric|is_not:0"
+                >
+                  <v-text-field
+                    v-model="editedItem.jumlah_cicilan"
+                    :error-messages="errors"
+                    label="Jumlah Cicilan"
+                  ></v-text-field>
+                </validation-provider>
+
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -151,7 +168,43 @@
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  is_not,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('is_not', {
+  // eslint-disable-next-line camelcase
+  ...is_not,
+  message: '{_field_} tidak boleh bernilai 0',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'akuntan',
   async asyncData({ store }) {
     return {

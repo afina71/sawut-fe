@@ -115,6 +115,7 @@
                 ><b> Form Edit Data Pelunasan Piutang</b></span
               >
             </v-card-title>
+
             <validation-observer ref="observer" v-slot="{ invalid }">
               <v-form class="pa-10" @submit.prevent="handleEdit">
                 <v-menu

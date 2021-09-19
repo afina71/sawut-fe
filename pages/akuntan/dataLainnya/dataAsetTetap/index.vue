@@ -26,167 +26,252 @@
                 ><b> Form Edit Data Aset Tetap</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-row justify="space-between">
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Informasi Umum</div>
-                  <v-text-field
-                    v-model="editedItem.nama_aset"
-                    class="pt-1"
-                    label="Nama Aset"
-                    dense
-                  ></v-text-field>
-                  <v-autocomplete
-                    v-model="editedItem.kelompok"
-                    class="pt-1"
-                    :items="namaKelompok"
-                    label="Kelompok"
-                    dense
-                  ></v-autocomplete>
-                  <v-menu
-                    v-model="editedTanggal1"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template #activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="editedItem.tanggal_beli"
-                        label="Tanggal Beli"
-                        append-icon="mdi-calendar"
-                        readonly
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="editedItem.tanggal_beli"
-                      color="green darken-1"
-                      @input="editedTanggal1 = false"
-                    ></v-date-picker>
-                  </v-menu>
-                  <v-text-field
-                    v-model="editedItem.harga_perolehan"
-                    class="pt-1"
-                    label="Harga Perolehan"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nilai_bersih"
-                    class="pt-1"
-                    label="Nilai Bersih"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nilai_residu"
-                    class="pt-1"
-                    label="Nilai Residu"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.umur_ekonomis"
-                    class="pt-1"
-                    label="Umur Ekonomis"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.lokasi"
-                    class="pt-1"
-                    label="Lokasi"
-                    dense
-                  ></v-text-field>
-                </v-col>
-                <v-spacer></v-spacer>
-                <v-col cols="12" sm="6">
-                  <div class="text-subtitle-2">Akumulasi</div>
-                  <v-text-field
-                    v-model="editedItem.nomor"
-                    class="pt-1"
-                    label="Nomor"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.departemen"
-                    class="pt-1"
-                    label="Departemen"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.akumulasi_beban"
-                    class="pt-1"
-                    label="Akumulasi beban"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.beban_per_tahun_ini"
-                    class="pt-1"
-                    label="Beban Pertahun"
-                    dense
-                  ></v-text-field>
-                  <v-menu
-                    v-model="editedTanggal2"
-                    :close-on-content-click="false"
-                    :nudge-right="40"
-                    transition="scale-transition"
-                    offset-y
-                    min-width="auto"
-                  >
-                    <template #activator="{ on, attrs }">
-                      <v-text-field
-                        v-model="editedItem.terhitung_tanggal"
-                        label="Terhitung Tanggal"
-                        append-icon="mdi-calendar"
-                        readonly
-                        dense
-                        v-bind="attrs"
-                        v-on="on"
-                      ></v-text-field>
-                    </template>
-                    <v-date-picker
-                      v-model="editedItem.terhitung_tanggal"
-                      color="green darken-1"
-                      @input="editedTanggal2 = false"
-                    ></v-date-picker>
-                  </v-menu>
-                  <v-text-field
-                    v-model="editedItem.nilai_buku"
-                    class="pt-1"
-                    label="Nilai Buku"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.beban_per_bulan"
-                    class="pt-1"
-                    label="Beban Perbulan"
-                    dense
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.nilai_penyusutan"
-                    class="pt-1"
-                    label="Nilai Penyusutan"
-                    dense
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <v-row>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Informasi Umum</div>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nama Aset"
+                      rules="required|alpha_spaces"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nama_aset"
+                        :error-messages="errors"
+                        label="Nama Aset"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Kelompok"
+                      rules="required"
+                    >
+                      <v-autocomplete
+                        v-model="editedItem.kelompok"
+                        :error-messages="errors"
+                        :items="namaKelompok"
+                        label="Kelompok"
+                      ></v-autocomplete>
+                    </validation-provider>
+                    <v-menu
+                      v-model="editedTanggal1"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template #activator="{ on, attrs }">
+                        <validation-provider
+                          v-slot="{ errors }"
+                          name="Tanggal Beli"
+                          rules="required"
+                        >
+                          <v-text-field
+                            v-model="editedItem.tanggal_beli"
+                            :error-messages="errors"
+                            label="Tanggal Beli"
+                            append-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </validation-provider>
+                      </template>
+                      <v-date-picker
+                        v-model="editedItem.tanggal_beli"
+                        color="green darken-1"
+                        @input="editedTanggal1 = false"
+                      ></v-date-picker>
+                    </v-menu>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Harga Perolehan"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.harga_perolehan"
+                        :error-messages="errors"
+                        label="Harga Perolehan"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nilai Bersih"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nilai_bersih"
+                        :error-messages="errors"
+                        label="Nilai Bersih"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nilai Residu"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nilai_residu"
+                        :error-messages="errors"
+                        label="Nilai Residu"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Umur Ekonomis"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.umur_ekonomis"
+                        :error-messages="errors"
+                        label="Umur Ekonomis"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Lokasi"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="editedItem.lokasi"
+                        :error-messages="errors"
+                        label="Lokasi"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <v-col cols="12" sm="6">
+                    <div class="text-subtitle-2">Akumulasi</div>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nomor"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nomor"
+                        :error-messages="errors"
+                        label="Nomor"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Departemen"
+                      rules="required"
+                    >
+                      <v-text-field
+                        v-model="editedItem.departemen"
+                        :error-messages="errors"
+                        label="Departemen"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Akumulasi Beban"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.akumulasi_beban"
+                        :error-messages="errors"
+                        label="Akumulasi beban"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Beban Pertahun"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.beban_per_tahun_ini"
+                        :error-messages="errors"
+                        label="Beban Pertahun"
+                      ></v-text-field>
+                    </validation-provider>
+                    <v-menu
+                      v-model="editedTanggal2"
+                      :close-on-content-click="false"
+                      :nudge-right="40"
+                      transition="scale-transition"
+                      offset-y
+                      min-width="auto"
+                    >
+                      <template #activator="{ on, attrs }">
+                        <validation-provider
+                          v-slot="{ errors }"
+                          name="Tanggal"
+                          rules="required"
+                        >
+                          <v-text-field
+                            v-model="editedItem.terhitung_tanggal"
+                            :error-messages="errors"
+                            label="Terhitung Tanggal"
+                            append-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </validation-provider>
+                      </template>
+                      <v-date-picker
+                        v-model="editedItem.terhitung_tanggal"
+                        color="green darken-1"
+                        @input="editedTanggal2 = false"
+                      ></v-date-picker>
+                    </v-menu>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nilai Buku"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nilai_buku"
+                        :error-messages="errors"
+                        label="Nilai Buku"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Beban Perbulan"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.beban_per_bulan"
+                        :error-messages="errors"
+                        label="Beban Perbulan"
+                      ></v-text-field>
+                    </validation-provider>
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Nilai Penyusutan"
+                      rules="required|numeric"
+                    >
+                      <v-text-field
+                        v-model="editedItem.nilai_penyusutan"
+                        :error-messages="errors"
+                        label="Nilai Penyusutan"
+                      ></v-text-field>
+                    </validation-provider>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -285,7 +370,43 @@
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  alpha_spaces,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('alpha_spaces', {
+  // eslint-disable-next-line camelcase
+  ...alpha_spaces,
+  message: '{_field_} hanya dapat diisi dengan huruf',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'akuntan',
   async asyncData({ store }) {
     return {

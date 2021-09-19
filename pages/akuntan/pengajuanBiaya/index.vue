@@ -26,62 +26,85 @@
                 ><b> Form Edit Pengajuan Biaya</b></span
               >
             </v-card-title>
-            <v-form class="px-10 pt-10">
-              <v-text-field
-                v-model="editedItem.nama_pengaju"
-                class="pt-1"
-                label="Nama Pengaju"
-                dense
-                required
-              ></v-text-field>
-              <v-autocomplete
-                v-model="editedItem.kategori_biaya"
-                class="pt-1"
-                :items="kategoriBiaya"
-                label="Kategori Biaya"
-                dense
-                required
-                item-text="name"
-                item-value="name"
-              ></v-autocomplete>
-              <v-text-field
-                v-model="editedItem.keterangan_biaya"
-                class="pt-1"
-                label="Keterangan Biaya"
-                dense
-                required
-              ></v-text-field>
-              <v-text-field
-                v-model="editedItem.nominal"
-                class="pt-1"
-                label="Nominal"
-                dense
-                required
-              ></v-text-field>
-              <v-autocomplete
-                v-model="editedItem.sumber_biaya"
-                class="pt-1"
-                :items="sumberBiaya"
-                label="Sumber Biaya"
-                dense
-                required
-              ></v-autocomplete>
-            </v-form>
 
-            <v-card-actions class="py-5 pb-5 pr-10">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="closeEdit">
-                Batal
-              </v-btn>
-              <v-btn
-                depressed
-                class="white--text rounded-lg green darken-1"
-                :disabled="areAllEditsEmpty"
-                @click="handleEdit"
-              >
-                Simpan
-              </v-btn>
-            </v-card-actions>
+            <validation-observer ref="observer" v-slot="{ invalid }">
+              <v-form class="pa-10" @submit.prevent="handleEdit">
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Nama Pengaju"
+                  rules="required|alpha_spaces"
+                >
+                  <v-text-field
+                    v-model="editedItem.nama_pengaju"
+                    :error-messages="errors"
+                    label="Nama Pengaju"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Kategori Biaya"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.kategori_biaya"
+                    :error-messages="errors"
+                    :items="kategoriBiaya"
+                    label="Kategori Biaya"
+                    item-text="name"
+                    item-value="name"
+                  ></v-autocomplete>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Keterangan Biaya"
+                  rules="required"
+                >
+                  <v-text-field
+                    v-model="editedItem.keterangan_biaya"
+                    :error-messages="errors"
+                    label="Keterangan Biaya"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Nominal"
+                  rules="required|numeric|is_not:0"
+                >
+                  <v-text-field
+                    v-model="editedItem.nominal"
+                    :error-messages="errors"
+                    label="Nominal"
+                  ></v-text-field>
+                </validation-provider>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Sumber Biaya"
+                  rules="required"
+                >
+                  <v-autocomplete
+                    v-model="editedItem.sumber_biaya"
+                    :error-messages="errors"
+                    :items="sumberBiaya"
+                    label="Sumber Biaya"
+                  ></v-autocomplete>
+                </validation-provider>
+
+                <v-row class="pt-5">
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeEdit">
+                    Batal
+                  </v-btn>
+                  <v-btn
+                    depressed
+                    class="white--text rounded-lg green darken-1"
+                    type="submit"
+                    :disabled="invalid"
+                  >
+                    Simpan
+                  </v-btn>
+                </v-row>
+              </v-form>
+            </validation-observer>
           </v-card>
         </v-dialog>
 
@@ -150,7 +173,51 @@
 </template>
 
 <script>
+import {
+  required,
+  numeric,
+  // eslint-disable-next-line camelcase
+  alpha_spaces,
+  // eslint-disable-next-line camelcase
+  is_not,
+} from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
+extend('numeric', {
+  ...numeric,
+  message: '{_field_} hanya dapat diisi dengan angka',
+})
+
+extend('alpha_spaces', {
+  // eslint-disable-next-line camelcase
+  ...alpha_spaces,
+  message: '{_field_} hanya dapat diisi dengan huruf',
+})
+
+extend('is_not', {
+  // eslint-disable-next-line camelcase
+  ...is_not,
+  message: '{_field_} tidak boleh bernilai 0',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'akuntan',
   async asyncData({ store }) {
     return {
