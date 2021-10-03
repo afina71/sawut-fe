@@ -88,43 +88,22 @@ export const actions = {
       url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
-
-  // getItems({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'get',
-  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
-  //   })
-  // },
-  // createItem({ dispatch }, [url, data]) {
-  //   return dispatch('useAPI', {
-  //     method: 'post',
-  //     url: `https://sawut-laravel.herokuapp.com/api/${url}`,
-  //     data,
-  //   })
-  // },
-  // updateItem({ dispatch }, [url, data]) {
-  //   return dispatch('useAPI', {
-  //     method: 'put',
-  //     url: `https://sawut-laravel.herokuapp.com/api/${url}`,
-  //     data,
-  //   })
-  // },
-  // deleteItem({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'delete',
-  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
-  //   })
-  // },
-  // editItem({ dispatch }, payload) {
-  //   return dispatch('useAPI', {
-  //     method: 'put',
-  //     url: `https://sawut-laravel.herokuapp.com/api/${payload}`,
-  //   })
-  // },
+  addItem({ dispatch }, [url, data]) {
+    return dispatch('useAPI', {
+      method: 'post',
+      url: `https://api-bwut-python.herokuapp.com/${url}`,
+      data,
+    })
+  },
 
   // auth-related actions
   login(context, payload) {
     return this.dispatch('createItem', ['auth/login', payload])
+  },
+
+  // import data
+  importData({ dispatch }, payload) {
+    return dispatch('addItem', ['upload-file', payload])
   },
 
   // penerimaan wakaf

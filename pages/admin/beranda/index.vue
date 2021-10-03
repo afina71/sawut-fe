@@ -65,14 +65,89 @@
         </v-card>
       </v-col>
     </v-row>
+    <validation-observer ref="observer" v-slot="{ invalid }">
+      <v-form @submit.prevent="handleImport">
+        <v-row class="pa-10">
+          <v-col cols="10">
+            <validation-provider
+              v-slot="{ errors }"
+              name="File"
+              rules="required"
+            >
+              <v-file-input
+                v-model="inputItem.file"
+                :error-messages="errors"
+                label="File"
+                placeholder="Masukkan File Excel"
+                dense
+                outlined
+              ></v-file-input>
+            </validation-provider>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="2">
+            <v-btn
+              :color="colorTheme"
+              dark
+              depressed
+              type="submit"
+              :disabled="invalid"
+            >
+              Import Excel
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-form>
+    </validation-observer>
   </v-main>
 </template>
 
 <script>
+import { required } from 'vee-validate/dist/rules'
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from 'vee-validate'
+
+setInteractionMode('aggressive')
+
+extend('required', {
+  ...required,
+  message: '{_field_} tidak boleh kosong',
+})
+
 export default {
+  components: {
+    ValidationProvider,
+    ValidationObserver,
+  },
+
   layout: 'default',
   data: () => ({
     colorTheme: '#1B7A13',
+
+    inputItem: {
+      file: '',
+    },
   }),
+
+  methods: {
+    async handleImport() {
+      const { file } = this.inputItem
+      this.isLoading = true
+      try {
+        await this.$store.dispatch('importData', {
+          file,
+        })
+        this.$refs.observer.reset()
+        this.isLoading = false
+        this.handleRefreshList()
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+  },
 }
 </script>
