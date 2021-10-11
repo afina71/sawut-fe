@@ -88,13 +88,13 @@ export const actions = {
       url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
-  addItem({ dispatch }, [url, data]) {
-    return dispatch('useAPI', {
-      method: 'post',
-      url: `https://api-bwut-python.herokuapp.com/${url}`,
-      data,
-    })
-  },
+  // addItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'post',
+  //     url: `https://pythonapi-bwut.herokuapp.com/api/${url}`,
+  //     data,
+  //   })
+  // },
 
   // auth-related actions
   login(context, payload) {
@@ -102,9 +102,9 @@ export const actions = {
   },
 
   // import data
-  importData({ dispatch }, payload) {
-    return dispatch('addItem', ['upload-file', payload])
-  },
+  // importData({ dispatch }, payload) {
+  //   return dispatch('addItem', ['upload-file', payload])
+  // },
 
   // penerimaan wakaf
   getDataWakaf({ dispatch }) {

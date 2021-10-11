@@ -65,7 +65,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <validation-observer ref="observer" v-slot="{ invalid }">
+    <!-- <validation-observer ref="observer" v-slot="{ invalid }">
       <v-form @submit.prevent="handleImport">
         <v-row class="pa-10">
           <v-col cols="10">
@@ -98,56 +98,75 @@
           </v-col>
         </v-row>
       </v-form>
-    </validation-observer>
+    </validation-observer> -->
   </v-main>
 </template>
 
 <script>
-import { required } from 'vee-validate/dist/rules'
-import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
-} from 'vee-validate'
+// import axios from 'axios'
+// import { required } from 'vee-validate/dist/rules'
+// import {
+//   extend,
+//   ValidationObserver,
+//   ValidationProvider,
+//   setInteractionMode,
+// } from 'vee-validate'
 
-setInteractionMode('aggressive')
+// setInteractionMode('aggressive')
 
-extend('required', {
-  ...required,
-  message: '{_field_} tidak boleh kosong',
-})
+// extend('required', {
+//   ...required,
+//   message: '{_field_} tidak boleh kosong',
+// })
 
 export default {
-  components: {
-    ValidationProvider,
-    ValidationObserver,
-  },
+  // components: {
+  //   ValidationProvider,
+  //   ValidationObserver,
+  // },
 
   layout: 'default',
   data: () => ({
     colorTheme: '#1B7A13',
 
-    inputItem: {
-      file: '',
-    },
+    // inputItem: {
+    //   file: '',
+    // },
   }),
 
   methods: {
-    async handleImport() {
-      const { file } = this.inputItem
-      this.isLoading = true
-      try {
-        await this.$store.dispatch('importData', {
-          file,
-        })
-        this.$refs.observer.reset()
-        this.isLoading = false
-        this.handleRefreshList()
-      } catch (error) {
-        this.isLoading = false
-      }
-    },
+    // eslint-disable-next-line require-await
+    // async handleImport() {
+    //   const formData = new FormData()
+    //   formData.append('file', this.inputItem.file)
+    //   axios
+    //     .post(
+    //       'https://bwutmuidiy-sawut.com/pyapi--sawut/api/upload-file',
+    //       formData,
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log(response)
+    //     })
+    // },
+    // async handleImport() {
+    //   const { file } = this.inputItem
+    //   this.isLoading = true
+    //   try {
+    //     await this.$store.dispatch('importData', {
+    //       file,
+    //     })
+    //     this.$refs.observer.reset()
+    //     this.isLoading = false
+    //     this.handleRefreshList()
+    //   } catch (error) {
+    //     this.isLoading = false
+    //   }
+    // },
   },
 }
 </script>

@@ -9,17 +9,22 @@ export default {
   // },
 
   head: {
-    titleTemplate: '%s - sawut',
-    title: 'sawut',
+    titleTemplate: '%s - BWUT MUI DIY',
+    title: 'SAWUT',
     htmlAttrs: {
       lang: 'en',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      {
+        hid: 'description',
+        name: 'description',
+        content:
+          'SAWUT merupakan Web Application Sistem Akuntansi Wakaf uang Tunai milik BWUT MUI DIY. SAWUT telah disesuaikan dengan standarisasi akuntansi wakaf terbaru, yaitu PSAK 112. Dibuatnya SAWUT, sebagai bentuk dukungan terhadap perkembangan wakaf uang tunai di Indonesia.',
+      },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo_bwut.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
