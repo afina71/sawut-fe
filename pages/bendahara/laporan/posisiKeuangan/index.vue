@@ -1,13 +1,13 @@
 <template>
   <v-main>
-    <v-row class="py-10 justify-center">
-      <v-col cols="10">
+    <v-row class="pt-10">
+      <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
+        >Download</v-btn
+      >
+    </v-row>
+    <v-row class="justify-center">
+      <v-col cols="12">
         <pdf :src="pdfsrc"></pdf>
-      </v-col>
-      <v-col cols="2" class="pb-10">
-        <v-btn :color="colorTheme" dark depressed @click.prevent="downloadPDF()"
-          >Download</v-btn
-        >
       </v-col>
     </v-row>
   </v-main>
@@ -31,7 +31,7 @@ export default {
   created() {
     this.$axios
       .get(
-        `https://sawut-laravel.herokuapp.com/api/wakaf/laporan/posisikeuangan/generate`,
+        `http://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/posisikeuangan/generate`,
         {
           responseType: 'blob',
         }
@@ -49,7 +49,7 @@ export default {
     async downloadPDF() {
       await this.$axios({
         url:
-          'https://sawut-laravel.herokuapp.com/api/wakaf/laporan/posisikeuangan/download',
+          'http://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/posisikeuangan/download',
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
