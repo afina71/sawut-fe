@@ -59,33 +59,33 @@ export const actions = {
   getItems({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'get',
-      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
   createItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
       method: 'post',
-      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
+      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
       data,
     })
   },
   updateItem({ dispatch }, [url, data]) {
     return dispatch('useAPI', {
       method: 'put',
-      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
+      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
       data,
     })
   },
   deleteItem({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'delete',
-      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
   editItem({ dispatch }, payload) {
     return dispatch('useAPI', {
       method: 'put',
-      url: `http://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
     })
   },
   // addItem({ dispatch }, [url, data]) {

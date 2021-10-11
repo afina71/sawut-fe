@@ -1,7 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  // mode: 'spa',
+  target: 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
 
   // env: {
@@ -21,7 +21,7 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'SAWUT merupakan Web Application Sistem Akuntansi Wakaf uang Tunai milik BWUT MUI DIY. SAWUT telah disesuaikan dengan standarisasi akuntansi wakaf terbaru, yaitu PSAK 112. Dibuatnya SAWUT, sebagai bentuk dukungan terhadap perkembangan wakaf uang tunai di Indonesia.',
+          'SAWUT merupakan Web Application Sistem Akuntansi Wakaf Uang Tunai milik BWUT MUI DIY. SAWUT telah disesuaikan dengan standarisasi akuntansi wakaf terbaru, yaitu PSAK 112. Dibuatnya SAWUT, sebagai bentuk dukungan terhadap perkembangan wakaf uang tunai di Indonesia.',
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/logo_bwut.png' }],

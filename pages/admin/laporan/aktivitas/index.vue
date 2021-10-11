@@ -31,7 +31,7 @@ export default {
   created() {
     this.$axios
       .get(
-        `http://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/aktivitas/generate`,
+        `https://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/aktivitas/generate`,
         {
           responseType: 'blob',
         }
@@ -49,7 +49,7 @@ export default {
     async downloadPDF() {
       await this.$axios({
         url:
-          'http://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/aktivitas/download',
+          'https://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/aktivitas/download',
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
