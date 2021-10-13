@@ -119,7 +119,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Nomor AIW"
-                      rules="required|is_not:0"
+                      rules="required|numeric|is_not:0"
                     >
                       <v-text-field
                         v-model="inputItem.nomor_aiw"
@@ -142,7 +142,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Jangka Waktu"
-                      rules="required|numeric|is_not:0"
+                      rules="required|numeric"
                     >
                       <v-text-field
                         v-model="inputItem.jangka_waktu_temporer"
@@ -291,7 +291,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Nomor AIW"
-                      rules="required|is_not:0"
+                      rules="required|numeric|is_not:0"
                     >
                       <v-text-field
                         v-model="editedItem.nomor_aiw"
@@ -314,7 +314,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Jangka Waktu"
-                      rules="required|numeric|is_not:0"
+                      rules="required|numeric"
                     >
                       <v-text-field
                         v-model="editedItem.jangka_waktu_temporer"

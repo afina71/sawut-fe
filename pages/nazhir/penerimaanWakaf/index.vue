@@ -119,7 +119,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Nomor AIW"
-                      rules="required|is_not:0"
+                      rules="required|numeric|is_not:0"
                     >
                       <v-text-field
                         v-model="inputItem.nomor_aiw"
@@ -142,7 +142,7 @@
                     <validation-provider
                       v-slot="{ errors }"
                       name="Jangka Waktu"
-                      rules="required|numeric|is_not:0"
+                      rules="required|numeric"
                     >
                       <v-text-field
                         v-model="inputItem.jangka_waktu_temporer"
@@ -277,7 +277,6 @@
 <script>
 import {
   required,
-  numeric,
   // eslint-disable-next-line camelcase
   alpha_spaces,
   // eslint-disable-next-line camelcase
@@ -295,11 +294,6 @@ setInteractionMode('aggressive')
 extend('required', {
   ...required,
   message: '{_field_} tidak boleh kosong',
-})
-
-extend('numeric', {
-  ...numeric,
-  message: '{_field_} hanya dapat diisi dengan angka',
 })
 
 extend('alpha_spaces', {
