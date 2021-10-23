@@ -50,7 +50,7 @@ export const actions = {
             },
           }) => {
             // eslint-disable-next-line unicorn/error-message
-            // reject(new Error({ statusCode, message }))
+            reject(new Error({ statusCode, message }))
           }
         )
     })

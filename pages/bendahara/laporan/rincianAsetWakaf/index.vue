@@ -30,12 +30,9 @@ export default {
 
   created() {
     this.$axios
-      .get(
-        `https://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/rincianaset/generate`,
-        {
-          responseType: 'blob',
-        }
-      )
+      .get(`http://localhost:8000/api/wakaf/laporan/rincianaset/generate`, {
+        responseType: 'blob',
+      })
       .then((response) => {
         console.log('Success', response)
         const blob = new Blob([response.data])
@@ -48,8 +45,7 @@ export default {
   methods: {
     async downloadPDF() {
       await this.$axios({
-        url:
-          'https://sawutbe.bwutmuidiy-sawut.com/api/wakaf/laporan/rincianaset/download',
+        url: 'http://localhost:8000/api/wakaf/laporan/rincianaset/download',
         method: 'GET',
         responseType: 'blob',
       }).then((response) => {
