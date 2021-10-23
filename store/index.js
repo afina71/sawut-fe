@@ -56,38 +56,38 @@ export const actions = {
     })
   },
 
-  getItems({ dispatch }, payload) {
-    return dispatch('useAPI', {
-      method: 'get',
-      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-    })
-  },
-  createItem({ dispatch }, [url, data]) {
-    return dispatch('useAPI', {
-      method: 'post',
-      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
-      data,
-    })
-  },
-  updateItem({ dispatch }, [url, data]) {
-    return dispatch('useAPI', {
-      method: 'put',
-      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
-      data,
-    })
-  },
-  deleteItem({ dispatch }, payload) {
-    return dispatch('useAPI', {
-      method: 'delete',
-      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-    })
-  },
-  editItem({ dispatch }, payload) {
-    return dispatch('useAPI', {
-      method: 'put',
-      url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
-    })
-  },
+  // getItems({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'get',
+  //     url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+  //   })
+  // },
+  // createItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'post',
+  //     url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // updateItem({ dispatch }, [url, data]) {
+  //   return dispatch('useAPI', {
+  //     method: 'put',
+  //     url: `https://sawutbe.bwutmuidiy-sawut.com/api/${url}`,
+  //     data,
+  //   })
+  // },
+  // deleteItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'delete',
+  //     url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+  //   })
+  // },
+  // editItem({ dispatch }, payload) {
+  //   return dispatch('useAPI', {
+  //     method: 'put',
+  //     url: `https://sawutbe.bwutmuidiy-sawut.com/api/${payload}`,
+  //   })
+  // },
   // addItem({ dispatch }, [url, data]) {
   //   return dispatch('useAPI', {
   //     method: 'post',
@@ -95,6 +95,39 @@ export const actions = {
   //     data,
   //   })
   // },
+
+  getItems({ dispatch }, payload) {
+    return dispatch('useAPI', {
+      method: 'get',
+      url: `http://localhost:8000/api/${payload}`,
+    })
+  },
+  createItem({ dispatch }, [url, data]) {
+    return dispatch('useAPI', {
+      method: 'post',
+      url: `http://localhost:8000/api/${url}`,
+      data,
+    })
+  },
+  updateItem({ dispatch }, [url, data]) {
+    return dispatch('useAPI', {
+      method: 'put',
+      url: `http://localhost:8000/api/${url}`,
+      data,
+    })
+  },
+  deleteItem({ dispatch }, payload) {
+    return dispatch('useAPI', {
+      method: 'delete',
+      url: `http://localhost:8000/api/${payload}`,
+    })
+  },
+  editItem({ dispatch }, payload) {
+    return dispatch('useAPI', {
+      method: 'put',
+      url: `http://localhost:8000/api/${payload}`,
+    })
+  },
 
   // auth-related actions
   login(context, payload) {
